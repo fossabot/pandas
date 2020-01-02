@@ -1,0 +1,344 @@
+syntax = "proto3";
+// import "google/protobuf/timestamp.proto";
+
+
+package grpc.lbs.v1;
+
+message Vertexe {
+    double longitude = 1;
+	double latitude = 2;
+}
+
+message Geofence {
+    string fence_id  = 1;
+	string fence_name = 2;
+	repeated string monitored_object = 3;
+	string shape = 4; 
+	double longitude = 5;
+	double latitude = 6;
+    double radius = 7;
+	string coord_type = 8;
+	int32  denoise = 9;
+	string create_time = 10;
+	string update_time = 11;
+    repeated Vertexe vertexes = 12;
+}
+
+message CircleGeofence {
+    string name = 1;
+    repeated string monitored_objects = 2;
+    double longitude = 3;
+    double latitude = 4;
+    double radius = 5;
+    string coord_type = 6;
+    int32 denoise = 7;
+    string fence_id = 8;
+}
+
+message PolyGeofence {
+    string name = 1;
+    repeated string monitored_objects = 2;
+    string vertexes = 3;
+    string coord_type = 4;
+    int32 denoise = 5;
+    string fence_id = 6;
+}
+
+service LBS {
+    rpc ListCollections(ListCollectionsRequest) returns (ListCollectionsResponse) {}
+
+    // Geofence
+    rpc CreateCircleGeofence(CreateCircleGeofenceRequest) returns (CreateCircleGeofenceResponse) {}
+    rpc UpdateCircleGeofence(UpdateCircleGeofenceRequest) returns (UpdateCircleGeofenceResponse)  {}
+    rpc DeleteGeofence(DeleteGeofenceRequest) returns (DeleteGeofenceResponse) {}
+    rpc ListGeofences(ListGeofencesRequest) returns (ListGeofencesResponse) {}
+    rpc AddMonitoredObject(AddMonitoredObjectRequest) returns (AddMonitoredObjectResponse) {}
+    rpc RemoveMonitoredObject(RemoveMonitoredObjectRequest) returns (RemoveMonitoredObjectResponse) {}
+    rpc ListMonitoredObjects(ListMonitoredObjectsRequest) returns (ListMonitoredObjectsResponse) {}
+    rpc CreatePolyGeofence(CreatePolyGeofenceRequest) returns (CreatePolyGeofenceResponse) {}
+    rpc UpdatePolyGeofence(UpdatePolyGeofenceRequest) returns (UpdatePolyGeofenceResponse) {}
+    rpc GetFenceIds(GetFenceIdsRequest) returns (GetFenceIdsResponse) {}
+
+    // Alarm
+    rpc QueryStatus(QueryStatusRequest) returns (QueryStatusResponse) {}
+    rpc GetHistoryAlarms(GetHistoryAlarmsRequest) returns (GetHistoryAlarmsResponse) {}
+    rpc BatchGetHistoryAlarms(BatchGetHistoryAlarmsRequest) returns (BatchGetHistoryAlarmsResponse) {}
+    rpc GetStayPoints(GetStayPointsRequest) returns (GetStayPointsResponse) {}
+    // NotifyAlarms is used by apiserver to provide asynchrous notication
+    rpc NotifyAlarms(NotifyAlarmsRequest) returns (NotifyAlarmsResponse) {}
+    rpc GetFenceUserId(GetFenceUserIdRequest) returns (GetFenceUserIdResponse) {}
+
+    //Entity
+    rpc AddEntity(AddEntityRequest) returns (AddEntityResponse) {}
+    rpc UpdateEntity(UpdateEntityRequest) returns (UpdateEntityResponse) {}
+    rpc DeleteEntity(DeleteEntityRequest) returns (DeleteEntityResponse) {}
+    rpc ListEntity(ListEntityRequest) returns (ListEntityResponse) {}
+
+}
+
+// Collection
+
+message GetFenceUserIdRequest {
+    string fence_id = 1;
+}
+
+message GetFenceUserIdResponse {
+    string user_id = 1;
+}
+
+message ListCollectionsRequest {
+    string user_id = 1;
+}
+message ListCollectionsResponse {
+    repeated string project_ids = 1;
+}
+
+// Geofence
+message CreateCircleGeofenceRequest {
+    string user_id = 1;
+    string project_id = 2;
+    CircleGeofence fence = 3;
+}
+message CreateCircleGeofenceResponse {
+    string fence_id = 1;
+}
+
+message CreatePolyGeofenceRequest {
+    string user_id = 1;
+    string project_id = 2;
+    PolyGeofence fence = 3;
+}
+
+message CreatePolyGeofenceResponse {
+    string fence_id = 1;
+}
+
+message UpdatePolyGeofenceRequest {
+    string user_id = 1;
+    string project_id = 2;
+    PolyGeofence fence = 3;
+}
+message UpdatePolyGeofenceResponse {}
+
+message UpdateCircleGeofenceRequest {
+    string user_id = 1;
+    string project_id = 2;
+    CircleGeofence fence = 3;
+}
+message UpdateCircleGeofenceResponse {}
+
+message DeleteGeofenceRequest {
+    string user_id = 1;
+    string project_id = 2;
+    repeated string fence_ids = 3;
+    repeated string objects = 4;
+}
+message DeleteGeofenceResponse {
+    repeated string fence_ids = 1;
+}
+
+message ListGeofencesRequest {
+    string user_id = 1;
+    string project_id = 2;
+    repeated string fence_ids = 3;
+    repeated string objects = 4;
+}
+message ListGeofencesResponse {
+    repeated Geofence fences = 1;
+}
+
+message GetFenceIdsRequest {
+    string user_id = 1;
+    string project_id = 2;
+}
+
+message GetFenceIdsResponse {
+    repeated string fence_ids = 1;
+}
+
+message AddMonitoredObjectRequest {
+    string user_id = 1;
+    string project_id = 2;
+    string fence_id = 3;
+    repeated string objects = 4;
+}
+message AddMonitoredObjectResponse {}
+
+message RemoveMonitoredObjectRequest {
+    string user_id = 1;
+    string project_id = 2;
+    string fence_id = 3;
+    repeated string objects = 4;
+}
+message RemoveMonitoredObjectResponse {}
+
+message ListMonitoredObjectsRequest {
+    string user_id = 1;
+    string project_id = 2;
+    string fence_id = 3;
+    int32 page_index = 4;
+    int32 page_size = 5;
+}
+message ListMonitoredObjectsResponse {
+    int32 total_fences = 1;
+    repeated string objects = 2;
+}
+
+
+// Alarm
+message QueryStatusRequest {
+    string user_id = 1;
+    string project_id = 2;
+    string monitored_person = 3;
+    repeated string fence_ids = 4;
+}
+
+message MonitoredStatus {
+    int32 fence_id = 1;
+    string monitored_status = 2;
+}
+
+message QueryStatusResponse {
+    int32 status = 1;
+    string message = 2;
+    int32 size = 3;
+    repeated MonitoredStatus monitored_statuses = 4;
+}
+
+message GetHistoryAlarmsRequest {
+    string user_id = 1;
+    string project_id = 2;
+    string monitored_person = 3;
+    repeated string fence_ids = 4;
+}
+
+message AlarmPoint {
+    double longitude = 1;
+    double latitude = 2;
+    int32 radius = 3;
+    string coord_type = 4;
+    string loc_time = 5;
+    string create_time = 6;
+}
+
+message PrePoint {
+    double longitude = 1;
+    double latitude = 2;
+    int32 radius = 3;
+    string coord_type = 4;
+    string loc_time = 5;
+    string create_time = 6;
+}
+
+message Alarm {
+    int32 fence_id = 1;
+    string fence_name = 2;
+    string monitored_person = 3;
+    string action = 4;
+    AlarmPoint alarm_point = 5;
+    PrePoint pre_point = 6;
+}
+
+message GetHistoryAlarmsResponse {
+    int32 status = 1;
+    string message = 2;
+    int32 size = 3;
+    repeated Alarm alarms = 4;
+}
+
+message BatchGetHistoryAlarmsRequest {
+    string user_id = 1;
+    string project_id = 2;
+    string coord_type_output = 3;
+    string end_time = 4;
+    string start_time = 5;
+    int32 page_index = 7;
+    int32 page_size = 8;
+}
+message BatchGetHistoryAlarmsResponse {
+    int32 status = 1;
+    string message = 2;
+    int32 total = 3;
+    int32 size = 4;
+    repeated Alarm alarms = 5;
+}
+
+message GetStayPointsRequest {
+    string user_id = 1;
+    string project_id = 2;
+    string end_time = 3;
+    string entity_name = 4;
+    repeated string fence_ids = 5;
+    int32 page_index = 6;
+    int32 page_size = 7;
+    string start_time = 8;
+    string coord_type_output = 9;
+}
+
+message Point {
+    double latitude = 1;
+    double longitude = 2;
+    string coord_type = 3;
+    string loc_time = 4;
+}
+
+message GetStayPointsResponse {
+    int32 status = 1;
+    string message = 2;
+    int32 total = 3;
+    int32 size = 4;
+    int32 distance = 5;
+    Point end_point = 6;
+    Point start_point = 7;
+    repeated Point points = 8;
+}
+
+message NotifyAlarmsRequest {
+    string user_id = 1;
+    string project_id = 2;
+    bytes content = 3;
+}
+message NotifyAlarmsResponse {}
+
+// Entity
+message AddEntityRequest {
+    string user_id = 1;
+    string project_id = 2;
+    string entity_name = 3;
+    string entity_desc = 4;
+}
+message AddEntityResponse {}
+
+message UpdateEntityRequest {
+    string user_id = 1;
+    string project_id = 2;
+    string entity_name = 3;
+    string entity_desc = 4;
+}
+message UpdateEntityResponse {}
+
+message DeleteEntityRequest {
+    string user_id = 1;
+    string project_id = 2;
+    string entity_name = 3;
+}
+message DeleteEntityResponse {}
+
+message ListEntityRequest {
+    string user_id = 1;
+    string project_id = 2;
+    string coord_type_output = 3;
+    int32 page_index = 4;
+    int32 page_size = 5;
+}
+
+message EntityInfo {
+    string entity_name = 1;
+    double latitude = 2;
+    double longitude = 3;
+}
+
+message ListEntityResponse {
+    int32 total = 1;
+    repeated EntityInfo entity_info = 2;
+}

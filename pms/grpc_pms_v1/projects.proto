@@ -1,0 +1,338 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "github.com/cloustone/pandas/dmms/grpc_dmms_v1/dmms.proto";
+
+
+package grpc.pms.v1;
+
+message Reader {
+    string name = 1;
+    map<string, google.protobuf.Any> configs = 2;
+}
+
+// Project is created by uer and can manage meny workshops
+// Project is basic management unit that can inport device and device model
+message Project {
+    string ID = 1; // project id
+    string name = 2; // project name
+    string userID = 3; // user id
+    string description = 4; // project's description
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp last_updated_at = 6;
+    string status = 7;
+    repeated Reader readers = 8;
+}
+
+
+// Workshop is the basic woking place that have many views
+message Workshop {
+    string ID = 1; // workshop id
+    string name = 2; // work name
+    string userID = 3; // user id
+    string description = 4; // workshop description
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp last_updated_at = 6;
+    string status = 7;
+    repeated string viewIDs = 8;
+}
+
+// View is the basic view unit that can be modeled by user
+message View {
+    string ID = 1;
+    string name = 2;
+    string projectID = 3;
+    string workshopID = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp last_updated_at = 6;
+    bytes payload = 7;
+    string status = 8;
+    repeated string variables = 9;
+}
+// Variable is used by view to bind data and device model
+message Variable {
+    string ID = 1;
+    string name = 2;
+    string type = 3; 
+    string description = 4;
+    string projectID = 5;
+    google.protobuf.Any val = 6;
+    string binded_deviceID = 7;
+    string binded_endpoint = 8;
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp last_updated_at = 10;
+}
+
+// Projects manage user's projects and views for a specified project
+service ProjectManagement {
+    // CreateProject create a new project
+    rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse) {}
+    // GetProject return a project's detail information
+    rpc GetProject(GetProjectRequest) returns (GetProjectResponse) {}
+    // GetProjects return user's project list
+    rpc GetProjects(GetProjectsRequest) returns (GetProjectsResponse) {}
+    // DeleteProject delete a specifed project
+    rpc DeleteProject(DeleteProjectRequest) returns (DeleteProjectResponse) {}
+    // UpdateProject update a specifed project
+    rpc UpdateProject(UpdateProjectRequest) returns (UpdateProjectResponse) {}
+
+    //
+    // Project device
+    // User can add devices to a specified project, these devices are instances of some device model
+    // After adding devices, the widget in views can bind data or variables to specified device
+    // 
+    // AddDevice add a device into the project
+    rpc AddDevice(AddDeviceRequest) returns (AddDeviceResponse) {}
+    // AddDevices add a batch of devices into the project
+    rpc AddDevices(AddDevicesRequest) returns (AddDevicesResponse) {}
+    // DeleteDevice remove a device from project
+    rpc DeleteDevice(DeleteDeviceRequest) returns (DeleteDeviceResponse) {}
+    // DeleteDevices remove a batch of devices from project
+    rpc DeleteDevices(DeleteDevicesRequest) returns (DeleteDevicesResponse) {}
+    // GetDevices return a project's all devices ids
+    rpc GetDevices(GetDevicesRequest) returns (GetDevicesResponse) {}
+
+    // Workshop
+    // AddWorkshop add a workshop into the project
+    rpc AddWorkshop(AddWorkshopRequest) returns (AddWorkshopResponse) {}
+    // DeleteWorkshop remove a workshop from project
+    rpc DeleteWorkshop(DeleteWorkshopRequest) returns (DeleteWorkshopResponse) {}
+    // GetWorkshops return a project's all workshops 
+    rpc GetWorkshops(GetWorkshopsRequest) returns (GetWorkshopsResponse) {}
+    // GetWorkshop return specified workshop 
+    rpc GetWorkshop(GetWorkshopRequest) returns (GetWorkshopResponse) {}
+    // UpdateWorkshop update specified workshop
+    rpc UpdateWorkshop(UpdateWorkshopRequest) returns (UpdateWorkshopResponse) {}
+
+    // Project View
+    // CreateView create a new project's view
+    rpc CreateView(CreateViewRequest) returns (CreateViewResponse) {}
+    // DeleteView delete a project's view
+    rpc DeleteView(DeleteViewRequest) returns (DeleteViewResponse) {}
+    // GetViews return a project's all views
+    rpc GetViews(GetViewsRequest) returns (GetViewsResponse) {}
+    // GetView return a view's detail informaiton
+    rpc GetView(GetViewRequest) returns (GetViewResponse) {}
+    // UpdateView update a specified view
+    rpc UpdateView(UpdateViewRequest) returns (UpdateViewResponse) {}
+    
+    // Variables
+    // CreateVariable create a new variable in view or project
+    rpc CreateVariable(CreateVariableRequest) returns (CreateVariableResponse) {}
+    // GetVariable return a variable's detail information
+    rpc GetVariable(GetVariableRequest) returns (GetVariableResponse) {}
+    // GetVariables return all variables in a view or project
+    rpc GetVariables(GetVariablesRequest) returns (GetVariablesResponse) {}
+    // DeleteVariable delete a variable in view or project
+    rpc DeleteVariable(DeleteVariableRequest) returns (DeleteVariableResponse) {}
+    // DeleteVariables delete a batch of variables
+    rpc DeleteVariables(DeleteVariablesRequest) returns (DeleteVariablesResponse) {}
+    // UpdateVariable update a specified variable in view or project
+    rpc UpdateVariable(UpdateVariableRequest) returns (UpdateVariableResponse) {}
+
+}
+
+// Project message definitions
+message CreateProjectRequest {
+    string userID = 1;
+    Project project = 2;
+}
+message CreateProjectResponse {
+    Project project = 1;
+}
+
+message GetProjectRequest {
+    string userID = 1;
+    string projectID = 2;
+}
+message GetProjectResponse {
+    Project project = 1;
+}
+message GetProjectsRequest {
+    string userID = 1;
+}
+message GetProjectsResponse {
+    repeated Project projects = 1;
+}
+message DeleteProjectRequest {
+    string userID = 1;
+    string projectID = 2;
+}
+message DeleteProjectResponse {}
+message UpdateProjectRequest {
+    string userID = 1;
+    Project project = 2;
+}
+message UpdateProjectResponse {}
+
+// Project Device message definitions
+message AddDeviceRequest {
+    string deviceID = 1;
+    string projectID = 2;
+    string userID = 3;
+    grpc.dmms.v1.Device device = 4; // TODO
+}
+message AddDeviceResponse {}
+
+message AddDevicesRequest {
+    repeated string deviceIDs = 1;
+    string projectID = 2;
+    string userID = 3;
+}
+message AddDevicesResponse {}
+
+message DeleteDeviceRequest {
+    string deviceID = 1;
+    string projectID = 2;
+    string userID = 3;
+}
+message DeleteDeviceResponse {}
+
+message DeleteDevicesRequest {
+    repeated string deviceIDs = 1;
+    string projectID = 2;
+    string userID = 3;
+}
+message DeleteDevicesResponse {}
+
+message GetDevicesRequest {
+    string projectID = 1;
+    string userID = 2;
+}
+message GetDevicesResponse {
+    repeated string deviceIDs = 1;
+}
+
+// Workshop message definitions
+message AddWorkshopRequest {
+    string userID = 1;
+    string projectID = 2;
+    Workshop workshop = 3;
+}
+message AddWorkshopResponse {}
+
+message DeleteWorkshopRequest {
+    string userID = 1;
+    string projectID = 2;
+    string workshopID = 3;
+}
+message DeleteWorkshopResponse {}
+
+message GetWorkshopsRequest {
+    string userID = 1;
+    string projectID = 2;
+}
+message GetWorkshopsResponse {
+    repeated Workshop workshops = 1;
+}
+
+message GetWorkshopRequest {
+    string userID = 1;
+    string projectID = 2;
+    string workshopID = 3;
+}
+message GetWorkshopResponse {
+    Workshop workshop = 1;
+}
+
+message UpdateWorkshopRequest {
+    string userID = 1;
+    string projectID = 2;
+    Workshop workshop = 3;
+}
+message UpdateWorkshopResponse {}
+
+// Project View message definitions
+message CreateViewRequest {
+    string userID = 1;
+    string projectID = 2;
+    View view = 3;
+}
+message CreateViewResponse {
+    View view = 1;
+}
+message DeleteViewRequest {
+    string userID = 1;
+    string projectID = 2;
+    string workshopID = 3;
+    string viewID = 4;
+}
+message DeleteViewResponse {}
+
+message GetViewRequest {
+    string userID = 1;
+    string projectID = 2;
+    string workshopID = 3;
+    string viewID = 4;
+}
+message GetViewResponse {
+    View view = 1;
+}
+
+message GetViewsRequest {
+    string userID = 1;
+    string projectID = 2;
+    string workshopID = 3;
+}
+message GetViewsResponse {
+    repeated View views = 1;
+}
+
+message UpdateViewRequest {
+    string userID = 1;
+    string projectID = 2;
+    string workshopID = 3;
+    View view = 4;
+}
+message UpdateViewResponse {}
+
+// Variable
+message CreateVariableRequest {
+    string userID = 1;
+    string projectID = 2;
+    Variable variable = 3;
+}
+message CreateVariableResponse {}
+
+message GetVariableRequest {
+    string userID = 1;
+    string projectID = 2;
+    string workshopID = 3;
+    string variableID = 4;
+}
+message GetVariableResponse {
+    Variable variable = 1;
+}
+
+message GetVariablesRequest {
+    string userID = 1;
+    string projectID = 2;
+    string workshopID = 3;
+}
+
+message GetVariablesResponse {
+    repeated Variable variables = 1;
+}
+
+message DeleteVariableRequest {
+    string userID = 1;
+    string projectID = 2;
+    string workshopID = 3;
+    string variableID = 4;
+}
+message DeleteVariableResponse {}
+
+message DeleteVariablesRequest {
+    string userID = 1;
+    string projectID = 2;
+    string workshopID = 3;
+   repeated string variableIDs = 4;
+}
+message DeleteVariablesResponse {}
+
+message UpdateVariableRequest {
+    string userID = 1;
+    string projectID = 2;
+    Variable variable = 3;
+}
+message UpdateVariableResponse {}

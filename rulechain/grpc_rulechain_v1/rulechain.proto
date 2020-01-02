@@ -1,0 +1,95 @@
+syntax = "proto3";
+// import "google/protobuf/timestamp.proto";
+
+package grpc.rulechain.v1;
+
+service RuleChainService {
+    // RuleChain 
+    rpc CheckRuleChain(CheckRuleChainRequest) returns (CheckRuleChainResponse) {}
+    rpc CreateRuleChain(CreateRuleChainRequest) returns (CreateRuleChainResponse) {}
+    rpc DeleteRuleChain(DeleteRuleChainRequest) returns (DeleteRuleChainResponse){}
+    rpc UpdateRuleChain(UpdateRuleChainRequest) returns (UpdateRuleChainResponse) {}
+    rpc GetRuleChain(GetRuleChainRequest) returns (GetRuleChainResponse) {}
+    rpc GetUserRuleChains(GetUserRuleChainsRequest) returns (GetUserRuleChainsResponse) {}
+    rpc StartRuleChain(StartRuleChainRequest) returns (StartRuleChainResponse) {}
+    rpc StopRuleChain(StopRuleChainRequest) returns (StopRuleChainResponse) {}
+}
+
+message RuleChain {
+    string user_id = 1;
+    string rule_name = 2;
+    string type = 3;
+    string domain = 4;
+    string status = 6;
+    bytes payload = 7;
+}
+
+message CheckRuleChainRequest {
+    RuleChain rule = 1;
+}
+
+message CheckRuleChainResponse {
+    bool valid = 1;
+    repeated string reasons = 2;
+}
+
+message CreateRuleChainRequest {
+    RuleChain rule = 1;
+}
+
+message PullerAttribute {
+    string endpoint_URL = 1;
+    string port = 2;
+}
+
+message TLSAttribute {}
+
+
+message CreateRuleChainResponse {}
+// Delete RuleChain
+message DeleteRuleChainRequest {
+    string user_id = 1;
+    string rule_name = 2;
+    string type = 3;
+    string domain_id = 4;
+}
+
+message DeleteRuleChainResponse {}
+
+// Update RuleChain
+message UpdateRuleChainRequest {
+    RuleChain rule = 1;
+}
+
+message UpdateRuleChainResponse {}
+message GetRuleChainRequest {
+    string user_id = 1;
+    string domain = 2;
+    string rule_name = 3;
+}
+
+message GetRuleChainResponse {
+    RuleChain rule = 1;
+}
+
+message GetUserRuleChainsRequest {
+    string user_id = 1;
+    string domain = 2;
+}
+message GetUserRuleChainsResponse {
+    repeated RuleChain rules = 1;
+}
+
+message StartRuleChainRequest {
+    string user_id = 1;
+    string rule_name = 2;
+    string type = 3;
+}
+message StartRuleChainResponse {}
+message StopRuleChainRequest {
+    string user_id = 1;
+    string rule_name = 2;
+    string type = 3;
+}
+message StopRuleChainResponse {}
+

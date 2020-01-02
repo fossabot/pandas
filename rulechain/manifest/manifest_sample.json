@@ -1,0 +1,361 @@
+{
+  "ruleChain": {
+    "additionalInfo": {
+      "description": "Test"
+    },
+    "id": "",
+    "name": "Test",
+    "firstRuleNodeId": null,
+    "root": false,
+    "debugMode": false,
+    "configuration": null
+  },
+  "metadata": {
+    "firstNodeIndex": 13,
+    "nodes": [
+      {
+        "additionalInfo": {
+          "layoutX": 1011,
+          "layoutY": 525
+        },
+        "type": "CreateAlarmNode",
+        "name": "16",
+        "debugMode": false,
+        "configuration": {
+          "jsScript": "return {\n    msg: msg,\n    metadata: metadata,\n    msgType: msgType\n};"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "2 3",
+          "layoutX": 715,
+          "layoutY": 151
+        },
+        "type": "CheckMessageNode",
+        "name": "2",
+        "debugMode": false,
+        "configuration": {
+          "messageNames": [
+            "2",
+            "3"
+          ],
+          "metadataNames": [],
+          "checkAllKeys": false
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "4",
+          "layoutX": 711,
+          "layoutY": 227
+        },
+        "type": "GetCustomerAttributeNode",
+        "name": "4",
+        "debugMode": false,
+        "configuration": {
+          "attrMapping": {
+            "4": "4",
+            "temperature": "tempo"
+          },
+          "telemetry": false
+        }
+      },
+      {
+        "additionalInfo": {
+          "layoutX": 706,
+          "layoutY": 309
+        },
+        "type": "GetTelemetryNode",
+        "name": "5",
+        "debugMode": false,
+        "configuration": {
+          "startInterval": 2,
+          "endInterval": 1,
+          "startIntervalPattern": "",
+          "endIntervalPattern": "",
+          "useMetadataIntervalPatterns": false,
+          "startIntervalTimeUnit": "MINUTES",
+          "endIntervalTimeUnit": "MINUTES",
+          "fetchMode": "FIRST",
+          "orderBy": "ASC",
+          "latestTsKeyNames": []
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "6",
+          "layoutX": 989,
+          "layoutY": 207
+        },
+        "type": "ChangeOriginatorNode",
+        "name": "6",
+        "debugMode": false,
+        "configuration": {
+          "originatorSource": "CUSTOMER",
+          "relationsQuery": {
+            "direction": "FROM",
+            "maxLevel": 1,
+            "filters": [
+              {
+                "relationType": "Contains",
+                "entityTypes": []
+              }
+            ],
+            "fetchLastLevelOnly": false
+          }
+        }
+      },
+      {
+        "additionalInfo": {
+          "layoutX": 995,
+          "layoutY": 279
+        },
+        "type": "MsgToEmailNode",
+        "name": "7",
+        "debugMode": false,
+        "configuration": {
+          "fromTemplate": "info@testmail.org",
+          "toTemplate": "${userEmail}",
+          "ccTemplate": null,
+          "bccTemplate": null,
+          "subjectTemplate": "Device ${deviceType} temperature high",
+          "bodyTemplate": "Device ${deviceName} has high temperature ${temp}"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "8",
+          "layoutX": 989,
+          "layoutY": 89
+        },
+        "type": "AssignToCustomerNode",
+        "name": "8",
+        "debugMode": false,
+        "configuration": {
+          "customerNamePattern": "8",
+          "customerCacheExpiration": 300,
+          "createCustomerIfNotExists": false
+        }
+      },
+      {
+        "additionalInfo": {
+          "layoutX": 1005,
+          "layoutY": 362
+        },
+        "type": "SnsNode",
+        "name": "9",
+        "debugMode": false,
+        "configuration": {
+          "topicArnPattern": "arn:aws:sns:us-east-1:123456789012:MyNewTopic",
+          "accessKeyId": "9",
+          "secretAccessKey": "9",
+          "region": "us-east-1"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "10",
+          "layoutX": 703,
+          "layoutY": 392
+        },
+        "type": "SynchronizationBeginNode",
+        "name": "10",
+        "debugMode": false,
+        "configuration": {
+          "version": 0
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "11",
+          "layoutX": 1015,
+          "layoutY": 445
+        },
+        "type": "SendEmailNode",
+        "name": "11",
+        "debugMode": false,
+        "configuration": {
+          "useSystemSmtpSettings": true,
+          "smtpHost": "localhost",
+          "smtpPort": 25,
+          "username": null,
+          "password": null,
+          "smtpProtocol": "smtp",
+          "timeout": 10000,
+          "enableTls": false
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "12",
+          "layoutX": 715,
+          "layoutY": 483
+        },
+        "type": "SendRPCReplyNode",
+        "name": "12",
+        "debugMode": false,
+        "configuration": {
+          "requestIdMetaDataAttribute": "requestId"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "13",
+          "layoutX": 1240,
+          "layoutY": 88
+        },
+        "type": "CheckMessageNode",
+        "name": "13",
+        "debugMode": false,
+        "configuration": {
+          "messageNames": [
+            "13"
+          ],
+          "metadataNames": [],
+          "checkAllKeys": true
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "14",
+          "layoutX": 1245,
+          "layoutY": 180
+        },
+        "type": "GetCustomerDetailsNode",
+        "name": "14",
+        "debugMode": false,
+        "configuration": {
+          "detailsList": [
+            "TITLE"
+          ],
+          "addToMetadata": false
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "1",
+          "layoutX": 339,
+          "layoutY": 152
+        },
+        "type": "MsgTypeSwitchNode",
+        "name": "1",
+        "debugMode": false,
+        "configuration": {
+          "version": 0
+        }
+      }
+    ],
+    "connections": [
+      {
+        "fromIndex": 1,
+        "toIndex": 6,
+        "type": "True"
+      },
+      {
+        "fromIndex": 1,
+        "toIndex": 12,
+        "type": "True"
+      },
+      {
+        "fromIndex": 2,
+        "toIndex": 4,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 2,
+        "toIndex": 5,
+        "type": "Failure"
+      },
+      {
+        "fromIndex": 3,
+        "toIndex": 7,
+        "type": "Failure"
+      },
+      {
+        "fromIndex": 4,
+        "toIndex": 12,
+        "type": "Failure"
+      },
+      {
+        "fromIndex": 6,
+        "toIndex": 11,
+        "type": "Failure"
+      },
+      {
+        "fromIndex": 8,
+        "toIndex": 9,
+        "type": "Failure"
+      },
+      {
+        "fromIndex": 13,
+        "toIndex": 1,
+        "type": "Post attributes"
+      },
+      {
+        "fromIndex": 13,
+        "toIndex": 2,
+        "type": "RPC Request from Device"
+      },
+      {
+        "fromIndex": 13,
+        "toIndex": 2,
+        "type": "Other"
+      },
+      {
+        "fromIndex": 13,
+        "toIndex": 2,
+        "type": "Alarm Acknowledged"
+      },
+      {
+        "fromIndex": 13,
+        "toIndex": 2,
+        "type": "Post attributes"
+      },
+      {
+        "fromIndex": 13,
+        "toIndex": 2,
+        "type": "Post telemetry"
+      },
+      {
+        "fromIndex": 13,
+        "toIndex": 3,
+        "type": "Other"
+      },
+      {
+        "fromIndex": 13,
+        "toIndex": 8,
+        "type": "RPC Request from Device"
+      },
+      {
+        "fromIndex": 13,
+        "toIndex": 10,
+        "type": "Alarm Cleared"
+      }
+    ],
+     "ruleChainConnections": [
+      {
+        "fromIndex": 0,
+        "targetRuleChainId": {
+          "entityType": "RULE_CHAIN",
+          "id": "a3105900-1bf0-11ea-9b84-bf2f375eda53"
+        },
+        "additionalInfo": {
+          "layoutX": 475,
+          "layoutY": 241,
+          "ruleChainNodeId": "rule-chain-node-3"
+        },
+        "type": "Failure"
+      }
+    ]
+
+
+
+
+
+
+
+
+
+    
+  }
+}

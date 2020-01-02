@@ -1,0 +1,97 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+
+package grpc.dmms.v1;
+
+message Device {
+    string ID = 1;
+    string name = 3;
+    string Description = 4;
+    string status = 5;
+    string userID = 6;
+    string projectId = 7;
+    string modelID = 8;
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp last_updated_at = 10;
+    DataModel data_model = 11;
+}
+
+message Endpoint {
+    string path = 1;
+    string format = 2;
+    map<string, string> models = 3;
+}
+message DataModel {
+    string name = 1;
+    string ID = 2;
+    string domain = 3;
+    repeated DataModelField data_model_fields= 4;
+}
+
+message DataModelField {
+    string key = 1;
+    string value = 2;
+    string type = 3;
+    string default_value = 4;
+}
+
+message DeviceModel {
+    string ID = 1;
+    string name = 2;
+    string description = 3;
+    string domain = 4;
+    string version = 5;
+    repeated Endpoint endpoints = 6;
+    repeated DataModel dataModels = 7;
+    bool isLogical = 8;
+    bool isCompound = 9;
+    repeated string ChildModels = 10;
+    google.protobuf.Timestamp created_at = 11;
+    google.protobuf.Timestamp last_updated_at = 12;
+    string userID = 13;
+    string Icon = 14;
+}
+
+
+
+
+service DMMS {
+    // DeviceModel
+    rpc CreateDeviceModel(CreateDeviceModelRequest) returns (CreateDeviceModelResponse) {}
+    rpc GetDeviceModel(GetDeviceModelRequest) returns (GetDeviceModelResponse) {}
+    rpc GetDeviceModelWithName(GetDeviceModelWithNameRequest) returns (GetDeviceModelWithNameResponse) {}
+    rpc DeleteDeviceModel(DeleteDeviceModelRequest) returns (DeleteDeviceModelResponse) {}
+    rpc UpdateDeviceModel(UpdateDeviceModelRequest) returns (UpdateDeviceModelResponse) {}
+    rpc GetDeviceModels(GetDeviceModelsRequest) returns (GetDeviceModelsResponse) {}
+    rpc GetDeviceModelBundle(GetDeviceModelBundleRequest) returns (GetDeviceModelBundleResponse) {}
+
+    // Device Management
+}
+
+message CreateDeviceModelRequest {
+    string user_id = 1;
+    string name = 2;
+    bytes payload = 3;
+}
+
+message CreateDeviceModelResponse {}
+message GetDeviceModelRequest {}
+message GetDeviceModelResponse {}
+message GetDeviceModelWithNameRequest {}
+message GetDeviceModelWithNameResponse {}
+message DeleteDeviceModelRequest {}
+message DeleteDeviceModelResponse {}
+
+message UpdateDeviceModelRequest {
+    string user_id = 1;
+    string model_id = 2;
+    bytes payload = 3;
+}
+message UpdateDeviceModelResponse {}
+message GetDeviceModelsRequest {}
+message GetDeviceModelsResponse {}
+message GetDeviceModelBundleRequest {}
+message GetDeviceModelBundleResponse {}
+
+
+

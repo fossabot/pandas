@@ -1,0 +1,48 @@
+//  Licensed under the Apache License, Version 2.0 (the "License"); you may
+//  not use this file except in compliance with the License. You may obtain
+//  a copy of the License at
+//
+//        http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+//  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+//  License for the specific language governing permissions and limitations
+//  under the License.
+package message
+
+import "fmt"
+
+type MessageHandlerFunc func(msg Message, ctx interface{})
+
+type MessageFactory interface {
+	CreateMessage(topic string) Message
+}
+
+type Consumer interface {
+	WithClientId(clientId string)
+	Subscribe(topic string, queueName string, handler MessageHandlerFunc, ctx interface{}) error
+	UnSubscribe(topic string) error
+	Start() error
+	Close()
+	SetMessageFactory(factory MessageFactory)
+}
+
+func NewConsumer(c *Config) (Consumer, error) {
+	switch c.Backend {
+	case MessageBackendKafka:
+		consumer, err := newKafkaConsumer(c)
+		if consumer != nil {
+			consumer.SetMessageFactory(&builtinFactory{})
+		}
+		return consumer, err
+
+	case MessageBackendRabbit:
+		consumer, err := newRabbitConsumer(c)
+		if consumer != nil {
+			consumer.SetMessageFactory(&builtinFactory{})
+		}
+		return consumer, err
+	}
+	return nil, fmt.Errorf("invalid message backend '%s'", c.Hosts)
+}

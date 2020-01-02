@@ -1,0 +1,14 @@
+syntax = "proto3";
+// import "google/protobuf/timestamp.proto";
+
+package grpc.scada.v1;
+
+service Scada {
+    rpc GetWidgets(GetWidgetsRequest) returns (GetWidgetsResponse) {}
+}
+
+message GetWidgetsRequest {}
+message GetWidgetsResponse {}
+
+
+
