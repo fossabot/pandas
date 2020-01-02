@@ -13,16 +13,20 @@ package dmms
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"reflect"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"github.com/cloustone/pandas/dmms/converter"
 	pb "github.com/cloustone/pandas/dmms/grpc_dmms_v1"
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/factory"
-	"github.com/cloustone/pandas/models/manifest"
 	"github.com/sirupsen/logrus"
 )
 
@@ -35,6 +39,21 @@ func NewDeviceManagementService() *DeviceManagementService {
 	return &DeviceManagementService{}
 }
 
+// grpcError return grpc error according to models errors
+func grpcError(err error) error {
+	if err == nil {
+		return nil
+	} else if errors.Is(err, factory.ErrObjectNotFound) {
+		return status.Errorf(codes.NotFound, "%w", err)
+	} else if errors.Is(err, factory.ErrObjectAlreadyExist) {
+		return status.Errorf(codes.AlreadyExists, "%w", err)
+	} else if errors.Is(err, factory.ErrObjectInvalidArg) {
+		return status.Errorf(codes.InvalidArgument, "%w", err)
+	} else {
+		return status.Errorf(codes.Internal, "%s", err)
+	}
+}
+
 // LoadDefaultDeviceModels walk through the specified path and load model
 // deinitiontion into manager
 func (s *DeviceManagementService) loadPresetDeviceModels(path string) error {
@@ -44,9 +63,7 @@ func (s *DeviceManagementService) loadPresetDeviceModels(path string) error {
 		if fi.IsDir() {
 			return nil
 		}
-		contentType := models.BundleSchemeWithNameSuffix(fi.Name())
-		switch contentType {
-		case models.BundleSchemeYaml, models.BundleSchemeJSON:
+		if sheme := models.BundleSchemeWithNameSuffix(fi.Name()); sheme == models.BundleSchemeJSON {
 			logrus.Debugf("model definition file '%s' found", filename)
 
 			data, err := ioutil.ReadFile(filename)
@@ -54,14 +71,12 @@ func (s *DeviceManagementService) loadPresetDeviceModels(path string) error {
 				logrus.WithError(err).Errorf("read file '%s' failed", filename)
 				return err
 			}
-			deviceModel, err := createDeviceModelInternal(
-				models.NewBundle(filename, models.BundleKindDefinition, data, contentType),
-			)
-			if err != nil {
+			deviceModel := models.DeviceModel{}
+			if err := json.Unmarshal(data, &deviceModel); err != nil {
 				logrus.WithError(err)
 				return err
 			}
-			deviceModels = append(deviceModels, deviceModel)
+			deviceModels = append(deviceModels, &deviceModel)
 		}
 		return nil
 	}
@@ -72,40 +87,12 @@ func (s *DeviceManagementService) loadPresetDeviceModels(path string) error {
 	}
 
 	// These models should be upload to backend database after getting models
-	// mgr.repo.SaveDeviceModels(deviceModels)
+	pf := factory.NewFactory(reflect.TypeOf(models.DeviceModel{}).Name())
+	owner := factory.NewOwner("-") // builtin owner
+	for _, deviceModel := range deviceModels {
+		pf.Save(owner, deviceModel)
+	}
 	return nil
-}
-
-func createDeviceModelInternal(b models.Bundle) (*models.DeviceModel, error) {
-	model, err := manifest.ParseModelDefinition(b.Content(), string(b.Scheme()))
-	if err != nil {
-		logrus.WithError(err)
-		return nil, err
-	}
-
-	deviceModel := models.NewDeviceModel().WithName(model.Name).
-		WithDescription(model.Description).
-		WithDomain(model.Domain).
-		WithVersion(model.Version).
-		WithLogical(model.IsLogical).
-		WithCompound(model.IsCompound).
-		WithIcon(model.Icon)
-
-	// Endpoints
-	for _, ep := range model.Endpoints {
-		nep := models.NewEndpoint().WithPath(ep.Path).
-			WithDataModel(ep.DataModel, ep.Permission)
-		deviceModel.AddEndpoint(nep)
-	}
-	// DataModels
-	for _, dataModel := range model.DataModels {
-		ndm := models.NewDataModel().WithName(dataModel.Name)
-		for _, field := range dataModel.Fields {
-			ndm.AddField(models.NewDataModelField(field.Key, field.Type, field.DefaultValue))
-		}
-	}
-	// Child Models
-	return deviceModel, nil
 }
 
 // CreateDeviceModel create device model with device model bundle,
@@ -115,19 +102,12 @@ func createDeviceModelInternal(b models.Bundle) (*models.DeviceModel, error) {
 // User can also using the method to create device model with inmemory
 // bundle, for this case, the device should also be save to repo
 func (s *DeviceManagementService) CreateDeviceModel(ctx context.Context, in *pb.CreateDeviceModelRequest) (*pb.CreateDeviceModelResponse, error) {
-	deviceModel2 := converter.NewDeviceModel2Model(in.DeviceModel)
+	deviceModel := converter.NewDeviceModel2Model(in.DeviceModel)
 
 	pf := factory.NewFactory(reflect.TypeOf(models.DeviceModel{}).Name())
-	owner := factory.NewOwner(deviceModel2.ID)
-	bundle := models.NewBundle(deviceModel2.Name, models.BundleKindDefinition, nil, models.BundleSchemeYaml)
-
-	deviceModel, err := createDeviceModelInternal(bundle)
-	if err != nil {
-		logrus.WithError(err).Errorf("create device model failed")
-		return nil, err
-	}
-	pf.Save(owner, deviceModel)
-	return &pb.CreateDeviceModelResponse{}, nil
+	owner := factory.NewOwner(in.UserID)
+	_, err := pf.Save(owner, deviceModel)
+	return &pb.CreateDeviceModelResponse{}, grpcError(err)
 }
 
 func (s *DeviceManagementService) GetDeviceModel(ctx context.Context, in *pb.GetDeviceModelRequest) (*pb.GetDeviceModelResponse, error) {
@@ -145,21 +125,14 @@ func (s *DeviceManagementService) DeleteDeviceModel(ctx context.Context, in *pb.
 // presentation in web console
 func (s *DeviceManagementService) UpdateDeviceModel(ctx context.Context, in *pb.UpdateDeviceModelRequest) (*pb.UpdateDeviceModelResponse, error) {
 	pf := factory.NewFactory(reflect.TypeOf(models.DeviceModel{}).Name())
-	owner := factory.NewOwner(in.UserId)
-	bundle := models.NewBundle("", models.BundleKindDefinition, in.Payload, models.BundleSchemeYaml)
+	owner := factory.NewOwner(in.UserID)
 
-	if _, err := pf.Get(owner, in.ModelId); err != nil {
-		return nil, models.InvalidModelError.With(in.ModelId)
+	if _, err := pf.Get(owner, in.ModelID); err != nil {
+		return nil, grpcError(err)
 	}
-
-	deviceModel, err := createDeviceModelInternal(bundle)
-	if err != nil {
-		logrus.WithError(err).Errorf("model factory update device model failed")
-		return nil, err
-	}
-
-	pf.Update(owner, deviceModel)
-	return &pb.UpdateDeviceModelResponse{}, nil
+	deviceModel := converter.NewDeviceModel2Model(in.DeviceModel)
+	err := pf.Update(owner, deviceModel)
+	return &pb.UpdateDeviceModelResponse{}, grpcError(err)
 }
 
 func (s *DeviceManagementService) GetDeviceModels(ctx context.Context, in *pb.GetDeviceModelsRequest) (*pb.GetDeviceModelsResponse, error) {

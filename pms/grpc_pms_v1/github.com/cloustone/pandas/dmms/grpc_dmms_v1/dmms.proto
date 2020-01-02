@@ -53,8 +53,6 @@ message DeviceModel {
 }
 
 
-
-
 service DMMS {
     // DeviceModel
     rpc CreateDeviceModel(CreateDeviceModelRequest) returns (CreateDeviceModelResponse) {}
@@ -69,7 +67,7 @@ service DMMS {
 }
 
 message CreateDeviceModelRequest {
-    string user_id = 1;
+    string userID = 1;
     DeviceModel device_model = 2;
 }
 
@@ -82,9 +80,9 @@ message DeleteDeviceModelRequest {}
 message DeleteDeviceModelResponse {}
 
 message UpdateDeviceModelRequest {
-    string user_id = 1;
-    string model_id = 2;
-    bytes payload = 3;
+    string userID = 1;
+    string modelID = 2;
+    DeviceModel device_model = 3;
 }
 message UpdateDeviceModelResponse {}
 message GetDeviceModelsRequest {}
