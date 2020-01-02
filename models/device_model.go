@@ -23,21 +23,21 @@ import (
 // DeviceModel DeviceModel
 // swagger:model DeviceModel
 type DeviceModel struct {
-	Name        string       `json:"name"`
-	ID          string       `json:"id"`
-	Description string       `json:"description"`
-	Domain      string       `json:"domain"`
-	Version     string       `json:"version"`
-	Endpoints   []*Endpoint  `json:"endpoints"`
-	DataModels  []*DataModel `json:"dataModel"`
-	IsLogical   bool         `json:"isLogical"`
-	IsCompound  bool         `json:"isCompound"`
-	ChildModels []string     `json:"childModels"`
-	IsPreset    bool         `json:"isPreset"`
-	UserID      string       `json:"userId"`
-	CreatedAt   time.Time    `json:"createdAt"`
-	UpdatedAt   time.Time    `json:"updatedAt"`
-	Icon        string       `json:"icon"`
+	Name          string       `json:"name"`
+	ID            string       `json:"id"`
+	Description   string       `json:"description"`
+	Domain        string       `json:"domain"`
+	Version       string       `json:"version"`
+	Endpoints     []*Endpoint  `json:"endpoints"`
+	DataModels    []*DataModel `json:"dataModel"`
+	IsLogical     bool         `json:"isLogical"`
+	IsCompound    bool         `json:"isCompound"`
+	ChildModels   []string     `json:"childModels"`
+	IsPreset      bool         `json:"isPreset"`
+	UserID        string       `json:"userId"`
+	CreatedAt     time.Time    `json:"createdAt"`
+	LastUpdatedAt time.Time    `json:"updatedAt"`
+	Icon          string       `json:"icon"`
 }
 
 // NewDeviceModel ...

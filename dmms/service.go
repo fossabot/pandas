@@ -18,6 +18,7 @@ import (
 	"path/filepath"
 	"reflect"
 
+	"github.com/cloustone/pandas/dmms/converter"
 	pb "github.com/cloustone/pandas/dmms/grpc_dmms_v1"
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/factory"
@@ -114,10 +115,11 @@ func createDeviceModelInternal(b models.Bundle) (*models.DeviceModel, error) {
 // User can also using the method to create device model with inmemory
 // bundle, for this case, the device should also be save to repo
 func (s *DeviceManagementService) CreateDeviceModel(ctx context.Context, in *pb.CreateDeviceModelRequest) (*pb.CreateDeviceModelResponse, error) {
+	deviceModel2 := converter.NewDeviceModel2Model(in.DeviceModel)
 
 	pf := factory.NewFactory(reflect.TypeOf(models.DeviceModel{}).Name())
-	owner := factory.NewOwner(in.UserId)
-	bundle := models.NewBundle(in.Name, models.BundleKindDefinition, in.Payload, models.BundleSchemeYaml)
+	owner := factory.NewOwner(deviceModel2.ID)
+	bundle := models.NewBundle(deviceModel2.Name, models.BundleKindDefinition, nil, models.BundleSchemeYaml)
 
 	deviceModel, err := createDeviceModelInternal(bundle)
 	if err != nil {

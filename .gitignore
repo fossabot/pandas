@@ -11,3 +11,4 @@ debug
 *.tar
 .idea
 go.mod
+go.sum
