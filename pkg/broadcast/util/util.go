@@ -17,6 +17,10 @@ import (
 	"github.com/cloustone/pandas/pkg/broadcast/rabbitmq"
 )
 
+var (
+	globalBroadcast broadcast.Broadcast
+)
+
 // NewSynchronizer will create broadcastizer according to environment's setting
 func NewBroadcast(options *broadcast.ServingOptions) broadcast.Broadcast {
 	switch options.Method {
@@ -26,4 +30,24 @@ func NewBroadcast(options *broadcast.ServingOptions) broadcast.Broadcast {
 		return inproc.NewBroadcast()
 	}
 	return nil
+}
+
+// InitializeBroadcast initialize the global broadcast with a service based path
+func InitializeBroadcast(servingOptions *broadcast.ServingOptions, rootPath string) {
+	globalBroadcast = NewBroadcast(servingOptions).WithRootPath(rootPath)
+	globalBroadcast.AsMember()
+}
+
+// RegisterObserver register an observer on the global broadcast
+func RegisterObserver(obs broadcast.Observer, path string) {
+	globalBroadcast.RegisterObserver(path, obs)
+}
+
+// Notify fire the global broadcast
+func Notify(action, path string) {
+	globalBroadcast.Notify(broadcast.Notification{
+		Path:   path,
+		Action: action,
+		Param:  path, // TODO
+	})
 }

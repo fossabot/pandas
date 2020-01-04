@@ -15,7 +15,7 @@ import (
 	"context"
 
 	"github.com/cloustone/pandas/pkg/broadcast"
-	syncutil "github.com/cloustone/pandas/pkg/broadcast/util"
+	broadcast_util "github.com/cloustone/pandas/pkg/broadcast/util"
 	pb "github.com/cloustone/pandas/rulechain/grpc_rulechain_v1"
 	logr "github.com/sirupsen/logrus"
 )
@@ -43,12 +43,10 @@ func NewRuleChainService() *RuleChainService {
 }
 
 // Initialize will add prestart behaivor such as broadcastization initialization
-func (s *RuleChainService) Initialize(syncOptions *broadcast.ServingOptions) {
+func (s *RuleChainService) Initialize(options *broadcast.ServingOptions) {
 	s.controllers = loadControllers()
-	broadcastizer = syncutil.NewBroadcast(syncOptions).WithRootPath("pandas/rulechain")
-	broadcastizer.AsMember()
 	for path, _ := range s.controllers {
-		broadcastizer.RegisterObserver(path, s)
+		broadcast_util.RegisterObserver(s, path)
 	}
 }
 
@@ -72,11 +70,7 @@ func loadControllers() map[string]Controller {
 
 // notify is internal helper to simplify broadcastization notificaiton
 func notify(action string, path string) {
-	broadcastizer.Notify(broadcast.Notification{
-		Path:   path,
-		Action: action,
-		Param:  path,
-	})
+	broadcast_util.Notify(action, path)
 }
 
 func (s *RuleChainService) CheckRuleChain(context.Context, *pb.CheckRuleChainRequest) (*pb.CheckRuleChainResponse, error) {
