@@ -177,3 +177,40 @@ func (s *DeviceManagementService) GetDeviceModels(ctx context.Context, in *pb.Ge
 		DeviceModels: converter.NewDeviceModels2(deviceModels),
 	}, nil
 }
+
+// Device Management
+
+// AddDevice add new device into dmms and broadcast the action
+func (s *DeviceManagementService) AddDevice(ctx context.Context, in *pb.AddDeviceRequest) (*pb.AddDeviceResponse, error) {
+	return nil, nil
+}
+
+// GetDevice return specified device
+func (s *DeviceManagementService) GetDevice(ctx context.Context, in *pb.GetDeviceRequest) (*pb.GetDeviceResponse, error) {
+	return nil, nil
+}
+
+// UpdateDevice update specified device
+func (s *DeviceManagementService) UpdateDevice(ctx context.Context, in *pb.UpdateDeviceRequest) (*pb.UpdateDeviceResponse, error) {
+	return nil, nil
+}
+
+// GetDevices return user's all devices
+func (s *DeviceManagementService) GetDevices(ctx context.Context, in *pb.GetDevicesRequest) (*pb.GetDevicesResponse, error) {
+	return nil, nil
+}
+
+// DeleteDevice will remove specified device from dmms
+func (s *DeviceManagementService) DeleteDevice(ctx context.Context, in *pb.DeleteDeviceRequest) (*pb.DeleteDeviceResponse, error) {
+	return nil, nil
+}
+
+// SetDeviceStatus change device status and trigger related actions
+func (s *DeviceManagementService) SetDeviceStatus(ctx context.Context, in *pb.SetDeviceStatusRequest) (*pb.SetDeviceStatusResponse, error) {
+	return nil, nil
+}
+
+// GetDeviceLog return spcecified device's log
+func (s *DeviceManagementService) GetDeviceLog(ctx context.Context, in *pb.GetDeviceLogRequest) (*pb.GetDeviceLogResponse, error) {
+	return nil, nil
+}

@@ -44,7 +44,7 @@ func (m *Device) Reset()         { *m = Device{} }
 func (m *Device) String() string { return proto.CompactTextString(m) }
 func (*Device) ProtoMessage()    {}
 func (*Device) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{0}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{0}
 }
 func (m *Device) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Device.Unmarshal(m, b)
@@ -147,7 +147,7 @@ func (m *Endpoint) Reset()         { *m = Endpoint{} }
 func (m *Endpoint) String() string { return proto.CompactTextString(m) }
 func (*Endpoint) ProtoMessage()    {}
 func (*Endpoint) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{1}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{1}
 }
 func (m *Endpoint) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Endpoint.Unmarshal(m, b)
@@ -202,7 +202,7 @@ func (m *DataModel) Reset()         { *m = DataModel{} }
 func (m *DataModel) String() string { return proto.CompactTextString(m) }
 func (*DataModel) ProtoMessage()    {}
 func (*DataModel) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{2}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{2}
 }
 func (m *DataModel) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_DataModel.Unmarshal(m, b)
@@ -264,7 +264,7 @@ func (m *DataModelField) Reset()         { *m = DataModelField{} }
 func (m *DataModelField) String() string { return proto.CompactTextString(m) }
 func (*DataModelField) ProtoMessage()    {}
 func (*DataModelField) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{3}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{3}
 }
 func (m *DataModelField) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_DataModelField.Unmarshal(m, b)
@@ -336,7 +336,7 @@ func (m *DeviceModel) Reset()         { *m = DeviceModel{} }
 func (m *DeviceModel) String() string { return proto.CompactTextString(m) }
 func (*DeviceModel) ProtoMessage()    {}
 func (*DeviceModel) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{4}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{4}
 }
 func (m *DeviceModel) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_DeviceModel.Unmarshal(m, b)
@@ -454,6 +454,7 @@ func (m *DeviceModel) GetIcon() string {
 	return ""
 }
 
+// Device Model apis
 type CreateDeviceModelRequest struct {
 	UserID               string       `protobuf:"bytes,1,opt,name=userID" json:"userID,omitempty", bson:"userID,omitempty"`
 	DeviceModel          *DeviceModel `protobuf:"bytes,2,opt,name=device_model,json=deviceModel" json:"device_model,omitempty", bson:"device_model,omitempty"`
@@ -466,7 +467,7 @@ func (m *CreateDeviceModelRequest) Reset()         { *m = CreateDeviceModelReque
 func (m *CreateDeviceModelRequest) String() string { return proto.CompactTextString(m) }
 func (*CreateDeviceModelRequest) ProtoMessage()    {}
 func (*CreateDeviceModelRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{5}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{5}
 }
 func (m *CreateDeviceModelRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_CreateDeviceModelRequest.Unmarshal(m, b)
@@ -511,7 +512,7 @@ func (m *CreateDeviceModelResponse) Reset()         { *m = CreateDeviceModelResp
 func (m *CreateDeviceModelResponse) String() string { return proto.CompactTextString(m) }
 func (*CreateDeviceModelResponse) ProtoMessage()    {}
 func (*CreateDeviceModelResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{6}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{6}
 }
 func (m *CreateDeviceModelResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_CreateDeviceModelResponse.Unmarshal(m, b)
@@ -550,7 +551,7 @@ func (m *GetDeviceModelRequest) Reset()         { *m = GetDeviceModelRequest{} }
 func (m *GetDeviceModelRequest) String() string { return proto.CompactTextString(m) }
 func (*GetDeviceModelRequest) ProtoMessage()    {}
 func (*GetDeviceModelRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{7}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{7}
 }
 func (m *GetDeviceModelRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetDeviceModelRequest.Unmarshal(m, b)
@@ -595,7 +596,7 @@ func (m *GetDeviceModelResponse) Reset()         { *m = GetDeviceModelResponse{}
 func (m *GetDeviceModelResponse) String() string { return proto.CompactTextString(m) }
 func (*GetDeviceModelResponse) ProtoMessage()    {}
 func (*GetDeviceModelResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{8}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{8}
 }
 func (m *GetDeviceModelResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetDeviceModelResponse.Unmarshal(m, b)
@@ -634,7 +635,7 @@ func (m *GetDeviceModelWithNameRequest) Reset()         { *m = GetDeviceModelWit
 func (m *GetDeviceModelWithNameRequest) String() string { return proto.CompactTextString(m) }
 func (*GetDeviceModelWithNameRequest) ProtoMessage()    {}
 func (*GetDeviceModelWithNameRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{9}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{9}
 }
 func (m *GetDeviceModelWithNameRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetDeviceModelWithNameRequest.Unmarshal(m, b)
@@ -679,7 +680,7 @@ func (m *GetDeviceModelWithNameResponse) Reset()         { *m = GetDeviceModelWi
 func (m *GetDeviceModelWithNameResponse) String() string { return proto.CompactTextString(m) }
 func (*GetDeviceModelWithNameResponse) ProtoMessage()    {}
 func (*GetDeviceModelWithNameResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{10}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{10}
 }
 func (m *GetDeviceModelWithNameResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetDeviceModelWithNameResponse.Unmarshal(m, b)
@@ -718,7 +719,7 @@ func (m *DeleteDeviceModelRequest) Reset()         { *m = DeleteDeviceModelReque
 func (m *DeleteDeviceModelRequest) String() string { return proto.CompactTextString(m) }
 func (*DeleteDeviceModelRequest) ProtoMessage()    {}
 func (*DeleteDeviceModelRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{11}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{11}
 }
 func (m *DeleteDeviceModelRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_DeleteDeviceModelRequest.Unmarshal(m, b)
@@ -762,7 +763,7 @@ func (m *DeleteDeviceModelResponse) Reset()         { *m = DeleteDeviceModelResp
 func (m *DeleteDeviceModelResponse) String() string { return proto.CompactTextString(m) }
 func (*DeleteDeviceModelResponse) ProtoMessage()    {}
 func (*DeleteDeviceModelResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{12}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{12}
 }
 func (m *DeleteDeviceModelResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_DeleteDeviceModelResponse.Unmarshal(m, b)
@@ -795,7 +796,7 @@ func (m *UpdateDeviceModelRequest) Reset()         { *m = UpdateDeviceModelReque
 func (m *UpdateDeviceModelRequest) String() string { return proto.CompactTextString(m) }
 func (*UpdateDeviceModelRequest) ProtoMessage()    {}
 func (*UpdateDeviceModelRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{13}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{13}
 }
 func (m *UpdateDeviceModelRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_UpdateDeviceModelRequest.Unmarshal(m, b)
@@ -846,7 +847,7 @@ func (m *UpdateDeviceModelResponse) Reset()         { *m = UpdateDeviceModelResp
 func (m *UpdateDeviceModelResponse) String() string { return proto.CompactTextString(m) }
 func (*UpdateDeviceModelResponse) ProtoMessage()    {}
 func (*UpdateDeviceModelResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{14}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{14}
 }
 func (m *UpdateDeviceModelResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_UpdateDeviceModelResponse.Unmarshal(m, b)
@@ -877,7 +878,7 @@ func (m *GetDeviceModelsRequest) Reset()         { *m = GetDeviceModelsRequest{}
 func (m *GetDeviceModelsRequest) String() string { return proto.CompactTextString(m) }
 func (*GetDeviceModelsRequest) ProtoMessage()    {}
 func (*GetDeviceModelsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{15}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{15}
 }
 func (m *GetDeviceModelsRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetDeviceModelsRequest.Unmarshal(m, b)
@@ -915,7 +916,7 @@ func (m *GetDeviceModelsResponse) Reset()         { *m = GetDeviceModelsResponse
 func (m *GetDeviceModelsResponse) String() string { return proto.CompactTextString(m) }
 func (*GetDeviceModelsResponse) ProtoMessage()    {}
 func (*GetDeviceModelsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_dmms_b33d9923085b7c5d, []int{16}
+	return fileDescriptor_dmms_16322b9c725c1781, []int{16}
 }
 func (m *GetDeviceModelsResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetDeviceModelsResponse.Unmarshal(m, b)
@@ -942,6 +943,579 @@ func (m *GetDeviceModelsResponse) GetDeviceModels() []*DeviceModel {
 	return nil
 }
 
+// Device apis
+type AddDeviceRequest struct {
+	UserID               string   `protobuf:"bytes,1,opt,name=userID" json:"userID,omitempty", bson:"userID,omitempty"`
+	Device               *Device  `protobuf:"bytes,2,opt,name=device" json:"device,omitempty", bson:"device,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *AddDeviceRequest) Reset()         { *m = AddDeviceRequest{} }
+func (m *AddDeviceRequest) String() string { return proto.CompactTextString(m) }
+func (*AddDeviceRequest) ProtoMessage()    {}
+func (*AddDeviceRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dmms_16322b9c725c1781, []int{17}
+}
+func (m *AddDeviceRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddDeviceRequest.Unmarshal(m, b)
+}
+func (m *AddDeviceRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddDeviceRequest.Marshal(b, m, deterministic)
+}
+func (dst *AddDeviceRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddDeviceRequest.Merge(dst, src)
+}
+func (m *AddDeviceRequest) XXX_Size() int {
+	return xxx_messageInfo_AddDeviceRequest.Size(m)
+}
+func (m *AddDeviceRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddDeviceRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddDeviceRequest proto.InternalMessageInfo
+
+func (m *AddDeviceRequest) GetUserID() string {
+	if m != nil {
+		return m.UserID
+	}
+	return ""
+}
+
+func (m *AddDeviceRequest) GetDevice() *Device {
+	if m != nil {
+		return m.Device
+	}
+	return nil
+}
+
+type AddDeviceResponse struct {
+	Device               *Device  `protobuf:"bytes,1,opt,name=device" json:"device,omitempty", bson:"device,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *AddDeviceResponse) Reset()         { *m = AddDeviceResponse{} }
+func (m *AddDeviceResponse) String() string { return proto.CompactTextString(m) }
+func (*AddDeviceResponse) ProtoMessage()    {}
+func (*AddDeviceResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dmms_16322b9c725c1781, []int{18}
+}
+func (m *AddDeviceResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AddDeviceResponse.Unmarshal(m, b)
+}
+func (m *AddDeviceResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AddDeviceResponse.Marshal(b, m, deterministic)
+}
+func (dst *AddDeviceResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AddDeviceResponse.Merge(dst, src)
+}
+func (m *AddDeviceResponse) XXX_Size() int {
+	return xxx_messageInfo_AddDeviceResponse.Size(m)
+}
+func (m *AddDeviceResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_AddDeviceResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AddDeviceResponse proto.InternalMessageInfo
+
+func (m *AddDeviceResponse) GetDevice() *Device {
+	if m != nil {
+		return m.Device
+	}
+	return nil
+}
+
+type GetDeviceRequest struct {
+	UserID               string   `protobuf:"bytes,1,opt,name=userID" json:"userID,omitempty", bson:"userID,omitempty"`
+	DeviceID             string   `protobuf:"bytes,2,opt,name=deviceID" json:"deviceID,omitempty", bson:"deviceID,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetDeviceRequest) Reset()         { *m = GetDeviceRequest{} }
+func (m *GetDeviceRequest) String() string { return proto.CompactTextString(m) }
+func (*GetDeviceRequest) ProtoMessage()    {}
+func (*GetDeviceRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dmms_16322b9c725c1781, []int{19}
+}
+func (m *GetDeviceRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDeviceRequest.Unmarshal(m, b)
+}
+func (m *GetDeviceRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDeviceRequest.Marshal(b, m, deterministic)
+}
+func (dst *GetDeviceRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDeviceRequest.Merge(dst, src)
+}
+func (m *GetDeviceRequest) XXX_Size() int {
+	return xxx_messageInfo_GetDeviceRequest.Size(m)
+}
+func (m *GetDeviceRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDeviceRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDeviceRequest proto.InternalMessageInfo
+
+func (m *GetDeviceRequest) GetUserID() string {
+	if m != nil {
+		return m.UserID
+	}
+	return ""
+}
+
+func (m *GetDeviceRequest) GetDeviceID() string {
+	if m != nil {
+		return m.DeviceID
+	}
+	return ""
+}
+
+type GetDeviceResponse struct {
+	Device               *Device  `protobuf:"bytes,1,opt,name=device" json:"device,omitempty", bson:"device,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetDeviceResponse) Reset()         { *m = GetDeviceResponse{} }
+func (m *GetDeviceResponse) String() string { return proto.CompactTextString(m) }
+func (*GetDeviceResponse) ProtoMessage()    {}
+func (*GetDeviceResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dmms_16322b9c725c1781, []int{20}
+}
+func (m *GetDeviceResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDeviceResponse.Unmarshal(m, b)
+}
+func (m *GetDeviceResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDeviceResponse.Marshal(b, m, deterministic)
+}
+func (dst *GetDeviceResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDeviceResponse.Merge(dst, src)
+}
+func (m *GetDeviceResponse) XXX_Size() int {
+	return xxx_messageInfo_GetDeviceResponse.Size(m)
+}
+func (m *GetDeviceResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDeviceResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDeviceResponse proto.InternalMessageInfo
+
+func (m *GetDeviceResponse) GetDevice() *Device {
+	if m != nil {
+		return m.Device
+	}
+	return nil
+}
+
+type UpdateDeviceRequest struct {
+	UserID               string   `protobuf:"bytes,1,opt,name=userID" json:"userID,omitempty", bson:"userID,omitempty"`
+	Device               *Device  `protobuf:"bytes,2,opt,name=device" json:"device,omitempty", bson:"device,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UpdateDeviceRequest) Reset()         { *m = UpdateDeviceRequest{} }
+func (m *UpdateDeviceRequest) String() string { return proto.CompactTextString(m) }
+func (*UpdateDeviceRequest) ProtoMessage()    {}
+func (*UpdateDeviceRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dmms_16322b9c725c1781, []int{21}
+}
+func (m *UpdateDeviceRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateDeviceRequest.Unmarshal(m, b)
+}
+func (m *UpdateDeviceRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateDeviceRequest.Marshal(b, m, deterministic)
+}
+func (dst *UpdateDeviceRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateDeviceRequest.Merge(dst, src)
+}
+func (m *UpdateDeviceRequest) XXX_Size() int {
+	return xxx_messageInfo_UpdateDeviceRequest.Size(m)
+}
+func (m *UpdateDeviceRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateDeviceRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateDeviceRequest proto.InternalMessageInfo
+
+func (m *UpdateDeviceRequest) GetUserID() string {
+	if m != nil {
+		return m.UserID
+	}
+	return ""
+}
+
+func (m *UpdateDeviceRequest) GetDevice() *Device {
+	if m != nil {
+		return m.Device
+	}
+	return nil
+}
+
+type UpdateDeviceResponse struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UpdateDeviceResponse) Reset()         { *m = UpdateDeviceResponse{} }
+func (m *UpdateDeviceResponse) String() string { return proto.CompactTextString(m) }
+func (*UpdateDeviceResponse) ProtoMessage()    {}
+func (*UpdateDeviceResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dmms_16322b9c725c1781, []int{22}
+}
+func (m *UpdateDeviceResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateDeviceResponse.Unmarshal(m, b)
+}
+func (m *UpdateDeviceResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateDeviceResponse.Marshal(b, m, deterministic)
+}
+func (dst *UpdateDeviceResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateDeviceResponse.Merge(dst, src)
+}
+func (m *UpdateDeviceResponse) XXX_Size() int {
+	return xxx_messageInfo_UpdateDeviceResponse.Size(m)
+}
+func (m *UpdateDeviceResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateDeviceResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateDeviceResponse proto.InternalMessageInfo
+
+type GetDevicesRequest struct {
+	UserID               string   `protobuf:"bytes,1,opt,name=userID" json:"userID,omitempty", bson:"userID,omitempty"`
+	DeviceIDs            []string `protobuf:"bytes,2,rep,name=deviceIDs" json:"deviceIDs,omitempty", bson:"deviceIDs,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetDevicesRequest) Reset()         { *m = GetDevicesRequest{} }
+func (m *GetDevicesRequest) String() string { return proto.CompactTextString(m) }
+func (*GetDevicesRequest) ProtoMessage()    {}
+func (*GetDevicesRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dmms_16322b9c725c1781, []int{23}
+}
+func (m *GetDevicesRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDevicesRequest.Unmarshal(m, b)
+}
+func (m *GetDevicesRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDevicesRequest.Marshal(b, m, deterministic)
+}
+func (dst *GetDevicesRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDevicesRequest.Merge(dst, src)
+}
+func (m *GetDevicesRequest) XXX_Size() int {
+	return xxx_messageInfo_GetDevicesRequest.Size(m)
+}
+func (m *GetDevicesRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDevicesRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDevicesRequest proto.InternalMessageInfo
+
+func (m *GetDevicesRequest) GetUserID() string {
+	if m != nil {
+		return m.UserID
+	}
+	return ""
+}
+
+func (m *GetDevicesRequest) GetDeviceIDs() []string {
+	if m != nil {
+		return m.DeviceIDs
+	}
+	return nil
+}
+
+type GetDevicesResponse struct {
+	Devices              []*Device `protobuf:"bytes,1,rep,name=devices" json:"devices,omitempty", bson:"devices,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
+	XXX_unrecognized     []byte    `json:"-"`
+	XXX_sizecache        int32     `json:"-"`
+}
+
+func (m *GetDevicesResponse) Reset()         { *m = GetDevicesResponse{} }
+func (m *GetDevicesResponse) String() string { return proto.CompactTextString(m) }
+func (*GetDevicesResponse) ProtoMessage()    {}
+func (*GetDevicesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dmms_16322b9c725c1781, []int{24}
+}
+func (m *GetDevicesResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDevicesResponse.Unmarshal(m, b)
+}
+func (m *GetDevicesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDevicesResponse.Marshal(b, m, deterministic)
+}
+func (dst *GetDevicesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDevicesResponse.Merge(dst, src)
+}
+func (m *GetDevicesResponse) XXX_Size() int {
+	return xxx_messageInfo_GetDevicesResponse.Size(m)
+}
+func (m *GetDevicesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDevicesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDevicesResponse proto.InternalMessageInfo
+
+func (m *GetDevicesResponse) GetDevices() []*Device {
+	if m != nil {
+		return m.Devices
+	}
+	return nil
+}
+
+type DeleteDeviceRequest struct {
+	UserID               string   `protobuf:"bytes,1,opt,name=userID" json:"userID,omitempty", bson:"userID,omitempty"`
+	DeviceID             string   `protobuf:"bytes,2,opt,name=deviceID" json:"deviceID,omitempty", bson:"deviceID,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteDeviceRequest) Reset()         { *m = DeleteDeviceRequest{} }
+func (m *DeleteDeviceRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteDeviceRequest) ProtoMessage()    {}
+func (*DeleteDeviceRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dmms_16322b9c725c1781, []int{25}
+}
+func (m *DeleteDeviceRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteDeviceRequest.Unmarshal(m, b)
+}
+func (m *DeleteDeviceRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteDeviceRequest.Marshal(b, m, deterministic)
+}
+func (dst *DeleteDeviceRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteDeviceRequest.Merge(dst, src)
+}
+func (m *DeleteDeviceRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteDeviceRequest.Size(m)
+}
+func (m *DeleteDeviceRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteDeviceRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteDeviceRequest proto.InternalMessageInfo
+
+func (m *DeleteDeviceRequest) GetUserID() string {
+	if m != nil {
+		return m.UserID
+	}
+	return ""
+}
+
+func (m *DeleteDeviceRequest) GetDeviceID() string {
+	if m != nil {
+		return m.DeviceID
+	}
+	return ""
+}
+
+type DeleteDeviceResponse struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteDeviceResponse) Reset()         { *m = DeleteDeviceResponse{} }
+func (m *DeleteDeviceResponse) String() string { return proto.CompactTextString(m) }
+func (*DeleteDeviceResponse) ProtoMessage()    {}
+func (*DeleteDeviceResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dmms_16322b9c725c1781, []int{26}
+}
+func (m *DeleteDeviceResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteDeviceResponse.Unmarshal(m, b)
+}
+func (m *DeleteDeviceResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteDeviceResponse.Marshal(b, m, deterministic)
+}
+func (dst *DeleteDeviceResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteDeviceResponse.Merge(dst, src)
+}
+func (m *DeleteDeviceResponse) XXX_Size() int {
+	return xxx_messageInfo_DeleteDeviceResponse.Size(m)
+}
+func (m *DeleteDeviceResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteDeviceResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteDeviceResponse proto.InternalMessageInfo
+
+type SetDeviceStatusRequest struct {
+	UserID               string   `protobuf:"bytes,1,opt,name=userID" json:"userID,omitempty", bson:"userID,omitempty"`
+	DeviceID             string   `protobuf:"bytes,2,opt,name=deviceID" json:"deviceID,omitempty", bson:"deviceID,omitempty"`
+	Status               string   `protobuf:"bytes,3,opt,name=status" json:"status,omitempty", bson:"status,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *SetDeviceStatusRequest) Reset()         { *m = SetDeviceStatusRequest{} }
+func (m *SetDeviceStatusRequest) String() string { return proto.CompactTextString(m) }
+func (*SetDeviceStatusRequest) ProtoMessage()    {}
+func (*SetDeviceStatusRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dmms_16322b9c725c1781, []int{27}
+}
+func (m *SetDeviceStatusRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetDeviceStatusRequest.Unmarshal(m, b)
+}
+func (m *SetDeviceStatusRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetDeviceStatusRequest.Marshal(b, m, deterministic)
+}
+func (dst *SetDeviceStatusRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetDeviceStatusRequest.Merge(dst, src)
+}
+func (m *SetDeviceStatusRequest) XXX_Size() int {
+	return xxx_messageInfo_SetDeviceStatusRequest.Size(m)
+}
+func (m *SetDeviceStatusRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetDeviceStatusRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetDeviceStatusRequest proto.InternalMessageInfo
+
+func (m *SetDeviceStatusRequest) GetUserID() string {
+	if m != nil {
+		return m.UserID
+	}
+	return ""
+}
+
+func (m *SetDeviceStatusRequest) GetDeviceID() string {
+	if m != nil {
+		return m.DeviceID
+	}
+	return ""
+}
+
+func (m *SetDeviceStatusRequest) GetStatus() string {
+	if m != nil {
+		return m.Status
+	}
+	return ""
+}
+
+type SetDeviceStatusResponse struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *SetDeviceStatusResponse) Reset()         { *m = SetDeviceStatusResponse{} }
+func (m *SetDeviceStatusResponse) String() string { return proto.CompactTextString(m) }
+func (*SetDeviceStatusResponse) ProtoMessage()    {}
+func (*SetDeviceStatusResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dmms_16322b9c725c1781, []int{28}
+}
+func (m *SetDeviceStatusResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetDeviceStatusResponse.Unmarshal(m, b)
+}
+func (m *SetDeviceStatusResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetDeviceStatusResponse.Marshal(b, m, deterministic)
+}
+func (dst *SetDeviceStatusResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetDeviceStatusResponse.Merge(dst, src)
+}
+func (m *SetDeviceStatusResponse) XXX_Size() int {
+	return xxx_messageInfo_SetDeviceStatusResponse.Size(m)
+}
+func (m *SetDeviceStatusResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetDeviceStatusResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetDeviceStatusResponse proto.InternalMessageInfo
+
+type GetDeviceLogRequest struct {
+	UserID               string               `protobuf:"bytes,1,opt,name=userID" json:"userID,omitempty", bson:"userID,omitempty"`
+	DeviceID             string               `protobuf:"bytes,2,opt,name=deviceID" json:"deviceID,omitempty", bson:"deviceID,omitempty"`
+	Since                *timestamp.Timestamp `protobuf:"bytes,3,opt,name=since" json:"since,omitempty", bson:"since,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
+}
+
+func (m *GetDeviceLogRequest) Reset()         { *m = GetDeviceLogRequest{} }
+func (m *GetDeviceLogRequest) String() string { return proto.CompactTextString(m) }
+func (*GetDeviceLogRequest) ProtoMessage()    {}
+func (*GetDeviceLogRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dmms_16322b9c725c1781, []int{29}
+}
+func (m *GetDeviceLogRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDeviceLogRequest.Unmarshal(m, b)
+}
+func (m *GetDeviceLogRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDeviceLogRequest.Marshal(b, m, deterministic)
+}
+func (dst *GetDeviceLogRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDeviceLogRequest.Merge(dst, src)
+}
+func (m *GetDeviceLogRequest) XXX_Size() int {
+	return xxx_messageInfo_GetDeviceLogRequest.Size(m)
+}
+func (m *GetDeviceLogRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDeviceLogRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDeviceLogRequest proto.InternalMessageInfo
+
+func (m *GetDeviceLogRequest) GetUserID() string {
+	if m != nil {
+		return m.UserID
+	}
+	return ""
+}
+
+func (m *GetDeviceLogRequest) GetDeviceID() string {
+	if m != nil {
+		return m.DeviceID
+	}
+	return ""
+}
+
+func (m *GetDeviceLogRequest) GetSince() *timestamp.Timestamp {
+	if m != nil {
+		return m.Since
+	}
+	return nil
+}
+
+type GetDeviceLogResponse struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetDeviceLogResponse) Reset()         { *m = GetDeviceLogResponse{} }
+func (m *GetDeviceLogResponse) String() string { return proto.CompactTextString(m) }
+func (*GetDeviceLogResponse) ProtoMessage()    {}
+func (*GetDeviceLogResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_dmms_16322b9c725c1781, []int{30}
+}
+func (m *GetDeviceLogResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDeviceLogResponse.Unmarshal(m, b)
+}
+func (m *GetDeviceLogResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDeviceLogResponse.Marshal(b, m, deterministic)
+}
+func (dst *GetDeviceLogResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDeviceLogResponse.Merge(dst, src)
+}
+func (m *GetDeviceLogResponse) XXX_Size() int {
+	return xxx_messageInfo_GetDeviceLogResponse.Size(m)
+}
+func (m *GetDeviceLogResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDeviceLogResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDeviceLogResponse proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*Device)(nil), "grpc.dmms.v1.Device")
 	proto.RegisterType((*Endpoint)(nil), "grpc.dmms.v1.Endpoint")
@@ -961,6 +1535,20 @@ func init() {
 	proto.RegisterType((*UpdateDeviceModelResponse)(nil), "grpc.dmms.v1.UpdateDeviceModelResponse")
 	proto.RegisterType((*GetDeviceModelsRequest)(nil), "grpc.dmms.v1.GetDeviceModelsRequest")
 	proto.RegisterType((*GetDeviceModelsResponse)(nil), "grpc.dmms.v1.GetDeviceModelsResponse")
+	proto.RegisterType((*AddDeviceRequest)(nil), "grpc.dmms.v1.AddDeviceRequest")
+	proto.RegisterType((*AddDeviceResponse)(nil), "grpc.dmms.v1.AddDeviceResponse")
+	proto.RegisterType((*GetDeviceRequest)(nil), "grpc.dmms.v1.GetDeviceRequest")
+	proto.RegisterType((*GetDeviceResponse)(nil), "grpc.dmms.v1.GetDeviceResponse")
+	proto.RegisterType((*UpdateDeviceRequest)(nil), "grpc.dmms.v1.UpdateDeviceRequest")
+	proto.RegisterType((*UpdateDeviceResponse)(nil), "grpc.dmms.v1.UpdateDeviceResponse")
+	proto.RegisterType((*GetDevicesRequest)(nil), "grpc.dmms.v1.GetDevicesRequest")
+	proto.RegisterType((*GetDevicesResponse)(nil), "grpc.dmms.v1.GetDevicesResponse")
+	proto.RegisterType((*DeleteDeviceRequest)(nil), "grpc.dmms.v1.DeleteDeviceRequest")
+	proto.RegisterType((*DeleteDeviceResponse)(nil), "grpc.dmms.v1.DeleteDeviceResponse")
+	proto.RegisterType((*SetDeviceStatusRequest)(nil), "grpc.dmms.v1.SetDeviceStatusRequest")
+	proto.RegisterType((*SetDeviceStatusResponse)(nil), "grpc.dmms.v1.SetDeviceStatusResponse")
+	proto.RegisterType((*GetDeviceLogRequest)(nil), "grpc.dmms.v1.GetDeviceLogRequest")
+	proto.RegisterType((*GetDeviceLogResponse)(nil), "grpc.dmms.v1.GetDeviceLogResponse")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -982,6 +1570,14 @@ type DMMSClient interface {
 	DeleteDeviceModel(ctx context.Context, in *DeleteDeviceModelRequest, opts ...grpc.CallOption) (*DeleteDeviceModelResponse, error)
 	UpdateDeviceModel(ctx context.Context, in *UpdateDeviceModelRequest, opts ...grpc.CallOption) (*UpdateDeviceModelResponse, error)
 	GetDeviceModels(ctx context.Context, in *GetDeviceModelsRequest, opts ...grpc.CallOption) (*GetDeviceModelsResponse, error)
+	// Device Management
+	AddDevice(ctx context.Context, in *AddDeviceRequest, opts ...grpc.CallOption) (*AddDeviceResponse, error)
+	GetDevice(ctx context.Context, in *GetDeviceRequest, opts ...grpc.CallOption) (*GetDeviceResponse, error)
+	UpdateDevice(ctx context.Context, in *UpdateDeviceRequest, opts ...grpc.CallOption) (*UpdateDeviceResponse, error)
+	GetDevices(ctx context.Context, in *GetDevicesRequest, opts ...grpc.CallOption) (*GetDevicesResponse, error)
+	DeleteDevice(ctx context.Context, in *DeleteDeviceRequest, opts ...grpc.CallOption) (*DeleteDeviceResponse, error)
+	SetDeviceStatus(ctx context.Context, in *SetDeviceStatusRequest, opts ...grpc.CallOption) (*SetDeviceStatusResponse, error)
+	GetDeviceLog(ctx context.Context, in *GetDeviceLogRequest, opts ...grpc.CallOption) (*GetDeviceLogResponse, error)
 }
 
 type dMMSClient struct {
@@ -1046,6 +1642,69 @@ func (c *dMMSClient) GetDeviceModels(ctx context.Context, in *GetDeviceModelsReq
 	return out, nil
 }
 
+func (c *dMMSClient) AddDevice(ctx context.Context, in *AddDeviceRequest, opts ...grpc.CallOption) (*AddDeviceResponse, error) {
+	out := new(AddDeviceResponse)
+	err := c.cc.Invoke(ctx, "/grpc.dmms.v1.DMMS/AddDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dMMSClient) GetDevice(ctx context.Context, in *GetDeviceRequest, opts ...grpc.CallOption) (*GetDeviceResponse, error) {
+	out := new(GetDeviceResponse)
+	err := c.cc.Invoke(ctx, "/grpc.dmms.v1.DMMS/GetDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dMMSClient) UpdateDevice(ctx context.Context, in *UpdateDeviceRequest, opts ...grpc.CallOption) (*UpdateDeviceResponse, error) {
+	out := new(UpdateDeviceResponse)
+	err := c.cc.Invoke(ctx, "/grpc.dmms.v1.DMMS/UpdateDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dMMSClient) GetDevices(ctx context.Context, in *GetDevicesRequest, opts ...grpc.CallOption) (*GetDevicesResponse, error) {
+	out := new(GetDevicesResponse)
+	err := c.cc.Invoke(ctx, "/grpc.dmms.v1.DMMS/GetDevices", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dMMSClient) DeleteDevice(ctx context.Context, in *DeleteDeviceRequest, opts ...grpc.CallOption) (*DeleteDeviceResponse, error) {
+	out := new(DeleteDeviceResponse)
+	err := c.cc.Invoke(ctx, "/grpc.dmms.v1.DMMS/DeleteDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dMMSClient) SetDeviceStatus(ctx context.Context, in *SetDeviceStatusRequest, opts ...grpc.CallOption) (*SetDeviceStatusResponse, error) {
+	out := new(SetDeviceStatusResponse)
+	err := c.cc.Invoke(ctx, "/grpc.dmms.v1.DMMS/SetDeviceStatus", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dMMSClient) GetDeviceLog(ctx context.Context, in *GetDeviceLogRequest, opts ...grpc.CallOption) (*GetDeviceLogResponse, error) {
+	out := new(GetDeviceLogResponse)
+	err := c.cc.Invoke(ctx, "/grpc.dmms.v1.DMMS/GetDeviceLog", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DMMSServer is the server API for DMMS service.
 type DMMSServer interface {
 	// DeviceModel
@@ -1055,6 +1714,14 @@ type DMMSServer interface {
 	DeleteDeviceModel(context.Context, *DeleteDeviceModelRequest) (*DeleteDeviceModelResponse, error)
 	UpdateDeviceModel(context.Context, *UpdateDeviceModelRequest) (*UpdateDeviceModelResponse, error)
 	GetDeviceModels(context.Context, *GetDeviceModelsRequest) (*GetDeviceModelsResponse, error)
+	// Device Management
+	AddDevice(context.Context, *AddDeviceRequest) (*AddDeviceResponse, error)
+	GetDevice(context.Context, *GetDeviceRequest) (*GetDeviceResponse, error)
+	UpdateDevice(context.Context, *UpdateDeviceRequest) (*UpdateDeviceResponse, error)
+	GetDevices(context.Context, *GetDevicesRequest) (*GetDevicesResponse, error)
+	DeleteDevice(context.Context, *DeleteDeviceRequest) (*DeleteDeviceResponse, error)
+	SetDeviceStatus(context.Context, *SetDeviceStatusRequest) (*SetDeviceStatusResponse, error)
+	GetDeviceLog(context.Context, *GetDeviceLogRequest) (*GetDeviceLogResponse, error)
 }
 
 func RegisterDMMSServer(s *grpc.Server, srv DMMSServer) {
@@ -1169,6 +1836,132 @@ func _DMMS_GetDeviceModels_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DMMS_AddDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddDeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DMMSServer).AddDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpc.dmms.v1.DMMS/AddDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DMMSServer).AddDevice(ctx, req.(*AddDeviceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DMMS_GetDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DMMSServer).GetDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpc.dmms.v1.DMMS/GetDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DMMSServer).GetDevice(ctx, req.(*GetDeviceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DMMS_UpdateDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DMMSServer).UpdateDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpc.dmms.v1.DMMS/UpdateDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DMMSServer).UpdateDevice(ctx, req.(*UpdateDeviceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DMMS_GetDevices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDevicesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DMMSServer).GetDevices(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpc.dmms.v1.DMMS/GetDevices",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DMMSServer).GetDevices(ctx, req.(*GetDevicesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DMMS_DeleteDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DMMSServer).DeleteDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpc.dmms.v1.DMMS/DeleteDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DMMSServer).DeleteDevice(ctx, req.(*DeleteDeviceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DMMS_SetDeviceStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetDeviceStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DMMSServer).SetDeviceStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpc.dmms.v1.DMMS/SetDeviceStatus",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DMMSServer).SetDeviceStatus(ctx, req.(*SetDeviceStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DMMS_GetDeviceLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDeviceLogRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DMMSServer).GetDeviceLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpc.dmms.v1.DMMS/GetDeviceLog",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DMMSServer).GetDeviceLog(ctx, req.(*GetDeviceLogRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _DMMS_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "grpc.dmms.v1.DMMS",
 	HandlerType: (*DMMSServer)(nil),
@@ -1197,70 +1990,116 @@ var _DMMS_serviceDesc = grpc.ServiceDesc{
 			MethodName: "GetDeviceModels",
 			Handler:    _DMMS_GetDeviceModels_Handler,
 		},
+		{
+			MethodName: "AddDevice",
+			Handler:    _DMMS_AddDevice_Handler,
+		},
+		{
+			MethodName: "GetDevice",
+			Handler:    _DMMS_GetDevice_Handler,
+		},
+		{
+			MethodName: "UpdateDevice",
+			Handler:    _DMMS_UpdateDevice_Handler,
+		},
+		{
+			MethodName: "GetDevices",
+			Handler:    _DMMS_GetDevices_Handler,
+		},
+		{
+			MethodName: "DeleteDevice",
+			Handler:    _DMMS_DeleteDevice_Handler,
+		},
+		{
+			MethodName: "SetDeviceStatus",
+			Handler:    _DMMS_SetDeviceStatus_Handler,
+		},
+		{
+			MethodName: "GetDeviceLog",
+			Handler:    _DMMS_GetDeviceLog_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "dmms.proto",
 }
 
-func init() { proto.RegisterFile("dmms.proto", fileDescriptor_dmms_b33d9923085b7c5d) }
+func init() { proto.RegisterFile("dmms.proto", fileDescriptor_dmms_16322b9c725c1781) }
 
-var fileDescriptor_dmms_b33d9923085b7c5d = []byte{
-	// 906 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x55, 0xdd, 0x72, 0xdb, 0x44,
-	0x14, 0xae, 0x6c, 0xd7, 0x89, 0x8f, 0x9d, 0x84, 0xec, 0x40, 0xba, 0x71, 0x4b, 0xf1, 0xa8, 0x05,
-	0x32, 0xc0, 0xb8, 0x10, 0x18, 0xa0, 0x1d, 0x86, 0x99, 0x12, 0x15, 0xf0, 0x0c, 0xe1, 0x42, 0xd0,
-	0x42, 0x2f, 0xc0, 0x6c, 0xb5, 0xeb, 0x44, 0xa0, 0xbf, 0x6a, 0x57, 0x99, 0xc9, 0x63, 0x70, 0xc3,
-	0x5b, 0xf0, 0x68, 0xdc, 0x72, 0x0b, 0xb3, 0x3f, 0x92, 0x25, 0xd9, 0xb2, 0xe3, 0x69, 0xee, 0xf6,
-	0x9c, 0x3d, 0xbf, 0x9f, 0xbe, 0x6f, 0x05, 0x40, 0xc3, 0x90, 0x8f, 0x93, 0x34, 0x16, 0x31, 0x1a,
-	0x9c, 0xa5, 0x89, 0x37, 0x56, 0x8e, 0x8b, 0x8f, 0x86, 0x6f, 0x9d, 0xc5, 0xf1, 0x59, 0xc0, 0x1e,
-	0xa8, 0xbb, 0x17, 0xd9, 0xec, 0x81, 0xf0, 0x43, 0xc6, 0x05, 0x09, 0x13, 0x1d, 0x6e, 0xff, 0xd3,
-	0x82, 0xae, 0xc3, 0x2e, 0x7c, 0x8f, 0xa1, 0x5d, 0x68, 0x4d, 0x1c, 0x6c, 0x8d, 0xac, 0xa3, 0x9e,
-	0xdb, 0x9a, 0x38, 0x08, 0x41, 0x27, 0x22, 0x21, 0xc3, 0x6d, 0xe5, 0x51, 0x67, 0x34, 0x82, 0x3e,
-	0x65, 0xdc, 0x4b, 0xfd, 0x44, 0xf8, 0x71, 0x84, 0x3b, 0xea, 0xaa, 0xec, 0x42, 0x07, 0xd0, 0xe5,
-	0x82, 0x88, 0x8c, 0xe3, 0x9b, 0xea, 0xd2, 0x58, 0xd2, 0x9f, 0x71, 0x96, 0x4e, 0x1c, 0xdc, 0xd5,
-	0x7e, 0x6d, 0xa1, 0x3b, 0xd0, 0x4b, 0xd2, 0xf8, 0x77, 0xe6, 0x89, 0x89, 0x83, 0xb7, 0xd4, 0xd5,
-	0xdc, 0x81, 0x30, 0x6c, 0x85, 0x31, 0x65, 0xc1, 0xc4, 0xc1, 0xdb, 0xea, 0x2e, 0x37, 0xd1, 0x43,
-	0x00, 0x2f, 0x65, 0x44, 0x30, 0x3a, 0x25, 0x02, 0xf7, 0x46, 0xd6, 0x51, 0xff, 0x78, 0x38, 0xd6,
-	0xeb, 0x8e, 0xf3, 0x75, 0xc7, 0x3f, 0xe6, 0xeb, 0xba, 0x3d, 0x13, 0xfd, 0x58, 0xa0, 0xaf, 0x60,
-	0x2f, 0x20, 0x5c, 0x4c, 0xb3, 0x84, 0xe6, 0xf9, 0xb0, 0x36, 0x7f, 0x47, 0xa6, 0x3c, 0xd5, 0x19,
-	0x8f, 0x05, 0xfa, 0x14, 0x80, 0x12, 0x41, 0xa6, 0x6a, 0x1c, 0xdc, 0x57, 0xe9, 0xb7, 0xc6, 0x65,
-	0xec, 0xc7, 0x0e, 0x11, 0xe4, 0x54, 0x5e, 0xbb, 0x3d, 0x9a, 0x1f, 0xed, 0xbf, 0x2d, 0xd8, 0x7e,
-	0x12, 0xd1, 0x24, 0xf6, 0x23, 0x21, 0x11, 0x4e, 0x88, 0x38, 0x37, 0x98, 0xab, 0xb3, 0xc4, 0x69,
-	0x16, 0xa7, 0x21, 0x11, 0xb8, 0xa5, 0x71, 0xd2, 0x16, 0x7a, 0x04, 0x5d, 0xd5, 0x8b, 0xe3, 0xf6,
-	0xa8, 0x7d, 0xd4, 0x3f, 0xb6, 0xab, 0xcd, 0xf2, 0x9a, 0x63, 0xd5, 0x86, 0x3f, 0x89, 0x44, 0x7a,
-	0xe9, 0x9a, 0x8c, 0xe1, 0x43, 0xe8, 0x97, 0xdc, 0xe8, 0x35, 0x68, 0xff, 0xc1, 0x2e, 0x4d, 0x57,
-	0x79, 0x44, 0xaf, 0xc3, 0xcd, 0x0b, 0x12, 0x64, 0xcc, 0xf4, 0xd4, 0xc6, 0xa3, 0xd6, 0xe7, 0x96,
-	0xfd, 0xa7, 0x05, 0xbd, 0x62, 0x91, 0x82, 0x12, 0x56, 0x89, 0x12, 0x9a, 0x36, 0xad, 0x82, 0x36,
-	0x07, 0xd0, 0xa5, 0x71, 0x48, 0xfc, 0xc8, 0x10, 0xc7, 0x58, 0xe8, 0x5b, 0xd8, 0x9f, 0x23, 0x36,
-	0x9d, 0xf9, 0x2c, 0xa0, 0x1c, 0x77, 0xd4, 0x2e, 0x77, 0x1a, 0x80, 0xfb, 0x5a, 0x06, 0xb9, 0x7b,
-	0xb4, 0x62, 0x73, 0xfb, 0x25, 0xec, 0x56, 0x43, 0xae, 0xba, 0x91, 0x9c, 0x5f, 0x5c, 0x26, 0x05,
-	0xa5, 0xe5, 0x19, 0xdd, 0x83, 0x1d, 0xca, 0x66, 0x24, 0x0b, 0xc4, 0x54, 0x67, 0x68, 0x52, 0x0f,
-	0x8c, 0xf3, 0x99, 0xf4, 0xd9, 0xff, 0xb5, 0xa1, 0xaf, 0x65, 0xa2, 0x81, 0x68, 0xd2, 0x4a, 0xab,
-	0x59, 0x2b, 0xed, 0xa5, 0x5a, 0x31, 0x50, 0x75, 0x2a, 0x50, 0x61, 0xd8, 0xba, 0x60, 0x29, 0x97,
-	0x59, 0x5a, 0x44, 0xb9, 0x89, 0x3e, 0x81, 0x1e, 0x33, 0x5f, 0x9a, 0xe3, 0xae, 0x02, 0xef, 0x60,
-	0x39, 0x11, 0xdc, 0x79, 0x20, 0xfa, 0x4c, 0x93, 0x55, 0x73, 0x00, 0x6f, 0xa9, 0xb4, 0x46, 0xb2,
-	0x96, 0x42, 0xa5, 0x38, 0x7d, 0xfe, 0x5d, 0x7c, 0xe6, 0x7b, 0x24, 0x50, 0x02, 0xdc, 0x76, 0xe7,
-	0x0e, 0x74, 0x17, 0xc0, 0xe7, 0x27, 0x71, 0x98, 0xc4, 0x59, 0x44, 0x95, 0x04, 0xb7, 0xdd, 0x92,
-	0x47, 0x02, 0x70, 0x72, 0xee, 0x07, 0xd4, 0xf4, 0x85, 0x51, 0x5b, 0x02, 0x50, 0x72, 0xd5, 0x44,
-	0xdc, 0x7f, 0x45, 0x11, 0x0f, 0x36, 0x15, 0xf1, 0xfc, 0x4d, 0xda, 0xa9, 0xbc, 0x49, 0x08, 0x3a,
-	0x13, 0x2f, 0x8e, 0xf0, 0xae, 0xfe, 0x9a, 0xf2, 0x6c, 0x27, 0x80, 0x4f, 0x54, 0xf3, 0x12, 0x0d,
-	0x5c, 0xf6, 0x32, 0x63, 0xbc, 0x5c, 0xc7, 0xaa, 0xd4, 0xf9, 0x02, 0x06, 0x54, 0x45, 0x9b, 0x67,
-	0xa2, 0xa5, 0x06, 0x3c, 0xac, 0x21, 0x5f, 0xaa, 0xd7, 0xa7, 0x73, 0xc3, 0x7e, 0x0e, 0x87, 0x4b,
-	0x3a, 0xf2, 0x24, 0x8e, 0x38, 0x5b, 0x28, 0x6d, 0x6d, 0x54, 0xfa, 0x29, 0xbc, 0xf1, 0x0d, 0x13,
-	0x1b, 0x6c, 0x72, 0x5f, 0x8a, 0xa4, 0x88, 0x2e, 0xf4, 0x5e, 0x75, 0xda, 0xcf, 0xe0, 0xa0, 0x5e,
-	0xf6, 0x5a, 0xc6, 0xf5, 0xe0, 0xcd, 0x6a, 0xdd, 0x9f, 0x7c, 0x71, 0xfe, 0x3d, 0x09, 0xd9, 0xba,
-	0xb1, 0xdf, 0x83, 0xfd, 0x72, 0xdb, 0x69, 0x49, 0xa3, 0x7b, 0xa5, 0x06, 0xb2, 0x94, 0xfd, 0x2b,
-	0xdc, 0x6d, 0x6a, 0x72, 0x2d, 0x4b, 0xfc, 0x0c, 0xd8, 0x61, 0x01, 0xdb, 0x88, 0x40, 0x57, 0x83,
-	0xfd, 0x36, 0x1c, 0x2e, 0xa9, 0xac, 0x87, 0xb6, 0xff, 0xb2, 0x00, 0x6b, 0xc6, 0x5f, 0x77, 0xdf,
-	0x05, 0x3c, 0xda, 0x1b, 0xe1, 0x71, 0x1b, 0x0e, 0x97, 0xcc, 0x65, 0xa6, 0xfe, 0xb0, 0xce, 0x24,
-	0xbe, 0x66, 0x64, 0xfb, 0x39, 0xdc, 0x5a, 0xc8, 0x30, 0xdf, 0xed, 0xcb, 0x7c, 0x9b, 0xa9, 0xf9,
-	0x83, 0x5a, 0xea, 0x05, 0x5c, 0x31, 0xe8, 0xa0, 0x34, 0x28, 0x3f, 0xfe, 0xb7, 0x03, 0x1d, 0xe7,
-	0xf4, 0xf4, 0x07, 0x34, 0x83, 0xfd, 0x05, 0x45, 0xa2, 0x77, 0xaa, 0x65, 0x9a, 0x1e, 0x89, 0xe1,
-	0xbb, 0x6b, 0xe3, 0xcc, 0xee, 0x37, 0xd0, 0x2f, 0xb0, 0x5b, 0xdd, 0x05, 0xdd, 0xab, 0x26, 0x2f,
-	0x15, 0xef, 0xf0, 0xfe, 0xea, 0xa0, 0xa2, 0x7c, 0x56, 0x07, 0x37, 0x67, 0x3a, 0x7a, 0x7f, 0x55,
-	0x85, 0x9a, 0xe8, 0x86, 0x1f, 0x5c, 0x2d, 0xb8, 0x68, 0x3b, 0x83, 0xfd, 0x05, 0x9a, 0xd6, 0xd1,
-	0x6b, 0x52, 0x48, 0x1d, 0xbd, 0x66, 0xbe, 0xab, 0x3e, 0x0b, 0xc4, 0xaa, 0xf7, 0x69, 0x52, 0x44,
-	0xbd, 0x4f, 0x33, 0x43, 0x6f, 0xa0, 0xdf, 0x60, 0xaf, 0xc6, 0x38, 0xb4, 0xf2, 0x0b, 0xe4, 0x14,
-	0x1e, 0xbe, 0xbd, 0x26, 0x2a, 0xef, 0xf0, 0xa2, 0xab, 0x7e, 0x61, 0x1f, 0xff, 0x1f, 0x00, 0x00,
-	0xff, 0xff, 0x1d, 0xe6, 0x8e, 0x0a, 0xe0, 0x0b, 0x00, 0x00,
+var fileDescriptor_dmms_16322b9c725c1781 = []byte{
+	// 1188 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0xeb, 0x6e, 0x1b, 0x45,
+	0x14, 0xce, 0xda, 0xae, 0x13, 0x1f, 0x3b, 0xb7, 0x49, 0x70, 0x26, 0x6e, 0x49, 0xcd, 0xb4, 0x40,
+	0x04, 0x95, 0x5b, 0x02, 0x02, 0x5a, 0x21, 0xa4, 0x10, 0xb7, 0x60, 0xa9, 0xa9, 0x84, 0x43, 0x6f,
+	0x42, 0x60, 0xb6, 0xde, 0x71, 0xb2, 0x60, 0x7b, 0xb7, 0x9e, 0x71, 0xa4, 0x88, 0xa7, 0xe0, 0x0f,
+	0x6f, 0xc1, 0xeb, 0xf0, 0x16, 0x3c, 0x03, 0x68, 0x2e, 0xbb, 0x9e, 0x1d, 0xef, 0xda, 0x31, 0xc9,
+	0xbf, 0x9d, 0x33, 0xe7, 0xf2, 0x9d, 0x6f, 0xce, 0x65, 0x01, 0xbc, 0xc1, 0x80, 0x35, 0xc2, 0x51,
+	0xc0, 0x03, 0x54, 0x39, 0x1d, 0x85, 0xdd, 0x86, 0x14, 0x9c, 0x7f, 0x52, 0xbb, 0x7d, 0x1a, 0x04,
+	0xa7, 0x7d, 0x7a, 0x5f, 0xde, 0xbd, 0x19, 0xf7, 0xee, 0x73, 0x7f, 0x40, 0x19, 0x77, 0x07, 0xa1,
+	0x52, 0x27, 0xff, 0xe4, 0xa0, 0xd8, 0xa4, 0xe7, 0x7e, 0x97, 0xa2, 0x35, 0xc8, 0xb5, 0x9a, 0xd8,
+	0xa9, 0x3b, 0xfb, 0xa5, 0x76, 0xae, 0xd5, 0x44, 0x08, 0x0a, 0x43, 0x77, 0x40, 0x71, 0x5e, 0x4a,
+	0xe4, 0x37, 0xaa, 0x43, 0xd9, 0xa3, 0xac, 0x3b, 0xf2, 0x43, 0xee, 0x07, 0x43, 0x5c, 0x90, 0x57,
+	0xa6, 0x08, 0x55, 0xa1, 0xc8, 0xb8, 0xcb, 0xc7, 0x0c, 0xdf, 0x90, 0x97, 0xfa, 0x24, 0xe4, 0x63,
+	0x46, 0x47, 0xad, 0x26, 0x2e, 0x2a, 0xb9, 0x3a, 0xa1, 0x5b, 0x50, 0x0a, 0x47, 0xc1, 0xaf, 0xb4,
+	0xcb, 0x5b, 0x4d, 0xbc, 0x2c, 0xaf, 0x26, 0x02, 0x84, 0x61, 0x79, 0x10, 0x78, 0xb4, 0xdf, 0x6a,
+	0xe2, 0x15, 0x79, 0x17, 0x1d, 0xd1, 0x43, 0x80, 0xee, 0x88, 0xba, 0x9c, 0x7a, 0x1d, 0x97, 0xe3,
+	0x52, 0xdd, 0xd9, 0x2f, 0x1f, 0xd4, 0x1a, 0x2a, 0xdd, 0x46, 0x94, 0x6e, 0xe3, 0x87, 0x28, 0xdd,
+	0x76, 0x49, 0x6b, 0x1f, 0x72, 0xf4, 0x0d, 0xac, 0xf7, 0x5d, 0xc6, 0x3b, 0xe3, 0xd0, 0x8b, 0xec,
+	0x61, 0xae, 0xfd, 0xaa, 0x30, 0x79, 0xae, 0x2c, 0x0e, 0x39, 0xfa, 0x1c, 0xc0, 0x73, 0xb9, 0xdb,
+	0x91, 0x70, 0x70, 0x59, 0x9a, 0xef, 0x34, 0x4c, 0xee, 0x1b, 0x4d, 0x97, 0xbb, 0xc7, 0xe2, 0xba,
+	0x5d, 0xf2, 0xa2, 0x4f, 0xf2, 0x97, 0x03, 0x2b, 0x8f, 0x87, 0x5e, 0x18, 0xf8, 0x43, 0x2e, 0x18,
+	0x0e, 0x5d, 0x7e, 0xa6, 0x39, 0x97, 0xdf, 0x82, 0xa7, 0x5e, 0x30, 0x1a, 0xb8, 0x1c, 0xe7, 0x14,
+	0x4f, 0xea, 0x84, 0x1e, 0x41, 0x51, 0xc6, 0x62, 0x38, 0x5f, 0xcf, 0xef, 0x97, 0x0f, 0x48, 0x32,
+	0x58, 0xe4, 0xb3, 0x21, 0xc3, 0xb0, 0xc7, 0x43, 0x3e, 0xba, 0x68, 0x6b, 0x8b, 0xda, 0x43, 0x28,
+	0x1b, 0x62, 0xb4, 0x01, 0xf9, 0xdf, 0xe8, 0x85, 0x8e, 0x2a, 0x3e, 0xd1, 0x36, 0xdc, 0x38, 0x77,
+	0xfb, 0x63, 0xaa, 0x63, 0xaa, 0xc3, 0xa3, 0xdc, 0x97, 0x0e, 0xf9, 0xc3, 0x81, 0x52, 0x9c, 0x48,
+	0x5c, 0x12, 0x8e, 0x51, 0x12, 0xaa, 0x6c, 0x72, 0x71, 0xd9, 0x54, 0xa1, 0xe8, 0x05, 0x03, 0xd7,
+	0x1f, 0xea, 0xc2, 0xd1, 0x27, 0xf4, 0x1d, 0x6c, 0x4e, 0x18, 0xeb, 0xf4, 0x7c, 0xda, 0xf7, 0x18,
+	0x2e, 0xc8, 0x5c, 0x6e, 0x65, 0x10, 0xf7, 0x44, 0x28, 0xb5, 0xd7, 0xbd, 0xc4, 0x99, 0x91, 0xb7,
+	0xb0, 0x96, 0x54, 0xb9, 0x6c, 0x46, 0x02, 0x3f, 0xbf, 0x08, 0xe3, 0x92, 0x16, 0xdf, 0xe8, 0x0e,
+	0xac, 0x7a, 0xb4, 0xe7, 0x8e, 0xfb, 0xbc, 0xa3, 0x2c, 0x54, 0x51, 0x57, 0xb4, 0xf0, 0x85, 0x90,
+	0x91, 0x7f, 0xf3, 0x50, 0x56, 0x6d, 0xa2, 0x88, 0xc8, 0xea, 0x95, 0x5c, 0x76, 0xaf, 0xe4, 0x53,
+	0x7b, 0x45, 0x53, 0x55, 0x48, 0x50, 0x85, 0x61, 0xf9, 0x9c, 0x8e, 0x98, 0xb0, 0x52, 0x4d, 0x14,
+	0x1d, 0xd1, 0x67, 0x50, 0xa2, 0xfa, 0xa5, 0x19, 0x2e, 0x4a, 0xf2, 0xaa, 0xe9, 0x85, 0xd0, 0x9e,
+	0x28, 0xa2, 0x2f, 0x54, 0xb1, 0xaa, 0x1a, 0xc0, 0xcb, 0xd2, 0x2c, 0xb3, 0x58, 0x0d, 0x55, 0xd1,
+	0x9c, 0x3e, 0x7b, 0x1a, 0x9c, 0xfa, 0x5d, 0xb7, 0x2f, 0x1b, 0x70, 0xa5, 0x3d, 0x11, 0xa0, 0x3d,
+	0x00, 0x9f, 0x1d, 0x05, 0x83, 0x30, 0x18, 0x0f, 0x3d, 0xd9, 0x82, 0x2b, 0x6d, 0x43, 0x22, 0x08,
+	0x38, 0x3a, 0xf3, 0xfb, 0x9e, 0x8e, 0x0b, 0xf5, 0xbc, 0x20, 0xc0, 0x10, 0x59, 0x4d, 0x5c, 0xbe,
+	0x62, 0x13, 0x57, 0x16, 0x6d, 0xe2, 0xc9, 0x4c, 0x5a, 0x4d, 0xcc, 0x24, 0x04, 0x85, 0x56, 0x37,
+	0x18, 0xe2, 0x35, 0xf5, 0x9a, 0xe2, 0x9b, 0x84, 0x80, 0x8f, 0x64, 0x70, 0xa3, 0x0c, 0xda, 0xf4,
+	0xed, 0x98, 0x32, 0xd3, 0x8f, 0x93, 0xf0, 0xf3, 0x15, 0x54, 0x3c, 0xa9, 0xad, 0xc7, 0x44, 0x4e,
+	0x02, 0xdc, 0xb5, 0x98, 0x37, 0xfc, 0x95, 0xbd, 0xc9, 0x81, 0xbc, 0x86, 0xdd, 0x94, 0x88, 0x2c,
+	0x0c, 0x86, 0x8c, 0x4e, 0xb9, 0x76, 0x16, 0x72, 0xfd, 0x1c, 0xde, 0xf9, 0x96, 0xf2, 0x05, 0x32,
+	0xb9, 0x2b, 0x9a, 0x24, 0xd6, 0x8e, 0xfb, 0x3d, 0x29, 0x24, 0x2f, 0xa0, 0x6a, 0xbb, 0xbd, 0x16,
+	0xb8, 0x5d, 0x78, 0x37, 0xe9, 0xf7, 0xa5, 0xcf, 0xcf, 0x9e, 0xb9, 0x03, 0x3a, 0x0f, 0xf6, 0x47,
+	0xb0, 0x69, 0x86, 0xed, 0x18, 0x3d, 0xba, 0x6e, 0x04, 0x10, 0xae, 0xc8, 0xcf, 0xb0, 0x97, 0x15,
+	0xe4, 0x5a, 0x92, 0x78, 0x05, 0xb8, 0x49, 0xfb, 0x74, 0xa1, 0x02, 0xba, 0x1c, 0xed, 0x37, 0x61,
+	0x37, 0xc5, 0xb3, 0x02, 0x4d, 0xfe, 0x74, 0x00, 0xab, 0x8a, 0xbf, 0xee, 0xb8, 0x53, 0x7c, 0xe4,
+	0x17, 0xe2, 0xe3, 0x26, 0xec, 0xa6, 0xe0, 0xd2, 0xa8, 0x1f, 0xd8, 0x95, 0xc4, 0xe6, 0x40, 0x26,
+	0xaf, 0x61, 0x67, 0xca, 0x42, 0xbf, 0xdb, 0xd7, 0x51, 0x36, 0x1d, 0xbd, 0x41, 0x1d, 0x39, 0x01,
+	0x67, 0x00, 0xad, 0x18, 0x40, 0x19, 0x79, 0x05, 0x1b, 0x87, 0x9e, 0xa7, 0xee, 0xe7, 0x31, 0x77,
+	0x0f, 0x8a, 0xca, 0x56, 0x37, 0xfb, 0x76, 0x5a, 0x90, 0xb6, 0xd6, 0x21, 0x87, 0xb0, 0x69, 0x78,
+	0xd6, 0x70, 0x27, 0x2e, 0x9c, 0x4b, 0xb8, 0x78, 0x02, 0x1b, 0x71, 0xde, 0xf3, 0xc0, 0xd5, 0x60,
+	0x45, 0x59, 0xc5, 0x2f, 0x1a, 0x9f, 0x05, 0x14, 0xc3, 0xcf, 0xff, 0x82, 0xf2, 0x23, 0x6c, 0x99,
+	0x2f, 0x7a, 0xbd, 0x54, 0x55, 0x61, 0x3b, 0xe9, 0x5c, 0x57, 0x4a, 0xcb, 0xc0, 0x3d, 0xaf, 0x48,
+	0xc4, 0x3e, 0x8b, 0x12, 0x66, 0x38, 0x27, 0xf7, 0xd1, 0x44, 0x40, 0x9a, 0x80, 0x4c, 0x57, 0x9a,
+	0x83, 0x06, 0x2c, 0x2b, 0x95, 0xa8, 0x6e, 0xd2, 0x71, 0x46, 0x4a, 0xa4, 0x05, 0x5b, 0x66, 0x37,
+	0x5e, 0xe5, 0x4d, 0xaa, 0xb0, 0x9d, 0x74, 0xa5, 0x73, 0xf6, 0xa0, 0x7a, 0x12, 0x01, 0x3d, 0x91,
+	0xbf, 0xd7, 0x57, 0x88, 0x62, 0xfc, 0xb1, 0xe7, 0xcd, 0x3f, 0x76, 0xb2, 0x0b, 0x3b, 0x53, 0x51,
+	0x34, 0x80, 0xdf, 0x61, 0x2b, 0x66, 0xea, 0x69, 0x70, 0x7a, 0x95, 0xe8, 0x0f, 0xe0, 0x06, 0xf3,
+	0x87, 0x5d, 0xaa, 0xa7, 0xc7, 0xac, 0xed, 0xad, 0x14, 0x05, 0x2b, 0xc9, 0xe0, 0x0a, 0xd4, 0xc1,
+	0xdf, 0x25, 0x28, 0x34, 0x8f, 0x8f, 0x4f, 0x50, 0x0f, 0x36, 0xa7, 0x16, 0x27, 0xfa, 0x20, 0xf9,
+	0x6a, 0x59, 0xbb, 0xbc, 0xf6, 0xe1, 0x5c, 0x3d, 0xcd, 0xc1, 0x12, 0xfa, 0x09, 0xd6, 0x92, 0x23,
+	0x07, 0xdd, 0x49, 0x1a, 0xa7, 0xee, 0xd8, 0xda, 0xdd, 0xd9, 0x4a, 0xb1, 0xfb, 0xb1, 0x3d, 0x03,
+	0xa3, 0x85, 0x84, 0x3e, 0x9e, 0xe5, 0xc1, 0xda, 0x8d, 0xb5, 0x7b, 0x97, 0x53, 0x8e, 0xc3, 0xf6,
+	0x60, 0x73, 0x6a, 0x9b, 0xd8, 0xec, 0x65, 0x2d, 0x32, 0x9b, 0xbd, 0xec, 0xb5, 0x24, 0xe3, 0x4c,
+	0xcd, 0x7f, 0x3b, 0x4e, 0xd6, 0xe2, 0xb2, 0xe3, 0x64, 0x2f, 0x92, 0x25, 0xf4, 0x0b, 0xac, 0x5b,
+	0x8b, 0x01, 0xcd, 0x7c, 0x81, 0xa8, 0x97, 0x6a, 0xef, 0xcf, 0xd1, 0x8a, 0x23, 0x3c, 0x83, 0x52,
+	0x3c, 0xc5, 0xd1, 0x5e, 0xd2, 0xca, 0x5e, 0x1c, 0xb5, 0xdb, 0x99, 0xf7, 0xa6, 0xbf, 0x38, 0x98,
+	0xed, 0xcf, 0x9e, 0xf5, 0xb6, 0xbf, 0xa9, 0x19, 0x4e, 0x96, 0xd0, 0x4b, 0xa8, 0x98, 0x04, 0xa1,
+	0xf7, 0xb2, 0xc9, 0x8b, 0xbc, 0x92, 0x59, 0x2a, 0xb1, 0xe3, 0xef, 0x01, 0x26, 0x03, 0x13, 0x65,
+	0x21, 0x89, 0x09, 0xad, 0x67, 0x2b, 0x98, 0x58, 0xcd, 0xa2, 0xb1, 0xb1, 0xa6, 0x4c, 0x56, 0x1b,
+	0x6b, 0xea, 0xc4, 0x94, 0x65, 0x60, 0x4d, 0x33, 0xbb, 0x0c, 0xd2, 0x47, 0xaa, 0x5d, 0x06, 0x59,
+	0x23, 0x51, 0x42, 0x37, 0xe7, 0x92, 0x0d, 0x3d, 0x65, 0x60, 0xda, 0xd0, 0xd3, 0xc6, 0x1a, 0x59,
+	0x7a, 0x53, 0x94, 0xb3, 0xf0, 0xd3, 0xff, 0x02, 0x00, 0x00, 0xff, 0xff, 0xfc, 0x51, 0xf6, 0xe4,
+	0xe7, 0x11, 0x00, 0x00,
 }

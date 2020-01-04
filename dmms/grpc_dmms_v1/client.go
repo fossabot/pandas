@@ -9,7 +9,7 @@
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 //  License for the specific language governing permissions and limitations
 //  under the License.
-package grpc_pms_v1
+package grpc_dmms_v1
 
 import (
 	"fmt"
@@ -21,8 +21,8 @@ import (
 )
 
 const (
-	DefaultPort = 30011
-	ServiceName = "pms"
+	DefaultPort = 30010
+	ServiceName = "dmms"
 )
 
 var (
@@ -32,13 +32,13 @@ var (
 
 // Client is a client interface for interacting with the tuning service.
 type Client interface {
-	ProjectManager() ProjectManagementClient
+	DeviceManager() DMMSClient
 	Close() error
 }
 
 type client struct {
-	pm   ProjectManagementClient
-	conn *grpc.ClientConn
+	deviceManager DMMSClient
+	conn          *grpc.ClientConn
 }
 
 // NewClient create a new load-balanced client to talk to the Tuning
@@ -76,13 +76,13 @@ func NewWithAddress(addr string) (Client, error) {
 	logr.Infof("Dial pms service ok")
 
 	return &client{
-		conn: conn,
-		pm:   NewProjectManagementClient(conn),
+		conn:          conn,
+		deviceManager: NewDMMSClient(conn),
 	}, nil
 }
 
-func (c *client) ProjectManager() ProjectManagementClient {
-	return c.pm
+func (c *client) DeviceManager() DMMSClient {
+	return c.deviceManager
 }
 
 func (c *client) Close() error {

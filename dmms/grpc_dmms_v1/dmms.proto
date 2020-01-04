@@ -63,8 +63,16 @@ service DMMS {
     rpc GetDeviceModels(GetDeviceModelsRequest) returns (GetDeviceModelsResponse) {}
 
     // Device Management
+    rpc AddDevice(AddDeviceRequest) returns (AddDeviceResponse) {}
+    rpc GetDevice(GetDeviceRequest) returns (GetDeviceResponse) {}
+    rpc UpdateDevice(UpdateDeviceRequest) returns (UpdateDeviceResponse) {}
+    rpc GetDevices(GetDevicesRequest) returns (GetDevicesResponse) {}
+    rpc DeleteDevice(DeleteDeviceRequest) returns (DeleteDeviceResponse) {}
+    rpc SetDeviceStatus(SetDeviceStatusRequest) returns (SetDeviceStatusResponse) {}
+    rpc GetDeviceLog(GetDeviceLogRequest) returns (GetDeviceLogResponse) {}
 }
 
+// Device Model apis
 message CreateDeviceModelRequest {
     string userID = 1;
     DeviceModel device_model = 2;
@@ -109,5 +117,59 @@ message GetDeviceModelsRequest {
 message GetDeviceModelsResponse {
     repeated DeviceModel device_models = 1;
 }
+
+// Device apis
+message AddDeviceRequest {
+    string userID = 1;
+    Device device = 2;
+}
+message AddDeviceResponse {
+    Device device = 1;
+}
+
+message GetDeviceRequest {
+    string userID = 1;
+    string deviceID = 2;
+}
+message GetDeviceResponse {
+    Device device = 1;
+}
+message UpdateDeviceRequest {
+    string userID = 1;
+    Device device = 2;
+}
+message UpdateDeviceResponse {}
+
+message GetDevicesRequest {
+    string userID = 1;
+    repeated string deviceIDs = 2;
+}
+message GetDevicesResponse {
+    repeated Device devices = 1;
+}
+
+message DeleteDeviceRequest {
+    string userID = 1;
+    string deviceID = 2;
+}
+message DeleteDeviceResponse {}
+
+message SetDeviceStatusRequest {
+    string userID = 1;
+    string deviceID = 2;
+    string status = 3;
+}
+message SetDeviceStatusResponse {}
+
+message GetDeviceLogRequest {
+    string userID = 1;
+    string deviceID = 2;
+    google.protobuf.Timestamp since = 3;
+}
+message GetDeviceLogResponse {}
+
+
+
+
 
 
