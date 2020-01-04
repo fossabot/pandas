@@ -12,18 +12,18 @@
 package util
 
 import (
-	"github.com/cloustone/pandas/pkg/synchron"
-	"github.com/cloustone/pandas/pkg/synchron/inproc"
-	"github.com/cloustone/pandas/pkg/synchron/rabbitmq"
+	"github.com/cloustone/pandas/pkg/broadcast"
+	"github.com/cloustone/pandas/pkg/broadcast/inproc"
+	"github.com/cloustone/pandas/pkg/broadcast/rabbitmq"
 )
 
-// NewSynchronizer will create synchronizer according to environment's setting
-func NewSynchronizer(syncOptions *synchron.SyncServingOptions) synchron.Synchronizer {
-	switch syncOptions.Method {
+// NewSynchronizer will create broadcastizer according to environment's setting
+func NewBroadcast(options *broadcast.ServingOptions) broadcast.Broadcast {
+	switch options.Method {
 	case rabbitmq.NAME:
-		return rabbitmq.NewSynchronizer(syncOptions.User, syncOptions.Password, syncOptions.Hosts)
+		return rabbitmq.NewBroadcast(options.User, options.Password, options.Hosts)
 	case inproc.NAME:
-		return inproc.NewSynchronizer()
+		return inproc.NewBroadcast()
 	}
 	return nil
 }

@@ -9,36 +9,36 @@
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 //  License for the specific language governing permissions and limitations
 //  under the License.
-package synchron
+package broadcast
 
 import (
 	"github.com/spf13/pflag"
 )
 
-type SyncServingOptions struct {
+type ServingOptions struct {
 	Method   string
 	User     string
 	Password string
 	Hosts    string
 }
 
-func NewSyncServingOptions() *SyncServingOptions {
-	s := SyncServingOptions{
+func NewServingOptions() *ServingOptions {
+	s := ServingOptions{
 		Method: "inproc",
 	}
 	return &s
 }
 
-func (s *SyncServingOptions) AddFlags(fs *pflag.FlagSet) {
-	fs.StringVar(&s.Method, "sync-method", s.Method,
-		"synchronization method(inproc, rabbitmq, raft)")
+func (s *ServingOptions) AddFlags(fs *pflag.FlagSet) {
+	fs.StringVar(&s.Method, "broadcast", s.Method,
+		"broadcastization method(inproc, rabbitmq, raft)")
 
-	fs.StringVar(&s.User, "sync-user", s.User,
-		"is synchronization using rabbitmq, the user name must be specified.")
+	fs.StringVar(&s.User, "broadcast-user", s.User,
+		"is broadcastization using rabbitmq, the user name must be specified.")
 
-	fs.StringVar(&s.Password, "sync-pwd", s.Password,
-		"if synchronization using rabbitmq, the password must be specified)")
+	fs.StringVar(&s.Password, "broadcast-pwd", s.Password,
+		"if broadcastization using rabbitmq, the password must be specified)")
 
-	fs.StringVar(&s.Hosts, "sync-hosts", s.Hosts,
-		"if synchronization using rabbitmq,  the hosts muste be specified)")
+	fs.StringVar(&s.Hosts, "broadcast-hosts", s.Hosts,
+		"if broadcastization using rabbitmq,  the hosts muste be specified)")
 }

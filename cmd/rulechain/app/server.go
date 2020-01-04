@@ -50,7 +50,7 @@ func NewAPIServerCommand() *cobra.Command {
 }
 
 func (s *ManagementServer) PreRun(runOptions *options.ServerRunOptions) *ManagementServer {
-	s.Initialize(runOptions.SyncServing)
+	s.Initialize(runOptions.BroadcastServing)
 	return s
 }
 

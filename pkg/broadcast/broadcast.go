@@ -10,7 +10,7 @@
 //  License for the specific language governing permissions and limitations
 //  under the License.
 
-package synchron
+package broadcast
 
 const (
 	ActionCreated = "created"
@@ -25,11 +25,11 @@ type Notification struct {
 }
 
 type Observer interface {
-	OnSynchronizationNotified(Synchronizer, Notification)
+	Onbroadcast(Broadcast, Notification)
 }
 
-type Synchronizer interface {
-	WithRootPath(string) Synchronizer
+type Broadcast interface {
+	WithRootPath(string) Broadcast
 	AsMember()
 	Notify(Notification)
 	RegisterObserver(path string, obs Observer)

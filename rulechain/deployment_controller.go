@@ -16,7 +16,7 @@ import (
 	"sync"
 
 	"github.com/cloustone/pandas/models"
-	"github.com/cloustone/pandas/pkg/synchron"
+	"github.com/cloustone/pandas/pkg/broadcast"
 
 	logr "github.com/sirupsen/logrus"
 )
@@ -45,8 +45,8 @@ func (c *deploymentController) OnModelNotified(path string, action string, obj i
 	deployment := obj.(models.Deployment)
 
 	switch action {
-	case synchron.ActionCreated:
-	case synchron.ActionUpdated:
+	case broadcast.ActionCreated:
+	case broadcast.ActionUpdated:
 		switch deployment.Status {
 		case models.DeploymentStatusRunning:
 			err = c.startDeployment(deployment)
@@ -56,7 +56,7 @@ func (c *deploymentController) OnModelNotified(path string, action string, obj i
 			err = fmt.Errorf("invalid deployment status '%s'", deployment.Status)
 		}
 
-	case synchron.ActionDeleted:
+	case broadcast.ActionDeleted:
 		err = c.deleteDeployment(deployment)
 	default:
 		err = fmt.Errorf("invalid model action '%s'", action)

@@ -15,7 +15,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/cloustone/pandas/pkg/synchron"
+	"github.com/cloustone/pandas/pkg/broadcast"
 
 	"github.com/sirupsen/logrus"
 	"github.com/streadway/amqp"
@@ -23,8 +23,8 @@ import (
 
 const NAME = "rabbitmq"
 
-type RabbitmqSynchronizer struct {
-	observers   []synchron.Observer
+type RabbitmqBroadcast struct {
+	observers   []broadcast.Observer
 	conn        *amqp.Connection
 	ch          *amqp.Channel
 	subscribers map[string]subscriber
@@ -34,10 +34,10 @@ type subscriber struct {
 	topic    string
 	clientId string
 	queue    amqp.Queue
-	observer synchron.Observer
+	observer broadcast.Observer
 }
 
-func NewSynchronizer(usr string, pwd string, hosts string) synchron.Synchronizer {
+func NewBroadcast(usr string, pwd string, hosts string) broadcast.Broadcast {
 	connectUrl := fmt.Sprintf("amqp://%s:%s@%s/", usr, pwd, hosts)
 	conn, err := amqp.Dial(connectUrl)
 	if err != nil {
@@ -47,18 +47,18 @@ func NewSynchronizer(usr string, pwd string, hosts string) synchron.Synchronizer
 	if err != nil {
 		logrus.Fatalf(err.Error())
 	}
-	return &RabbitmqSynchronizer{
-		observers:   []synchron.Observer{},
+	return &RabbitmqBroadcast{
+		observers:   []broadcast.Observer{},
 		conn:        conn,
 		ch:          ch,
 		subscribers: make(map[string]subscriber),
 	}
 }
 
-func (r *RabbitmqSynchronizer) AsMember() {}
+func (r *RabbitmqBroadcast) AsMember() {}
 
-func (r *RabbitmqSynchronizer) WithRootPath(path string) synchron.Synchronizer { return r }
-func (r *RabbitmqSynchronizer) Notify(n synchron.Notification) {
+func (r *RabbitmqBroadcast) WithRootPath(path string) broadcast.Broadcast { return r }
+func (r *RabbitmqBroadcast) Notify(n broadcast.Notification) {
 	body, err := json.Marshal(&n)
 	if err != nil {
 		logrus.WithError(err)
@@ -72,7 +72,7 @@ func (r *RabbitmqSynchronizer) Notify(n synchron.Notification) {
 	}
 }
 
-func (r *RabbitmqSynchronizer) RegisterObserver(path string, obs synchron.Observer) {
+func (r *RabbitmqBroadcast) RegisterObserver(path string, obs broadcast.Observer) {
 	if err := r.ch.ExchangeDeclare(path, "fanout", true, false, false, false, nil); err != nil {
 		logrus.WithError(err).Fatalf("register observer '%s' failed", path)
 	}
@@ -108,13 +108,13 @@ func (r *RabbitmqSynchronizer) RegisterObserver(path string, obs synchron.Observ
 	if err != nil {
 		logrus.WithError(err).Fatalf("register observer '%s' failed", path)
 	}
-	go func(r *RabbitmqSynchronizer, sub subscriber) {
+	go func(r *RabbitmqBroadcast, sub subscriber) {
 		for msg := range msgs {
-			n := synchron.Notification{}
+			n := broadcast.Notification{}
 			if err := json.Unmarshal(msg.Body, &n); err != nil {
 				logrus.WithError(err)
 			}
-			sub.observer.OnSynchronizationNotified(r, n)
+			sub.observer.Onbroadcast(r, n)
 		}
 	}(r, sub)
 	r.subscribers[path] = sub

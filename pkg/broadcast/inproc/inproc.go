@@ -11,28 +11,28 @@
 //  under the License.
 package inproc
 
-import "github.com/cloustone/pandas/pkg/synchron"
+import "github.com/cloustone/pandas/pkg/broadcast"
 
 const NAME = "inproc"
 
-type InprocSynchronizer struct {
-	observers []synchron.Observer
+type InprocBroadcast struct {
+	observers []broadcast.Observer
 }
 
-func NewSynchronizer() synchron.Synchronizer {
-	return &InprocSynchronizer{
-		observers: []synchron.Observer{},
+func NewBroadcast() broadcast.Broadcast {
+	return &InprocBroadcast{
+		observers: []broadcast.Observer{},
 	}
 }
 
-func (s *InprocSynchronizer) AsMember()                                      {}
-func (s *InprocSynchronizer) WithRootPath(path string) synchron.Synchronizer { return s }
-func (s *InprocSynchronizer) Notify(n synchron.Notification) {
+func (s *InprocBroadcast) AsMember()                                    {}
+func (s *InprocBroadcast) WithRootPath(path string) broadcast.Broadcast { return s }
+func (s *InprocBroadcast) Notify(n broadcast.Notification) {
 	for _, observer := range s.observers {
-		observer.OnSynchronizationNotified(s, n)
+		observer.Onbroadcast(s, n)
 	}
 }
 
-func (s *InprocSynchronizer) RegisterObserver(path string, obs synchron.Observer) {
+func (s *InprocBroadcast) RegisterObserver(path string, obs broadcast.Observer) {
 	s.observers = append(s.observers, obs)
 }

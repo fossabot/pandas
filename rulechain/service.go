@@ -14,14 +14,14 @@ package rulechain
 import (
 	"context"
 
-	"github.com/cloustone/pandas/pkg/synchron"
-	syncutil "github.com/cloustone/pandas/pkg/synchron/util"
+	"github.com/cloustone/pandas/pkg/broadcast"
+	syncutil "github.com/cloustone/pandas/pkg/broadcast/util"
 	pb "github.com/cloustone/pandas/rulechain/grpc_rulechain_v1"
 	logr "github.com/sirupsen/logrus"
 )
 
 var (
-	synchronizer synchron.Synchronizer
+	broadcastizer broadcast.Broadcast
 )
 
 // Controller monitor rulechain's change and adjust the deployment dynamically
@@ -42,18 +42,18 @@ func NewRuleChainService() *RuleChainService {
 	}
 }
 
-// Initialize will add prestart behaivor such as synchronization initialization
-func (s *RuleChainService) Initialize(syncOptions *synchron.SyncServingOptions) {
+// Initialize will add prestart behaivor such as broadcastization initialization
+func (s *RuleChainService) Initialize(syncOptions *broadcast.ServingOptions) {
 	s.controllers = loadControllers()
-	synchronizer = syncutil.NewSynchronizer(syncOptions).WithRootPath("pandas/rulechain")
-	synchronizer.AsMember()
+	broadcastizer = syncutil.NewBroadcast(syncOptions).WithRootPath("pandas/rulechain")
+	broadcastizer.AsMember()
 	for path, _ := range s.controllers {
-		synchronizer.RegisterObserver(path, s)
+		broadcastizer.RegisterObserver(path, s)
 	}
 }
 
 // OnSynchonronizedNotified will be notified when rulechain model object is changed
-func (s *RuleChainService) OnSynchronizationNotified(sync synchron.Synchronizer, notify synchron.Notification) {
+func (s *RuleChainService) Onbroadcast(sync broadcast.Broadcast, notify broadcast.Notification) {
 	if controller, found := s.controllers[notify.Path]; found {
 		controller.OnModelNotified(notify.Path, notify.Action, notify.Param)
 		return
@@ -70,9 +70,9 @@ func loadControllers() map[string]Controller {
 	return controllers
 }
 
-// notify is internal helper to simplify synchronization notificaiton
+// notify is internal helper to simplify broadcastization notificaiton
 func notify(action string, path string) {
-	synchronizer.Notify(synchron.Notification{
+	broadcastizer.Notify(broadcast.Notification{
 		Path:   path,
 		Action: action,
 		Param:  path,

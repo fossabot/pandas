@@ -13,24 +13,24 @@ package options
 
 import (
 	"github.com/cloustone/pandas/models/factory"
+	broadcast_options "github.com/cloustone/pandas/pkg/broadcast"
 	genericoptions "github.com/cloustone/pandas/pkg/server/options"
-	syncoptions "github.com/cloustone/pandas/pkg/synchron"
 	"github.com/spf13/pflag"
 )
 
 type ServerRunOptions struct {
-	SecureServing  *genericoptions.SecureServingOptions
-	FactoryServing *factory.FactoryServingOptions
-	SyncServing    *syncoptions.SyncServingOptions
-	SSHUser        string
-	SSHKeyfile     string
+	SecureServing    *genericoptions.SecureServingOptions
+	FactoryServing   *factory.FactoryServingOptions
+	BroadcastServing *broadcast_options.ServingOptions
+	SSHUser          string
+	SSHKeyfile       string
 }
 
 func NewServerRunOptions() *ServerRunOptions {
 	s := ServerRunOptions{
-		SecureServing:  genericoptions.NewSecureServingOptions("dmms"),
-		FactoryServing: factory.NewFactoryServingOptions(),
-		SyncServing:    syncoptions.NewSyncServingOptions(),
+		SecureServing:    genericoptions.NewSecureServingOptions("dmms"),
+		FactoryServing:   factory.NewFactoryServingOptions(),
+		BroadcastServing: broadcast_options.NewServingOptions(),
 	}
 	return &s
 }
@@ -38,7 +38,7 @@ func NewServerRunOptions() *ServerRunOptions {
 func (s *ServerRunOptions) AddFlags(fs *pflag.FlagSet) {
 	s.SecureServing.AddFlags(fs)
 	s.FactoryServing.AddFlags(fs)
-	s.SyncServing.AddFlags(fs)
+	s.BroadcastServing.AddFlags(fs)
 
 	fs.StringVar(&s.SSHUser, "ssh-user", s.SSHUser,
 		"If non-empty, use secure SSH proxy to the nodes, using this user name")
