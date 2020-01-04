@@ -14,14 +14,10 @@ package dmms
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"reflect"
-
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 
 	"github.com/cloustone/pandas/dmms/converter"
 	pb "github.com/cloustone/pandas/dmms/grpc_dmms_v1"
@@ -33,25 +29,18 @@ import (
 // DeviceManager manage all device and device models which include model definition and
 // presentation. Model definition and presentation are wrapped into bundle to
 // store into backend storage.
-type DeviceManagementService struct{}
+type DeviceManagementService struct {
+	servingOptions *ServingOptions
+}
 
 func NewDeviceManagementService() *DeviceManagementService {
 	return &DeviceManagementService{}
 }
 
-// grpcError return grpc error according to models errors
-func grpcError(err error) error {
-	if err == nil {
-		return nil
-	} else if errors.Is(err, factory.ErrObjectNotFound) {
-		return status.Errorf(codes.NotFound, "%w", err)
-	} else if errors.Is(err, factory.ErrObjectAlreadyExist) {
-		return status.Errorf(codes.AlreadyExists, "%w", err)
-	} else if errors.Is(err, factory.ErrObjectInvalidArg) {
-		return status.Errorf(codes.InvalidArgument, "%w", err)
-	} else {
-		return status.Errorf(codes.Internal, "%s", err)
-	}
+// Prerun initialize and load builtin devices models
+func (s *DeviceManagementService) Initialize(servingOptions *ServingOptions) {
+	s.servingOptions = servingOptions
+	s.loadPresetDeviceModels(s.servingOptions.DeviceModelPath)
 }
 
 // LoadDefaultDeviceModels walk through the specified path and load model
@@ -102,22 +91,62 @@ func (s *DeviceManagementService) loadPresetDeviceModels(path string) error {
 // User can also using the method to create device model with inmemory
 // bundle, for this case, the device should also be save to repo
 func (s *DeviceManagementService) CreateDeviceModel(ctx context.Context, in *pb.CreateDeviceModelRequest) (*pb.CreateDeviceModelResponse, error) {
-	deviceModel := converter.NewDeviceModel2Model(in.DeviceModel)
-
-	pf := factory.NewFactory(reflect.TypeOf(models.DeviceModel{}).Name())
+	pf := factory.NewFactory(models.DeviceModel{})
 	owner := factory.NewOwner(in.UserID)
-	_, err := pf.Save(owner, deviceModel)
-	return &pb.CreateDeviceModelResponse{}, grpcError(err)
+	deviceModel := converter.NewDeviceModel2Model(in.DeviceModel)
+	updatedDeviceModel, err := pf.Save(owner, deviceModel)
+	if err != nil {
+		return nil, grpcError(err)
+	}
+
+	return &pb.CreateDeviceModelResponse{
+		DeviceModel: converter.NewDeviceModel2(updatedDeviceModel),
+	}, nil
 }
 
+// GetDeviceModel return specifed device model's detail
 func (s *DeviceManagementService) GetDeviceModel(ctx context.Context, in *pb.GetDeviceModelRequest) (*pb.GetDeviceModelResponse, error) {
-	return nil, nil
+	pf := factory.NewFactory(models.DeviceModel{})
+	owner := factory.NewOwner(in.UserID)
+
+	deviceModel, err := pf.Get(owner, in.DeviceModelID)
+	if err != nil {
+		return nil, grpcError(err)
+	}
+	return &pb.GetDeviceModelResponse{
+		DeviceModel: converter.NewDeviceModel2(deviceModel),
+	}, nil
+
 }
+
+// GetDeviceModelWithName return device model specified with model name
 func (s *DeviceManagementService) GetDeviceModelWithName(ctx context.Context, in *pb.GetDeviceModelWithNameRequest) (*pb.GetDeviceModelWithNameResponse, error) {
-	return nil, nil
+	pf := factory.NewFactory(models.DeviceModel{})
+	owner := factory.NewOwner(in.UserID)
+	query := models.NewQuery().
+		WithQuery("name", in.DeviceModelName).
+		WithQuery("userID", in.UserID)
+
+	deviceModels, err := pf.List(owner, query)
+	if err != nil {
+		return nil, grpcError(err)
+	}
+	if len(deviceModels) == 0 {
+		return nil, grpcError(factory.ErrObjectNotFound)
+	}
+
+	return &pb.GetDeviceModelWithNameResponse{
+		DeviceModel: converter.NewDeviceModel2(deviceModels[0]),
+	}, nil
 }
+
+// DeleteDeviceModel delete specified device model
 func (s *DeviceManagementService) DeleteDeviceModel(ctx context.Context, in *pb.DeleteDeviceModelRequest) (*pb.DeleteDeviceModelResponse, error) {
-	return nil, nil
+	pf := factory.NewFactory(models.DeviceModel{})
+	owner := factory.NewOwner(in.UserID)
+
+	err := pf.Delete(owner, in.DeviceModelID)
+	return &pb.DeleteDeviceModelResponse{}, grpcError(err)
 }
 
 // UpdateDeviceModel is called when model presentation is changed using web
@@ -127,7 +156,7 @@ func (s *DeviceManagementService) UpdateDeviceModel(ctx context.Context, in *pb.
 	pf := factory.NewFactory(reflect.TypeOf(models.DeviceModel{}).Name())
 	owner := factory.NewOwner(in.UserID)
 
-	if _, err := pf.Get(owner, in.ModelID); err != nil {
+	if _, err := pf.Get(owner, in.DeviceModelID); err != nil {
 		return nil, grpcError(err)
 	}
 	deviceModel := converter.NewDeviceModel2Model(in.DeviceModel)
@@ -135,10 +164,16 @@ func (s *DeviceManagementService) UpdateDeviceModel(ctx context.Context, in *pb.
 	return &pb.UpdateDeviceModelResponse{}, grpcError(err)
 }
 
+// GetDeviceModels return user's all device models
 func (s *DeviceManagementService) GetDeviceModels(ctx context.Context, in *pb.GetDeviceModelsRequest) (*pb.GetDeviceModelsResponse, error) {
-	return nil, nil
-}
+	pf := factory.NewFactory(reflect.TypeOf(models.DeviceModel{}).Name())
+	owner := factory.NewOwner(in.UserID)
 
-func (s *DeviceManagementService) GetDeviceModelBundle(ctx context.Context, in *pb.GetDeviceModelBundleRequest) (*pb.GetDeviceModelBundleResponse, error) {
-	return nil, nil
+	deviceModels, err := pf.List(owner, models.NewQuery())
+	if err != nil {
+		return nil, grpcError(err)
+	}
+	return &pb.GetDeviceModelsResponse{
+		DeviceModels: converter.NewDeviceModels2(deviceModels),
+	}, nil
 }

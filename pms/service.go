@@ -52,7 +52,7 @@ func grpcError(err error) error {
 func (s *ProjectManagementService) CreateProject(ctx context.Context, in *pb.CreateProjectRequest) (*pb.CreateProjectResponse, error) {
 	pf := factory.NewFactory(models.Project{})
 	owner := factory.NewOwner(in.UserID)
-	query := models.NewQuery().WithCondition("projectName", in.Project.Name)
+	query := models.NewQuery().WithQuery("projectName", in.Project.Name)
 
 	if _, err := pf.List(owner, query); err == nil {
 		return nil, grpcError(err)

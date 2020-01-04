@@ -99,7 +99,8 @@ func NewDeviceModels(devices []*grpc_dmms_v1.Device) []models.Device {
 }
 
 // grpc_dmms_v1.DeviceModel and models.DeviceModel
-func NewDeviceModel2(model2 *models.DeviceModel) *grpc_dmms_v1.DeviceModel {
+func NewDeviceModel2(obj models.Model) *grpc_dmms_v1.DeviceModel {
+	model2 := obj.(*models.DeviceModel)
 	createdAt, _ := ptypes.TimestampProto(model2.CreatedAt)
 	lastUpdatedAt, _ := ptypes.TimestampProto(model2.LastUpdatedAt)
 
@@ -145,7 +146,7 @@ func NewDeviceModel2(model2 *models.DeviceModel) *grpc_dmms_v1.DeviceModel {
 	}
 }
 
-func NewDeviceModels2(model2s []*models.DeviceModel) []*grpc_dmms_v1.DeviceModel {
+func NewDeviceModels2(model2s []models.Model) []*grpc_dmms_v1.DeviceModel {
 	model2models := []*grpc_dmms_v1.DeviceModel{}
 	for _, model := range model2s {
 		model2models = append(model2models, NewDeviceModel2(model))

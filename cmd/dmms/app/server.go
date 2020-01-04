@@ -18,6 +18,7 @@ import (
 	"github.com/cloustone/pandas/lbs"
 	"github.com/cloustone/pandas/lbs/grpc_lbs_v1"
 	lbsproxy "github.com/cloustone/pandas/lbs/proxy"
+	"github.com/cloustone/pandas/models/factory"
 	"github.com/cloustone/pandas/pkg/server"
 	"github.com/gogo/protobuf/version"
 	"github.com/sirupsen/logrus"
@@ -62,7 +63,12 @@ func Run(runOptions *options.ServerRunOptions, stopCh <-chan struct{}) error {
 	// To help debugging, immediately log version
 	logrus.Infof("Version: %+v", version.Get())
 
-	NewDeviceManagementServer(runOptions).Run(runOptions.SecureServing)
+	// Initialize object factory
+	factory.Initialize(runOptions.FactoryServing)
+
+	service := NewDeviceManagementServer(runOptions)
+	service.Initialize(runOptions.DeviceServing)
+	service.Run(runOptions.SecureServing)
 	<-stopCh
 	return nil
 }

@@ -61,7 +61,6 @@ service DMMS {
     rpc DeleteDeviceModel(DeleteDeviceModelRequest) returns (DeleteDeviceModelResponse) {}
     rpc UpdateDeviceModel(UpdateDeviceModelRequest) returns (UpdateDeviceModelResponse) {}
     rpc GetDeviceModels(GetDeviceModelsRequest) returns (GetDeviceModelsResponse) {}
-    rpc GetDeviceModelBundle(GetDeviceModelBundleRequest) returns (GetDeviceModelBundleResponse) {}
 
     // Device Management
 }
@@ -70,25 +69,45 @@ message CreateDeviceModelRequest {
     string userID = 1;
     DeviceModel device_model = 2;
 }
+message CreateDeviceModelResponse {
+    DeviceModel device_model = 1;
+}
 
-message CreateDeviceModelResponse {}
-message GetDeviceModelRequest {}
-message GetDeviceModelResponse {}
-message GetDeviceModelWithNameRequest {}
-message GetDeviceModelWithNameResponse {}
-message DeleteDeviceModelRequest {}
+message GetDeviceModelRequest {
+    string userID = 1;
+    string deviceModelID = 2;
+}
+message GetDeviceModelResponse {
+    DeviceModel device_model = 1;
+}
+
+message GetDeviceModelWithNameRequest {
+    string userID = 1;
+    string device_model_name = 2;
+}
+message GetDeviceModelWithNameResponse {
+    DeviceModel device_model = 1;
+}
+
+message DeleteDeviceModelRequest {
+    string userID = 1;
+    string deviceModelID = 2;
+
+}
 message DeleteDeviceModelResponse {}
 
 message UpdateDeviceModelRequest {
     string userID = 1;
-    string modelID = 2;
+    string deviceModelID = 2;
     DeviceModel device_model = 3;
 }
 message UpdateDeviceModelResponse {}
-message GetDeviceModelsRequest {}
-message GetDeviceModelsResponse {}
-message GetDeviceModelBundleRequest {}
-message GetDeviceModelBundleResponse {}
 
+message GetDeviceModelsRequest {
+    string userID = 1;
+}
+message GetDeviceModelsResponse {
+    repeated DeviceModel device_models = 1;
+}
 
 

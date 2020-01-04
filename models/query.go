@@ -14,23 +14,23 @@ package models
 
 // Query ...
 type Query struct {
-	Offset     int32
-	Limit      int32
-	Conditions map[string]string
+	Offset int32
+	Limit  int32
+	Querys map[string]string
 }
 
 // NewQuery ...
 func NewQuery() *Query {
 	return &Query{
-		Offset:     0,
-		Limit:      10,
-		Conditions: make(map[string]string),
+		Offset: 0,
+		Limit:  10,
+		Querys: make(map[string]string),
 	}
 }
 
-// WithCondition ...
-func (q *Query) WithCondition(key, val string) *Query {
-	q.Conditions[key] = val
+// WithQuery ...
+func (q *Query) WithQuery(key, val string) *Query {
+	q.Querys[key] = val
 	return q
 }
 
