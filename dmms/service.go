@@ -14,10 +14,12 @@ package dmms
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"reflect"
+	"time"
 
 	"github.com/cloustone/pandas/dmms/converter"
 	pb "github.com/cloustone/pandas/dmms/grpc_dmms_v1"
@@ -68,6 +70,26 @@ func (s *DeviceManagementService) Onbroadcast(b broadcast.Broadcast, notify broa
 // handleDeviceNotifications handle device's notificaitons, such as device is added, removed,
 // and device message is recived.
 func (s *DeviceManagementService) handleDeviceNotifications(n *notifications.DeviceNotification) {
+	updateDeviceMetrics(n)
+
+	switch n.Type {
+	case notifications.KDeviceConnected, notifications.KDeviceDisconnected:
+		updateDeviceStatus(n)
+		break
+
+	case notifications.KDeviceMessageReceived:
+		updateDeviceValues(n)
+	}
+}
+
+// updateDeviceValues will update device real values using message received and device model
+func updateDeviceValues(n *notifications.DeviceNotification) {
+	// TODO
+}
+
+// updateDeviceStatus update device status
+func updateDeviceStatus(n *notifications.DeviceNotification) {
+	// The device should be authenticated to be as valid device
 	pf := factory.NewFactory(models.Device{})
 	owner := factory.NewOwner(n.UserID)
 
@@ -76,22 +98,58 @@ func (s *DeviceManagementService) handleDeviceNotifications(n *notifications.Dev
 		logrus.Error("ilegal device '%s' notification received", n.DeviceID)
 		return
 	}
-	device := converter.NewDevice(deviceModel)
-
+	device := deviceModel.(*models.Device)
 	switch n.Type {
 	case notifications.KDeviceConnected:
 		device.Status = models.KDeviceStatusConnected
-		pf.Update(owner, converter.NewDeviceModel(device))
+		break
+	case notifications.KDeviceDisconnected:
+		device.Status = models.KDeviceStatusDisconnected
+		break
+	default:
+		device.Status = models.KDeviceStatusUnknown
+	}
+	device.LastUpdatedAt = time.Now()
+	pf.Update(owner, device)
+}
+
+// updateDeviceMetrics update device metrics
+func updateDeviceMetrics(n *notifications.DeviceNotification) {
+	var deviceMetrics *models.DeviceMetrics
+
+	pf := factory.NewFactory(models.DeviceMetrics{})
+	owner := factory.NewOwner(n.UserID)
+	deviceMetricsModel, err := pf.Get(owner, n.DeviceID)
+	if err != nil {
+		if errors.Is(err, factory.ErrObjectNotFound) { // the device metrics not exist
+			deviceMetrics = &models.DeviceMetrics{
+				DeviceID:      n.DeviceID,
+				CreatedAt:     time.Now(),
+				LastUpdatedAt: time.Now(),
+			}
+		}
+	} else {
+		deviceMetrics = deviceMetricsModel.(*models.DeviceMetrics)
+	}
+	switch n.Type {
+	case notifications.KDeviceConnected:
+		deviceMetrics.LastUpdatedAt = time.Now()
+		deviceMetrics.ConnectCount += 1
+		deviceMetrics.LastConnectedAt = time.Now()
 		break
 
 	case notifications.KDeviceDisconnected:
-		device.Status = models.KDeviceStatusDisconnected
-		pf.Update(owner, converter.NewDeviceModel(device))
+		deviceMetrics.LastUpdatedAt = time.Now()
+		deviceMetrics.DisconnectCount += 1
+		deviceMetrics.LastDisconnectedAt = time.Now()
 		break
 
 	case notifications.KDeviceMessageReceived:
-
+		deviceMetrics.LastUpdatedAt = time.Now()
+		deviceMetrics.MessageCount += 1
+		deviceMetrics.LastMessageReceivedAt = time.Now()
 	}
+	pf.Save(owner, deviceMetrics)
 }
 
 // LoadDefaultDeviceModels walk through the specified path and load model
