@@ -19,7 +19,8 @@ import (
 
 // grpc_dmms_v1.Device and models.Device
 
-func NewDevice(deviceModel *models.Device) *grpc_dmms_v1.Device {
+func NewDevice(obj models.Model) *grpc_dmms_v1.Device {
+	deviceModel := obj.(*models.Device)
 	createdAt, _ := ptypes.TimestampProto(deviceModel.CreatedAt)
 	lastUpdatedAt, _ := ptypes.TimestampProto(deviceModel.LastUpdatedAt)
 	dataModel := grpc_dmms_v1.DataModel{
@@ -50,7 +51,7 @@ func NewDevice(deviceModel *models.Device) *grpc_dmms_v1.Device {
 	}
 }
 
-func NewDevices(deviceModels []*models.Device) []*grpc_dmms_v1.Device {
+func NewDevices(deviceModels []models.Model) []*grpc_dmms_v1.Device {
 	devices := []*grpc_dmms_v1.Device{}
 	for _, deviceModel := range deviceModels {
 		devices = append(devices, NewDevice(deviceModel))

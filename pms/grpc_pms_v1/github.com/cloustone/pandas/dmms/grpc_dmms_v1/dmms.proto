@@ -52,6 +52,18 @@ message DeviceModel {
     string Icon = 14;
 }
 
+message DeviceMetrics {
+    string userID = 1;
+    string deviceID = 2;
+    map<string, int32> metrics = 3;
+}
+
+message DeviceMessage {
+    string userID = 1;
+    string deviceID = 2;
+    string endpoint = 3;
+    bytes payload = 4;
+}
 
 service DMMS {
     // DeviceModel
@@ -70,6 +82,8 @@ service DMMS {
     rpc DeleteDevice(DeleteDeviceRequest) returns (DeleteDeviceResponse) {}
     rpc SetDeviceStatus(SetDeviceStatusRequest) returns (SetDeviceStatusResponse) {}
     rpc GetDeviceLog(GetDeviceLogRequest) returns (GetDeviceLogResponse) {}
+    rpc GetDeviceMetrics(GetDeviceMetricsRequest) returns (GetDeviceMetricsResponse) {}
+    rpc PostDeviceMessage(PostDeviceMessageRequest) returns (PostDeviceMessageResponse) {}
 }
 
 // Device Model apis
@@ -167,6 +181,21 @@ message GetDeviceLogRequest {
     google.protobuf.Timestamp since = 3;
 }
 message GetDeviceLogResponse {}
+
+message GetDeviceMetricsRequest {
+    string userID = 1;
+    string deviceID =2;
+}
+message GetDeviceMetricsResponse {
+    DeviceMetrics device_metrics = 1;
+}
+
+message PostDeviceMessageRequest {
+    string userID = 1;
+    string deviceID =2;
+    DeviceMessage device_message = 3;
+}
+message PostDeviceMessageResponse {}
 
 
 

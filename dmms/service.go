@@ -153,7 +153,7 @@ func (s *DeviceManagementService) DeleteDeviceModel(ctx context.Context, in *pb.
 // console, the model definition can not be changed without using
 // presentation in web console
 func (s *DeviceManagementService) UpdateDeviceModel(ctx context.Context, in *pb.UpdateDeviceModelRequest) (*pb.UpdateDeviceModelResponse, error) {
-	pf := factory.NewFactory(reflect.TypeOf(models.DeviceModel{}).Name())
+	pf := factory.NewFactory(models.DeviceModel{})
 	owner := factory.NewOwner(in.UserID)
 
 	if _, err := pf.Get(owner, in.DeviceModelID); err != nil {
@@ -166,7 +166,7 @@ func (s *DeviceManagementService) UpdateDeviceModel(ctx context.Context, in *pb.
 
 // GetDeviceModels return user's all device models
 func (s *DeviceManagementService) GetDeviceModels(ctx context.Context, in *pb.GetDeviceModelsRequest) (*pb.GetDeviceModelsResponse, error) {
-	pf := factory.NewFactory(reflect.TypeOf(models.DeviceModel{}).Name())
+	pf := factory.NewFactory(models.DeviceModel{})
 	owner := factory.NewOwner(in.UserID)
 
 	deviceModels, err := pf.List(owner, models.NewQuery())
@@ -182,27 +182,60 @@ func (s *DeviceManagementService) GetDeviceModels(ctx context.Context, in *pb.Ge
 
 // AddDevice add new device into dmms and broadcast the action
 func (s *DeviceManagementService) AddDevice(ctx context.Context, in *pb.AddDeviceRequest) (*pb.AddDeviceResponse, error) {
-	return nil, nil
+	pf := factory.NewFactory(models.Device{})
+	owner := factory.NewOwner(in.UserID)
+
+	device, err := pf.Save(owner, converter.NewDeviceModel(in.Device))
+	if err != nil {
+		return nil, grpcError(err)
+	}
+	return &pb.AddDeviceResponse{Device: converter.NewDevice(device)}, nil
 }
 
 // GetDevice return specified device
 func (s *DeviceManagementService) GetDevice(ctx context.Context, in *pb.GetDeviceRequest) (*pb.GetDeviceResponse, error) {
-	return nil, nil
+	pf := factory.NewFactory(models.Device{})
+	owner := factory.NewOwner(in.UserID)
+
+	deviceModel, err := pf.Get(owner, in.DeviceID)
+	if err != nil {
+		return nil, grpcError(err)
+	}
+	return &pb.GetDeviceResponse{Device: converter.NewDevice(deviceModel)}, nil
 }
 
 // UpdateDevice update specified device
 func (s *DeviceManagementService) UpdateDevice(ctx context.Context, in *pb.UpdateDeviceRequest) (*pb.UpdateDeviceResponse, error) {
-	return nil, nil
+	pf := factory.NewFactory(models.Device{})
+	owner := factory.NewOwner(in.UserID)
+
+	if err := pf.Update(owner, converter.NewDeviceModel(in.Device)); err != nil {
+		return nil, grpcError(err)
+	}
+	return &pb.UpdateDeviceResponse{}, nil
 }
 
 // GetDevices return user's all devices
 func (s *DeviceManagementService) GetDevices(ctx context.Context, in *pb.GetDevicesRequest) (*pb.GetDevicesResponse, error) {
-	return nil, nil
+	pf := factory.NewFactory(models.Device{})
+	owner := factory.NewOwner(in.UserID)
+
+	deviceModels, err := pf.List(owner, models.NewQuery())
+	if err != nil {
+		return nil, grpcError(err)
+	}
+	return &pb.GetDevicesResponse{Devices: converter.NewDevices(deviceModels)}, nil
 }
 
 // DeleteDevice will remove specified device from dmms
 func (s *DeviceManagementService) DeleteDevice(ctx context.Context, in *pb.DeleteDeviceRequest) (*pb.DeleteDeviceResponse, error) {
-	return nil, nil
+	pf := factory.NewFactory(models.Device{})
+	owner := factory.NewOwner(in.UserID)
+	if err := pf.Delete(owner, in.DeviceID); err != nil {
+		return nil, grpcError(err)
+	}
+
+	return &pb.DeleteDeviceResponse{}, nil
 }
 
 // SetDeviceStatus change device status and trigger related actions
@@ -212,5 +245,15 @@ func (s *DeviceManagementService) SetDeviceStatus(ctx context.Context, in *pb.Se
 
 // GetDeviceLog return spcecified device's log
 func (s *DeviceManagementService) GetDeviceLog(ctx context.Context, in *pb.GetDeviceLogRequest) (*pb.GetDeviceLogResponse, error) {
+	return nil, nil
+}
+
+// GetDeviceMetrics return device metrics
+func (s *DeviceManagementService) GetDeviceMetrics(ctx context.Context, in *pb.GetDeviceMetricsRequest) (*pb.GetDeviceMetricsResponse, error) {
+	return nil, nil
+}
+
+// PostDeviceMessage post a message to specified device on endpoint
+func (s *DeviceManagementService) PostDeviceMessage(ctx context.Context, in *pb.PostDeviceMessageRequest) (*pb.PostDeviceMessageResponse, error) {
 	return nil, nil
 }
