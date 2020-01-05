@@ -10,44 +10,35 @@
 //  License for the specific language governing permissions and limitations
 //  under the License.
 
-package models
+package notifications
 
 import (
-	"time"
-
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-	"github.com/jinzhu/gorm"
 )
 
 const (
-	KDeviceStatusConnected    = "CONNECTED"
-	KDeviceStatusDisconnected = "DISCONNECTED"
+	KDeviceConnected       = "DEVICE_CONNECTED"
+	KDeviceDisconnected    = "DEVICE_DISCONNECTED"
+	KDeviceMessageReceived = "DEVICE_MESSAGE_RECEIVED"
 )
 
-// Device Device
-// swagger:model Device
-type Device struct {
-	gorm.Model
-	ID            string    `json:"id"`
-	Name          string    `json:"name"`
-	Description   string    `json:"description"`
-	Status        string    `json:"status"`
-	UserID        string    `json:"userID"`
-	ProjectID     string    `json:"projectID"`
-	ModelID       string    `json:"modelID"`
-	CreatedAt     time.Time `json:"createdAt"`
-	LastUpdatedAt time.Time `json:"lastUpdatedAt"`
-	DataModel     DataModel `json:"dataModel"`
+// DeviceNotification DeviceNotification
+type DeviceNotification struct {
+	UserID     string `json:"userID"`
+	DeviceID   string `json:"deviceID"`
+	DeviceName string `json:"deviceName"`
+	Type       string `json:"type"`
+	Payload    []byte `json:"payload"`
 }
 
 // Validate validates this deployment
-func (m *Device) Validate(formats strfmt.Registry) error {
+func (m *DeviceNotification) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *Device) MarshalBinary() ([]byte, error) {
+func (m *DeviceNotification) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -55,8 +46,8 @@ func (m *Device) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Device) UnmarshalBinary(b []byte) error {
-	var res Device
+func (m *DeviceNotification) UnmarshalBinary(b []byte) error {
+	var res DeviceNotification
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

@@ -23,7 +23,16 @@ import (
 	pb "github.com/cloustone/pandas/dmms/grpc_dmms_v1"
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/factory"
+	"github.com/cloustone/pandas/models/notifications"
+	"github.com/cloustone/pandas/pkg/broadcast"
+	broadcast_util "github.com/cloustone/pandas/pkg/broadcast/util"
 	"github.com/sirupsen/logrus"
+)
+
+var (
+	nameOfDevice             = reflect.TypeOf(models.Device{}).Name()
+	nameOfDeviceModel        = reflect.TypeOf(models.DeviceModel{}).Name()
+	nameOfDeviceNotification = reflect.TypeOf(notifications.DeviceNotification{}).Name()
 )
 
 // DeviceManager manage all device and device models which include model definition and
@@ -41,6 +50,48 @@ func NewDeviceManagementService() *DeviceManagementService {
 func (s *DeviceManagementService) Initialize(servingOptions *ServingOptions) {
 	s.servingOptions = servingOptions
 	s.loadPresetDeviceModels(s.servingOptions.DeviceModelPath)
+	broadcast_util.RegisterObserver(s, nameOfDeviceModel)
+	broadcast_util.RegisterObserver(s, nameOfDeviceNotification)
+}
+
+// Onbroadcast handle notifications received from other component service
+func (s *DeviceManagementService) Onbroadcast(b broadcast.Broadcast, notify broadcast.Notification) {
+	switch notify.Path {
+	// DMMS receive DeviceNotifications from rulechain service when a device status or behaivour is changed
+	// For example. device is connected, or device message is received
+	case nameOfDeviceNotification:
+		notification := notify.Param.(notifications.DeviceNotification)
+		s.handleDeviceNotifications(&notification)
+	}
+}
+
+// handleDeviceNotifications handle device's notificaitons, such as device is added, removed,
+// and device message is recived.
+func (s *DeviceManagementService) handleDeviceNotifications(n *notifications.DeviceNotification) {
+	pf := factory.NewFactory(models.Device{})
+	owner := factory.NewOwner(n.UserID)
+
+	deviceModel, err := pf.Get(owner, n.DeviceID)
+	if err != nil {
+		logrus.Error("ilegal device '%s' notification received", n.DeviceID)
+		return
+	}
+	device := converter.NewDevice(deviceModel)
+
+	switch n.Type {
+	case notifications.KDeviceConnected:
+		device.Status = models.KDeviceStatusConnected
+		pf.Update(owner, converter.NewDeviceModel(device))
+		break
+
+	case notifications.KDeviceDisconnected:
+		device.Status = models.KDeviceStatusDisconnected
+		pf.Update(owner, converter.NewDeviceModel(device))
+		break
+
+	case notifications.KDeviceMessageReceived:
+
+	}
 }
 
 // LoadDefaultDeviceModels walk through the specified path and load model

@@ -51,7 +51,7 @@ func (s *RuleChainService) Initialize(options *broadcast.ServingOptions) {
 }
 
 // OnSynchonronizedNotified will be notified when rulechain model object is changed
-func (s *RuleChainService) Onbroadcast(sync broadcast.Broadcast, notify broadcast.Notification) {
+func (s *RuleChainService) Onbroadcast(b broadcast.Broadcast, notify broadcast.Notification) {
 	if controller, found := s.controllers[notify.Path]; found {
 		controller.OnModelNotified(notify.Path, notify.Action, notify.Param)
 		return
