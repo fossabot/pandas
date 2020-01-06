@@ -17,6 +17,11 @@ import (
 	"github.com/go-openapi/swag"
 )
 
+const (
+	KEndpointDirectionIn  = "in"
+	KEndpointDirectionOut = "out"
+)
+
 // Endpoint Endpoint
 // swagger:model Endpoint
 type Endpoint struct {

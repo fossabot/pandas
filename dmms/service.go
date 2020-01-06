@@ -74,17 +74,76 @@ func (s *DeviceManagementService) handleDeviceNotifications(n *notifications.Dev
 
 	switch n.Type {
 	case notifications.KDeviceConnected, notifications.KDeviceDisconnected:
-		updateDeviceStatus(n)
+		go updateDeviceStatus(n)
 		break
-
 	case notifications.KDeviceMessageReceived:
-		updateDeviceValues(n)
+		go updateDeviceValues(n)
 	}
 }
 
 // updateDeviceValues will update device real values using message received and device model
 func updateDeviceValues(n *notifications.DeviceNotification) {
-	// TODO
+	// Unmarshal device message and match with device model
+	msg := models.DeviceMessage{}
+	if err := msg.UnmarshalBinary(n.Payload); err != nil {
+		logrus.WithError(err)
+		return
+	}
+	// Get device model and device object to updated values
+	pf := factory.NewFactory(models.Device{})
+	owner := factory.NewOwner(n.UserID)
+	obj, err := pf.Get(owner, n.DeviceID)
+	if err != nil {
+		logrus.Errorf("failed to get device '%s'", n.DeviceID)
+		return
+	}
+	device := obj.(*models.Device)
+
+	// Get device model
+	pf = factory.NewFactory(models.DeviceModel{})
+	obj, err = pf.Get(owner, device.ModelID)
+	if err != nil {
+		logrus.Errorf("failed to get device '%s' with model '%s'", n.DeviceID, device.ModelID)
+		return
+	}
+	deviceModel := obj.(*models.DeviceModel)
+	dataModelName := ""
+
+	// Use endpoint to get in device data model name
+	for _, endpoint := range deviceModel.Endpoints {
+		if endpoint.Path == n.Endpoint {
+			dataModelName = endpoint.Models[models.KEndpointDirectionIn]
+			break // found
+		}
+	}
+	// Not found
+	if dataModelName == "" {
+		logrus.Errorf("device '%s' data model '%s' not found", n.DeviceID, device.ModelID)
+		return
+
+	}
+	// Update device
+	for _, deviceDataModel := range device.Values {
+		if deviceDataModel.Name == dataModelName { // found
+			updateDeviceValueWithMessage(&deviceDataModel, &msg)
+			break
+		}
+	}
+	pf.Update(owner, device)
+}
+
+// updateDeviceValueWithMessage update data model with incomming device message
+func updateDeviceValueWithMessage(dataModel *models.DataModel, msg *models.DeviceMessage) {
+	values := make(map[string]interface{})
+	if err := json.Unmarshal(msg.Payload, values); err != nil {
+		logrus.Errorf("device message '%s' payload error", msg.ID)
+		return
+	}
+	for index, field := range dataModel.Fields {
+		if value, found := values[field.Key]; found {
+			dataModel.Fields[index].Value = value.(string)
+		}
+	}
 }
 
 // updateDeviceStatus update device status

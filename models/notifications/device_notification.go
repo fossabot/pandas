@@ -29,6 +29,7 @@ type DeviceNotification struct {
 	DeviceID   string `json:"deviceID"`
 	DeviceName string `json:"deviceName"`
 	Type       string `json:"type"`
+	Endpoint   string `json:"endpoint"`
 	Payload    []byte `json:"payload"`
 }
 

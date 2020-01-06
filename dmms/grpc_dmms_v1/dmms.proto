@@ -13,7 +13,7 @@ message Device {
     string modelID = 8;
     google.protobuf.Timestamp created_at = 9;
     google.protobuf.Timestamp last_updated_at = 10;
-    DataModel data_model = 11;
+    repeated DataModel values = 11;
 }
 
 message Endpoint {

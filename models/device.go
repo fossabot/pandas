@@ -30,16 +30,16 @@ const (
 // swagger:model Device
 type Device struct {
 	gorm.Model
-	ID            string    `json:"id"`
-	Name          string    `json:"name"`
-	Description   string    `json:"description"`
-	Status        string    `json:"status"`
-	UserID        string    `json:"userID"`
-	ProjectID     string    `json:"projectID"`
-	ModelID       string    `json:"modelID"`
-	CreatedAt     time.Time `json:"createdAt"`
-	LastUpdatedAt time.Time `json:"lastUpdatedAt"`
-	DataModel     DataModel `json:"dataModel"`
+	ID            string      `json:"id"`
+	Name          string      `json:"name"`
+	Description   string      `json:"description"`
+	Status        string      `json:"status"`
+	UserID        string      `json:"userID"`
+	ProjectID     string      `json:"projectID"`
+	ModelID       string      `json:"modelID"`
+	CreatedAt     time.Time   `json:"createdAt"`
+	LastUpdatedAt time.Time   `json:"lastUpdatedAt"`
+	Values        []DataModel `json:"dataModels"`
 }
 
 // Validate validates this deployment
