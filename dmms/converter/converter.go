@@ -23,18 +23,23 @@ func NewDevice(obj models.Model) *grpc_dmms_v1.Device {
 	deviceModel := obj.(*models.Device)
 	createdAt, _ := ptypes.TimestampProto(deviceModel.CreatedAt)
 	lastUpdatedAt, _ := ptypes.TimestampProto(deviceModel.LastUpdatedAt)
-	dataModel := grpc_dmms_v1.DataModel{
-		DataModelFields: []*grpc_dmms_v1.DataModelField{},
-	}
+	values := []*grpc_dmms_v1.DataModel{}
 
-	for _, field := range deviceModel.DataModel.Fields {
-		dataModel.DataModelFields = append(dataModel.DataModelFields,
-			&grpc_dmms_v1.DataModelField{
-				Key:          field.Key,
-				Value:        field.Value,
-				Type:         field.Type,
-				DefaultValue: field.DefaultValue,
-			})
+	for _, value := range deviceModel.Values {
+		dataModel := grpc_dmms_v1.DataModel{
+			DataModelFields: []*grpc_dmms_v1.DataModelField{},
+		}
+
+		for _, field := range value.Fields {
+			dataModel.DataModelFields = append(dataModel.DataModelFields,
+				&grpc_dmms_v1.DataModelField{
+					Key:          field.Key,
+					Value:        field.Value,
+					Type:         field.Type,
+					DefaultValue: field.DefaultValue,
+				})
+		}
+		values = append(values, &dataModel)
 	}
 
 	return &grpc_dmms_v1.Device{
@@ -47,7 +52,7 @@ func NewDevice(obj models.Model) *grpc_dmms_v1.Device {
 		ModelID:       deviceModel.ModelID,
 		CreatedAt:     createdAt,
 		LastUpdatedAt: lastUpdatedAt,
-		DataModel:     &dataModel,
+		Values:        values,
 	}
 }
 
@@ -64,17 +69,21 @@ func NewDeviceModel(device *grpc_dmms_v1.Device) *models.Device {
 	lastUpdatedAt, _ := ptypes.Timestamp(device.LastUpdatedAt)
 
 	// DataModels
-	dataModel := models.DataModel{
-		Fields: []*models.DataModelField{},
-	}
-	for _, field := range device.DataModel.DataModelFields {
-		dataModel.Fields = append(dataModel.Fields,
-			&models.DataModelField{
-				Key:          field.Key,
-				Value:        field.Value,
-				Type:         field.Type,
-				DefaultValue: field.DefaultValue,
-			})
+	dataModels := []models.DataModel{}
+	for _, value := range device.Values {
+		dataModel := models.DataModel{
+			Fields: []*models.DataModelField{},
+		}
+		for _, field := range value.DataModelFields {
+			dataModel.Fields = append(dataModel.Fields,
+				&models.DataModelField{
+					Key:          field.Key,
+					Value:        field.Value,
+					Type:         field.Type,
+					DefaultValue: field.DefaultValue,
+				})
+		}
+		dataModels = append(dataModels, dataModel)
 	}
 
 	return &models.Device{
@@ -87,7 +96,7 @@ func NewDeviceModel(device *grpc_dmms_v1.Device) *models.Device {
 		ModelID:       device.ModelID,
 		CreatedAt:     createdAt,
 		LastUpdatedAt: lastUpdatedAt,
-		DataModel:     dataModel,
+		Values:        dataModels,
 	}
 }
 
