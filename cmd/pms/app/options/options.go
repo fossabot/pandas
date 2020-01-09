@@ -12,29 +12,29 @@
 package options
 
 import (
-	"github.com/cloustone/pandas/models/factory"
+	modeloptions "github.com/cloustone/pandas/models/options"
 	genericoptions "github.com/cloustone/pandas/pkg/server/options"
 	"github.com/spf13/pflag"
 )
 
 type ServerRunOptions struct {
-	SecureServing  *genericoptions.SecureServingOptions
-	FactoryServing *factory.FactoryServingOptions
-	SSHKeyfile     string
-	SSHUser        string
+	SecureServing *genericoptions.SecureServingOptions
+	ModelServing  *modeloptions.ServingOptions
+	SSHKeyfile    string
+	SSHUser       string
 }
 
 func NewServerRunOptions() *ServerRunOptions {
 	s := ServerRunOptions{
-		SecureServing:  genericoptions.NewSecureServingOptions("dmms"),
-		FactoryServing: factory.NewFactoryServingOptions(),
+		SecureServing: genericoptions.NewSecureServingOptions("dmms"),
+		ModelServing:  modeloptions.NewServingOptions(),
 	}
 	return &s
 }
 
 func (s *ServerRunOptions) AddFlags(fs *pflag.FlagSet) {
 	s.SecureServing.AddFlags(fs)
-	s.FactoryServing.AddFlags(fs)
+	s.ModelServing.AddFlags(fs)
 
 	fs.StringVar(&s.SSHUser, "ssh-user", s.SSHUser,
 		"If non-empty, use secure SSH proxy to the nodes, using this user name")

@@ -15,21 +15,29 @@ import (
 	"time"
 
 	"github.com/cloustone/pandas/models"
+	"github.com/cloustone/pandas/models/cache"
+	modelsoptions "github.com/cloustone/pandas/models/options"
 	"github.com/jinzhu/gorm"
+	"github.com/sirupsen/logrus"
 )
 
 type viewFactory struct {
-	modelDB *gorm.DB
+	modelDB        *gorm.DB
+	cache          cache.Cache
+	servingOptions *modelsoptions.ServingOptions
 }
 
-func (pf *viewFactory) initialize(factoryServingOptions *FactoryServingOptions) error {
-	modelDB, err := gorm.Open(factoryServingOptions.StorePath, "pandas-views.db")
+func newViewFactory(servingOptions *modelsoptions.ServingOptions) Factory {
+	modelDB, err := gorm.Open(servingOptions.StorePath, "pandas-projects.db")
 	if err != nil {
-		return err
+		logrus.Fatal(err)
 	}
-	modelDB.AutoMigrate(&models.Project{})
-	pf.modelDB = modelDB
-	return nil
+	modelDB.AutoMigrate(&models.View{})
+	return &viewFactory{
+		modelDB:        modelDB,
+		cache:          cache.NewCache(servingOptions),
+		servingOptions: servingOptions,
+	}
 }
 
 func (pf *viewFactory) Save(owner Owner, obj models.Model) (models.Model, error) {

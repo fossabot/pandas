@@ -15,21 +15,29 @@ import (
 	"time"
 
 	"github.com/cloustone/pandas/models"
+	"github.com/cloustone/pandas/models/cache"
+	modelsoptions "github.com/cloustone/pandas/models/options"
 	"github.com/jinzhu/gorm"
+	"github.com/sirupsen/logrus"
 )
 
 type workshopFactory struct {
-	modelDB *gorm.DB
+	modelDB        *gorm.DB
+	cache          cache.Cache
+	servingOptions *modelsoptions.ServingOptions
 }
 
-func (pf *workshopFactory) initialize(factoryServingOptions *FactoryServingOptions) error {
-	modelDB, err := gorm.Open(factoryServingOptions.StorePath, "pandas-workshops.db")
+func newWorkshopFactory(servingOptions *modelsoptions.ServingOptions) Factory {
+	modelDB, err := gorm.Open(servingOptions.StorePath, "pandas-workshops.db")
 	if err != nil {
-		return err
+		logrus.Fatal(err)
 	}
 	modelDB.AutoMigrate(&models.Project{})
-	pf.modelDB = modelDB
-	return nil
+	return &workshopFactory{
+		modelDB:        modelDB,
+		cache:          cache.NewCache(servingOptions),
+		servingOptions: servingOptions,
+	}
 }
 
 func (pf *workshopFactory) Save(owner Owner, model models.Model) (models.Model, error) {

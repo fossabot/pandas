@@ -14,14 +14,14 @@ package dmms
 import (
 	"fmt"
 
-	factoryoptions "github.com/cloustone/pandas/models/factory"
+	modeloptions "github.com/cloustone/pandas/models/options"
 	"github.com/spf13/pflag"
 )
 
 // ServingOptions
 type ServingOptions struct {
-	FactoryServingOptions factoryoptions.FactoryServingOptions
-	DeviceModelPath       string
+	ServingOptions  modeloptions.ServingOptions
+	DeviceModelPath string
 }
 
 func NewServingOptions() *ServingOptions {

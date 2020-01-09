@@ -15,41 +15,33 @@ import (
 	"reflect"
 
 	"github.com/cloustone/pandas/models"
+	modeloptions "github.com/cloustone/pandas/models/options"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
 )
 
 var (
-	factories             map[string]Factory = make(map[string]Factory)
-	factoryServingOptions *FactoryServingOptions
+	factories map[string]Factory = make(map[string]Factory)
 )
 
 // Factory will create and manage object
 type Factory interface {
 	// Save a newly created object into factory
 	Save(Owner, models.Model) (models.Model, error)
-
 	// List return object sets accoroding to query
 	List(Owner, *models.Query) ([]models.Model, error)
-
 	// Get return a specified object
 	Get(Owner, string) (models.Model, error)
-
 	// Delete will delete specified object in factory
 	Delete(Owner, string) error
-
 	// Update update object in factory
 	Update(Owner, models.Model) error
-
-	// initialize is used internally to initialize factory
-	initialize(*FactoryServingOptions) error
 }
 
 // NewFactory create and return model factory
 func NewFactory(obj interface{}) Factory {
 	name := reflect.TypeOf(obj).Name()
 	if factory, found := factories[name]; found {
-		factory.initialize(factoryServingOptions)
 		return factory
 	}
 	logrus.Fatalf("unregistered model '%s' factory", name)
@@ -62,25 +54,17 @@ func RegisterFactory(model interface{}, f Factory) {
 }
 
 // Initialize will be called in startup to initialize all internal model factory
-func Initialize(factoryServingOptions *FactoryServingOptions) {
+func Initialize(servingOptions *modeloptions.ServingOptions) {
 	// Open pandas data based
-	db, err := gorm.Open(factoryServingOptions.StorePath, "pandas.db")
+	db, err := gorm.Open(servingOptions.StorePath, "pandas.db")
 	if err != nil {
 		logrus.Fatalf("factory failed to open database")
 	}
 	defer db.Close()
 
-	factoryServingOptions = factoryServingOptions
-
-	RegisterFactory(models.Project{}, &projectFactory{})
-	RegisterFactory(models.RuleChain{}, &rulechainFactory{})
-	RegisterFactory(models.Workshop{}, &workshopFactory{})
-	RegisterFactory(models.View{}, &viewFactory{})
-	RegisterFactory(models.DeviceInProject{}, &deviceInProjectFactory{})
-
-	for modelName, factory := range factories {
-		if err := factory.initialize(factoryServingOptions); err != nil {
-			logrus.Fatalf("factory '%s' initialize failed", modelName)
-		}
-	}
+	RegisterFactory(models.Project{}, newProjectFactory(servingOptions))
+	RegisterFactory(models.RuleChain{}, newRuleChainFactory(servingOptions))
+	RegisterFactory(models.Workshop{}, newWorkshopFactory(servingOptions))
+	RegisterFactory(models.View{}, newViewFactory(servingOptions))
+	RegisterFactory(models.DeviceInProject{}, newDeviceInProjectFactory(servingOptions))
 }

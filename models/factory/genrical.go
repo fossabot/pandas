@@ -13,6 +13,7 @@ package factory
 
 import (
 	"github.com/cloustone/pandas/models"
+	modeloptions "github.com/cloustone/pandas/models/options"
 	"github.com/jinzhu/gorm"
 )
 
@@ -20,7 +21,7 @@ type genericalFactory struct {
 	modelDB *gorm.DB
 }
 
-func (pf *genericalFactory) initialize(factoryServingOptions *FactoryServingOptions) error {
+func (pf *genericalFactory) initialize(factoryServingOptions *modeloptions.ServingOptions) error {
 	modelDB, err := gorm.Open(factoryServingOptions.StorePath, "pandas.db")
 	if err != nil {
 		return err

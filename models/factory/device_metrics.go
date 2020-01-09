@@ -15,21 +15,29 @@ import (
 	"time"
 
 	"github.com/cloustone/pandas/models"
+	"github.com/cloustone/pandas/models/cache"
+	modelsoptions "github.com/cloustone/pandas/models/options"
 	"github.com/jinzhu/gorm"
+	"github.com/sirupsen/logrus"
 )
 
 type deviceMetricsFactory struct {
-	modelDB *gorm.DB
+	modelDB        *gorm.DB
+	cache          cache.Cache
+	servingOptions *modelsoptions.ServingOptions
 }
 
-func (pf *deviceMetricsFactory) initialize(factoryServingOptions *FactoryServingOptions) error {
-	modelDB, err := gorm.Open(factoryServingOptions.StorePath, "pandas-device-metrics.db")
+func newDeviceMetricsFactory(servingOptions *modelsoptions.ServingOptions) Factory {
+	modelDB, err := gorm.Open(servingOptions.StorePath, "pandas-devices.db")
 	if err != nil {
-		return err
+		logrus.Fatal(err)
 	}
 	modelDB.AutoMigrate(&models.DeviceMetrics{})
-	pf.modelDB = modelDB
-	return nil
+	return &workshopFactory{
+		modelDB:        modelDB,
+		cache:          cache.NewCache(servingOptions),
+		servingOptions: servingOptions,
+	}
 }
 
 func (pf *deviceMetricsFactory) Save(owner Owner, obj models.Model) (models.Model, error) {

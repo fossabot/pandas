@@ -15,21 +15,29 @@ import (
 	"time"
 
 	"github.com/cloustone/pandas/models"
+	"github.com/cloustone/pandas/models/cache"
+	modelsoptions "github.com/cloustone/pandas/models/options"
 	"github.com/jinzhu/gorm"
+	"github.com/sirupsen/logrus"
 )
 
 type rulechainFactory struct {
-	modelDB *gorm.DB
+	modelDB        *gorm.DB
+	cache          cache.Cache
+	servingOptions *modelsoptions.ServingOptions
 }
 
-func (pf *rulechainFactory) initialize(factoryServingOptions *FactoryServingOptions) error {
-	modelDB, err := gorm.Open(factoryServingOptions.StorePath, "pandas-rulechains.db")
+func newRuleChainFactory(servingOptions *modelsoptions.ServingOptions) Factory {
+	modelDB, err := gorm.Open(servingOptions.StorePath, "pandas-rulechains.db")
 	if err != nil {
-		return err
+		logrus.Fatal(err)
 	}
 	modelDB.AutoMigrate(&models.RuleChain{})
-	pf.modelDB = modelDB
-	return nil
+	return &rulechainFactory{
+		modelDB:        modelDB,
+		cache:          cache.NewCache(servingOptions),
+		servingOptions: servingOptions,
+	}
 }
 
 func (pf *rulechainFactory) Save(owner Owner, obj models.Model) (models.Model, error) {

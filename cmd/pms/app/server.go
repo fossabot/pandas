@@ -59,7 +59,7 @@ func Run(runOptions *options.ServerRunOptions, stopCh <-chan struct{}) error {
 	logrus.Infof("Version: %+v", version.Get())
 
 	// Initialize object factory
-	factory.Initialize(runOptions.FactoryServing)
+	factory.Initialize(runOptions.ModelServing)
 
 	NewProjectManagementServer().Run(runOptions.SecureServing)
 	<-stopCh

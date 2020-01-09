@@ -9,7 +9,7 @@
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 //  License for the specific language governing permissions and limitations
 //  under the License.
-package factory
+package options
 
 import (
 	"fmt"
@@ -17,19 +17,19 @@ import (
 	"github.com/spf13/pflag"
 )
 
-// FactoryServingOptions
-type FactoryServingOptions struct {
+// ServingOptions
+type ServingOptions struct {
 	// StorePath is backend storage connect url
 	StorePath string
 }
 
-func NewFactoryServingOptions() *FactoryServingOptions {
-	return &FactoryServingOptions{
+func NewServingOptions() *ServingOptions {
+	return &ServingOptions{
 		StorePath: "sqllite-3",
 	}
 }
 
-func (s *FactoryServingOptions) Validate() []error {
+func (s *ServingOptions) Validate() []error {
 	errors := []error{}
 
 	if s.StorePath == "" {
@@ -39,7 +39,7 @@ func (s *FactoryServingOptions) Validate() []error {
 	return errors
 }
 
-func (s *FactoryServingOptions) AddFlags(fs *pflag.FlagSet) {
+func (s *ServingOptions) AddFlags(fs *pflag.FlagSet) {
 	fs.StringVar(&s.StorePath, "factory-store-path", s.StorePath, ""+
 		"The backend storage connect url.")
 }
