@@ -20,12 +20,14 @@ import (
 // ServingOptions
 type ServingOptions struct {
 	// StorePath is backend storage connect url
-	StorePath string
+	StorePath         string
+	CacheConnectedUrl string
 }
 
 func NewServingOptions() *ServingOptions {
 	return &ServingOptions{
-		StorePath: "sqllite-3",
+		StorePath:         "sqllite-3",
+		CacheConnectedUrl: "127.0.0.1:6379",
 	}
 }
 
@@ -33,13 +35,13 @@ func (s *ServingOptions) Validate() []error {
 	errors := []error{}
 
 	if s.StorePath == "" {
-		errors = append(errors, fmt.Errorf("--factory-store-path is not specified"))
+		errors = append(errors, fmt.Errorf("--models-store-path is not specified"))
 	}
 
 	return errors
 }
 
 func (s *ServingOptions) AddFlags(fs *pflag.FlagSet) {
-	fs.StringVar(&s.StorePath, "factory-store-path", s.StorePath, ""+
-		"The backend storage connect url.")
+	fs.StringVar(&s.StorePath, "models-store-path", s.StorePath, "The backend storage connect url.")
+	fs.StringVar(&s.CacheConnectedUrl, "cache-connected-url", s.CacheConnectedUrl, "The backend cache connectd url.")
 }

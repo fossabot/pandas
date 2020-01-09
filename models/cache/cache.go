@@ -12,14 +12,24 @@
 package cache
 
 import (
+	"time"
+
 	modelsoptions "github.com/cloustone/pandas/models/options"
 )
 
+// Cache is simple wrapper of redis or memcahed client
 type Cache interface {
-	Set(key string, val interface{}) error
-	String(key string) (string, error)
+	Set(key string, val interface{}) (interface{}, error)
+	Get(key string) (interface{}, error)
+	Delete(key string) error
+	Setnx(key string, val interface{}) (interface{}, error)
+	Expire(key string, duration time.Duration) error
+	ListPush(key string, args ...interface{}) (interface{}, error)
+	ListRange(key string, start string, size string) ([]interface{}, error)
+	Flush()
 }
 
+// NewCache return cache client endpoint
 func NewCache(options *modelsoptions.ServingOptions) Cache {
-	return nil
+	return newRedisCache(options)
 }
