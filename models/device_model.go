@@ -17,12 +17,15 @@ import (
 
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/jinzhu/gorm"
 	"github.com/rs/xid"
 )
 
 // DeviceModel DeviceModel
 // swagger:model DeviceModel
 type DeviceModel struct {
+	ModelTypeInfo
+	gorm.Model
 	Name          string       `json:"name"`
 	ID            string       `json:"id"`
 	Description   string       `json:"description"`

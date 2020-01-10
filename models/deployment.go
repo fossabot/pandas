@@ -32,6 +32,7 @@ const (
 // Deployment Deployment
 // swagger:model Deployment
 type Deployment struct {
+	ModelTypeInfo
 	gorm.Model
 	UserID        string            `json:"userId" yaml:"userId" gorm:"size:255"`
 	Name          string            `json:"name" yaml:"name" gorm:"size:255"`

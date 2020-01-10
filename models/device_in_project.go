@@ -21,6 +21,7 @@ import (
 
 // DeviceInProject represent a device in project
 type DeviceInProject struct {
+	ModelTypeInfo
 	DeviceID      string    `json:"deviceID"`
 	DeviceName    string    `json:"deviceName"`
 	ProjectID     string    `json:"projectID"`

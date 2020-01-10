@@ -37,3 +37,14 @@ func getModelError(db *gorm.DB) error {
 	}
 	return nil
 }
+
+func newCacheID(owner Owner, additionals ...string) string {
+	id := owner.User()
+	if owner.Project() != "" {
+		id += "_" + owner.Project()
+	}
+	for _, additionalID := range additionals {
+		id += "_" + additionalID
+	}
+	return id
+}

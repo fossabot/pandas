@@ -17,11 +17,14 @@ import (
 
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/jinzhu/gorm"
 )
 
 // Workshop Workshop
 // swagger:model Workshop
 type Workshop struct {
+	ModelTypeInfo
+	gorm.Model
 	ID            string    `json:"id"`
 	Name          string    `json:"name"`
 	Description   string    `json:"description"`

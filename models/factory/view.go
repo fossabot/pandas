@@ -48,6 +48,8 @@ func (pf *viewFactory) Save(owner Owner, obj models.Model) (models.Model, error)
 	if err := getModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
+	// update cache
+	pf.cache.Set(newCacheID(owner, view.ID), view)
 	return view, nil
 }
 
@@ -65,11 +67,25 @@ func (pf *viewFactory) List(owner Owner, query *models.Query) ([]models.Model, e
 	return results, nil
 }
 
-func (pf *viewFactory) Get(Owner, string) (models.Model, error) {
-	return nil, nil
+func (pf *viewFactory) Get(owner Owner, viewID string) (models.Model, error) {
+	view := models.View{}
+	if err := pf.cache.Get(newCacheID(owner, viewID), &view); err == nil {
+		return &view, nil
+	}
+	pf.modelDB.Where("userId = ? AND projectId = ?", owner.User(), viewID).Find(&view)
+	if err := getModelError(pf.modelDB); err != nil {
+		return nil, err
+	}
+
+	return &view, nil
 }
 
-func (pf *viewFactory) Delete(Owner, string) error {
+func (pf *viewFactory) Delete(owner Owner, viewID string) error {
+	pf.modelDB.Delete(&models.View{
+		ProjectID: owner.Project(),
+		ID:        viewID,
+	})
+	pf.cache.Delete(newCacheID(owner, viewID))
 	return nil
 }
 

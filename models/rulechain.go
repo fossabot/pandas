@@ -31,6 +31,7 @@ const (
 // RuleChain RuleChain
 // swagger:model RuleChain
 type RuleChain struct {
+	ModelTypeInfo
 	gorm.Model
 	DebugMode     bool      `json:"debugMode" `
 	Description   string    `json:"description"gorm:"size:255"`

@@ -17,11 +17,14 @@ import (
 
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/jinzhu/gorm"
 )
 
 // Variable Variable
 // swagger:model Variable
 type Variable struct {
+	ModelTypeInfo
+	gorm.Model
 	ID             string      `json:"id"`
 	Name           string      `json:"name"`
 	Type           string      `json:"type"`

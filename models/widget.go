@@ -12,9 +12,13 @@
 
 package models
 
+import "github.com/jinzhu/gorm"
+
 // Widget Widget
 // swagger:model Widget
 type Widget struct {
+	ModelTypeInfo
+	gorm.Model
 	Name       string       `json:"name" bson:"name"`
 	ID         string       `json:"id" bson:"id"`
 	Domain     string       `json:"domain" bson:"domain"`

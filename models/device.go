@@ -29,6 +29,7 @@ const (
 // Device Device
 // swagger:model Device
 type Device struct {
+	ModelTypeInfo
 	gorm.Model
 	ID            string      `json:"id"`
 	Name          string      `json:"name"`

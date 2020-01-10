@@ -17,16 +17,24 @@ import (
 	"github.com/spf13/pflag"
 )
 
+const (
+	KCacheNone  = "none"
+	KCacheRedis = "redis"
+	KCacheLocal = "local"
+)
+
 // ServingOptions
 type ServingOptions struct {
 	// StorePath is backend storage connect url
 	StorePath         string
+	Cache             string
 	CacheConnectedUrl string
 }
 
 func NewServingOptions() *ServingOptions {
 	return &ServingOptions{
 		StorePath:         "sqllite-3",
+		Cache:             KCacheNone,
 		CacheConnectedUrl: "127.0.0.1:6379",
 	}
 }
@@ -43,5 +51,6 @@ func (s *ServingOptions) Validate() []error {
 
 func (s *ServingOptions) AddFlags(fs *pflag.FlagSet) {
 	fs.StringVar(&s.StorePath, "models-store-path", s.StorePath, "The backend storage connect url.")
+	fs.StringVar(&s.Cache, "cache", s.Cache, "cache method for models backend, options(none, local, redis.")
 	fs.StringVar(&s.CacheConnectedUrl, "cache-connected-url", s.CacheConnectedUrl, "The backend cache connectd url.")
 }

@@ -17,11 +17,14 @@ import (
 
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/jinzhu/gorm"
 )
 
 // View View
 // swagger:model View
 type View struct {
+	ModelTypeInfo
+	gorm.Model
 	ID            string    `json:"id"`
 	Name          string    `json:"name"`
 	ProjectID     string    `json:"projectID"`

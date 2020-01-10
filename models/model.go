@@ -11,10 +11,36 @@
 //  under the License.
 package models
 
-import "github.com/go-openapi/strfmt"
+import (
+	"encoding/json"
+	"reflect"
+
+	"github.com/go-openapi/strfmt"
+)
 
 type Model interface {
 	Validate(formats strfmt.Registry) error
 	MarshalBinary() ([]byte, error)
 	UnmarshalBinary(b []byte) error
+}
+
+// ModelTypeInfo is added to model which should be saved into factory
+type ModelTypeInfo struct {
+	ModelTypeName string `json:"modelTypeName"`
+}
+
+// Unmarshal return real model in val buffer
+func UnmarshalBinary(val []byte) (Model, error) {
+	modelTypeInfo := ModelTypeInfo{}
+	if err := json.Unmarshal(val, &modelTypeInfo); err != nil {
+		return nil, err
+	}
+	switch modelTypeInfo.ModelTypeName {
+	case reflect.TypeOf(DeviceModel{}).Name():
+		deviceModel := &DeviceModel{}
+		err := json.Unmarshal(val, deviceModel)
+		return deviceModel, err
+	default:
+	}
+	return nil, nil
 }

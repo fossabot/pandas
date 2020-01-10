@@ -17,6 +17,7 @@ import (
 
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/jinzhu/gorm"
 )
 
 // ProjectStatus
@@ -28,6 +29,8 @@ const (
 // Project Project
 // swagger:model Project
 type Project struct {
+	ModelTypeInfo
+	gorm.Model
 	ID            string    `json:"id"`
 	Name          string    `json:"name"`
 	UserID        string    `json:"user_id"`
