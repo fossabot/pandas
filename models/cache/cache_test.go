@@ -52,89 +52,84 @@ func TestCacheSet(t *testing.T) {
 
 }
 
-func TestCacheSetAndGet(t *testing.T)
-{
+func TestCacheSetAndGet(t *testing.T) {
 	servingOptions := modelsoptions.NewServingOptions()
 	servingOptions.Cache = modelsoptions.KCacheRedis
 	cache := NewCache(servingOptions)
 	viewID := "id12345"
 	origin := &models.View{
-		Name: "hello"
-		ProjectID: "project1"
+		Name:      "hello",
+		ProjectID: "project1",
 	}
-	Convey("mofang testcache set return true when two cache items are same", t, func(){
+	Convey("mofang testcache set return true when two cache items are same", t, func() {
 		err := cache.Set(viewID, origin)
 		So(err, ShouldBeNil)
-		
+
 		view := models.View{}
 		err = cache.Get(viewID, &view)
 		So(err, ShouldBeNil)
 	})
 
-	Convey("mofang testcache set&get return false when two cache items are dismatched", t, func(){
+	Convey("mofang testcache set&get return false when two cache items are dismatched", t, func() {
 		err := cache.Set(viewID, origin)
 		So(err, ShouldBeNil)
-		
+
 		view := models.View{}
-		err = cache.Get(viewID + "1", &view)
+		err = cache.Get(viewID+"1", &view)
 		So(err, ShouldNotBeNil)
 	})
-	
 }
 
-func TestCacheDelete(t *testing.T)
-{
+func TestCacheDelete(t *testing.T) {
 	servingOptions := modelsoptions.NewServingOptions()
 	servingOptions.Cache = modelsoptions.KCacheRedis
 	cache := NewCache(servingOptions)
 
 	viewID := "id12345"
 	origin := &models.View{
-		Name: "Hello"
-		ProjectID: "project1"
+		Name:      "Hello",
+		ProjectID: "project1",
 	}
-	Convey("test cache delete return true when cache item is deleted", t, func(){
+	Convey("test cache delete return true when cache item is deleted", t, func() {
 		err := cache.Set(viewID, origin)
 		So(err, ShouldBeNil)
-		
-		view := models.View{}
-		err = cache.Get(ViewID, &view)
-		So(err, ShouldBeNil)
-
-		err = cache.Delete(ViewID)
-		So(err, ShouldBeNil)
 
 		view := models.View{}
-		err = cache.Get(ViewID, &view)
+		err = cache.Get(viewID, &view)
+		So(err, ShouldBeNil)
+
+		err = cache.Delete(viewID)
+		So(err, ShouldBeNil)
+
+		view = models.View{}
+		err = cache.Get(viewID, &view)
 		So(err, ShouldNotBeNil)
 	})
 }
 
-func TestListPush(t *testing.T)
-{
+func TestListPush(t *testing.T) {
 	servingOptions := modelsoptions.NewServingOptions()
-	servingOptions.Cache = KCacheRedis
+	servingOptions.Cache = modelsoptions.KCacheRedis
 	cache := NewCache(servingOptions)
 
 	viewID := "id123456"
 
 	origin1 := &models.View{
-		Name: "Hello"
-		ProjectID: "project1"
+		Name:      "Hello",
+		ProjectID: "project1",
 	}
 
 	origin2 := &models.View{
-		Name: "GoodBye"
-		ProjectID: "project2"
+		Name:      "GoodBye",
+		ProjectID: "project2",
 	}
 
-	convey("test listpush", t, func(){
+	Convey("test listpush", t, func() {
 		err := cache.ListPush(viewID, origin1, origin2)
 		So(err, ShouldNotBeNil)
 
 		view := models.View{}
-		err := cache.Get(viewID, &view)
+		err = cache.Get(viewID, &view)
 		So(err, ShouldNotBeNil)
 	})
-	
 }
