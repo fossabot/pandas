@@ -142,10 +142,8 @@ func (o *SetDeploymentStatusParams) WriteToRequest(r runtime.ClientRequest, reg 
 	}
 	var res []error
 
-	if o.DeploymentControl != nil {
-		if err := r.SetBodyParam(o.DeploymentControl); err != nil {
-			return err
-		}
+	if err := r.SetBodyParam(o.DeploymentControl); err != nil {
+		return err
 	}
 
 	// path param deploymentId

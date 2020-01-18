@@ -15,7 +15,6 @@ import (
 	"fmt"
 
 	"github.com/cloustone/pandas/models"
-	"github.com/cloustone/pandas/readers/grpc"
 	"github.com/sirupsen/logrus"
 )
 
@@ -64,5 +63,4 @@ func NewReader(name string, c map[string]string) (models.Reader, error) {
 }
 
 func init() {
-	RegisterReader("grpc", grpc.ReaderFactory{})
 }

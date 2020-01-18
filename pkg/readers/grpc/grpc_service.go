@@ -15,13 +15,11 @@ import (
 	"context"
 	"net"
 
-	"github.com/cloustone/pandas/config"
 	"github.com/cloustone/pandas/models"
 	logr "github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/status"
@@ -43,30 +41,33 @@ type grpcReader struct {
 }
 
 func newGrpcReader(configs map[string]interface{}) (models.Reader, error) {
-	var opts []grpc.ServerOption
+	/*
+		var opts []grpc.ServerOption
 
-	if config.IsTLSEnabled() {
-		config.FatalOnAbsentKey(config.ServerCertKey)
-		config.FatalOnAbsentKey(config.ServerPrivateKey)
+		if config.IsTLSEnabled() {
+			config.FatalOnAbsentKey(config.ServerCertKey)
+			config.FatalOnAbsentKey(config.ServerPrivateKey)
 
-		creds, err := credentials.NewServerTLSFromFile(config.GetServerCert(), config.GetServerPrivateKey())
-		if err != nil {
-			logr.Fatalf("Failed to generate credentials %v", err)
-			return nil, err
+			creds, err := credentials.NewServerTLSFromFile(config.GetServerCert(), config.GetServerPrivateKey())
+			if err != nil {
+				logr.Fatalf("Failed to generate credentials %v", err)
+				return nil, err
+			}
+			opts = []grpc.ServerOption{grpc.Creds(creds)}
 		}
-		opts = []grpc.ServerOption{grpc.Creds(creds)}
-	}
 
-	rootCtx, shutdownFn := context.WithCancel(context.Background())
-	childRoutines, childCtx := errgroup.WithContext(rootCtx)
+		rootCtx, shutdownFn := context.WithCancel(context.Background())
+		childRoutines, childCtx := errgroup.WithContext(rootCtx)
 
-	return &grpcReader{
-		context:       childCtx,
-		shutdownFn:    shutdownFn,
-		childRoutines: childRoutines,
-		grpcServer:    grpc.NewServer(opts...),
-		configs:       configs,
-	}, nil
+		return &grpcReader{
+			context:       childCtx,
+			shutdownFn:    shutdownFn,
+			childRoutines: childRoutines,
+			grpcServer:    grpc.NewServer(opts...),
+			configs:       configs,
+		}, nil
+	*/
+	return nil, nil
 }
 
 func (r *grpcReader) Config() map[string]interface{} { return r.configs }

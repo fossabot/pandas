@@ -35,6 +35,11 @@ rulechain: cmd/rulechain
 	@echo "building rulechain server (rulechain)..."
 	$Q CGO_ENABLED=0 go build -o bin/rulechain $(IMPORTPATH)/cmd/rulechain
 
+.PHONY: test
+test: 
+	go test -v ./...
+
+
 
 
 

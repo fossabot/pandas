@@ -11,7 +11,10 @@
 //  under the License.
 package editor
 
-import "github.com/cloustone/pandas/pkg/auth"
+import (
+	"github.com/cloustone/pandas/models"
+	"github.com/cloustone/pandas/pkg/auth"
+)
 
 type Manager interface {
 	// Widget
@@ -20,5 +23,5 @@ type Manager interface {
 	// Widget is created dynamically using device model and categorized by
 	// domain. Preset models are system widgets and user's modes are
 	// customization widgets. (in futer, all widgets will be stored into db)
-	GetWidgets(principal auth.Principal) (*WidgetList, error)
+	GetWidgets(principal auth.Principal) ([]models.Widget, error)
 }

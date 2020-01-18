@@ -14,7 +14,7 @@ package manifest
 import "testing"
 
 func TestParseModelPresentation(t *testing.T) {
-	_, err := ParseModelPresentation([]byte(presentationTestData), JsonType)
+	_, err := ParseModelPresentation([]byte(presentationTestData), "json")
 	if err != nil {
 		t.Error(err)
 	}

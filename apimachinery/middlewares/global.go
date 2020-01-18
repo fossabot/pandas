@@ -29,7 +29,7 @@ func LogViaLogrus(handler http.Handler) http.Handler {
 func Cross(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logrus.Debugln("Enter into cross handler")
-		logrus.Debugln("request: %+v", r)
+		logrus.Debugln("request: %v", r)
 
 		if r.Method == "OPTIONS" {
 			if r.Header.Get("Access-Control-Request-Method") != "" {

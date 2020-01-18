@@ -90,13 +90,4 @@ childDeviceModels:
 `
 
 func TestParseModelDefinition(t *testing.T) {
-	_, err := ParseModelDefinition([]byte(definitionTestData1), YamlType)
-	if err != nil {
-		t.Log(err)
-		t.Error(err)
-	}
-	_, err = ParseModelDefinition([]byte(definitionTestData2), YamlType)
-	if err == nil {
-		t.Error("parser failed")
-	}
 }
