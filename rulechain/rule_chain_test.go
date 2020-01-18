@@ -12,35 +12,22 @@
 package rulechain
 
 import (
+	"io/ioutil"
 	"testing"
 
+	"github.com/cloustone/pandas/rulechain/manifest"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestNodeChains(t *testing.T) {
+	manifestNormalSample, err := ioutil.ReadFile("../manifest_sample.json")
+	So(err, ShouldBeNil)
+
 	Convey("Construct node chanis", t, func() {
-		manifest, err := ParseManifest([]byte(manifestNormalSample))
+		manifest, err := manifest.New([]byte(manifestNormalSample))
 		So(err, ShouldBeNil)
 
-		chains, err := NewNodeChainsWithManifest(manifest)
-		So(err, ShouldBeNil)
-		So(len(chains), ShouldEqual, 1)
-	})
-
-	Convey("Handling message", t, func() {
-		manifest, err := ParseManifest([]byte(manifestNormalSample))
-		So(err, ShouldBeNil)
-
-		chains, err := NewNodeChainsWithManifest(manifest)
-		So(err, ShouldBeNil)
-		So(len(chains), ShouldEqual, 1)
-
-		vals := map[string]interface{}{}
-		metadata := newTestingMetadata(vals)
-		payload := []byte(`{"hello":"world", "who":"jenson"}`)
-		msg := newTestingMessage("M0001", "device", MESSAGE_TYPE_POST_ATTRIBUTES_REQUEST, payload, metadata)
-
-		err = chains[0].ApplyData(msg)
+		_, err = NewWithManifest(manifest)
 		So(err, ShouldBeNil)
 	})
 }

@@ -11,14 +11,17 @@
 //  under the License.
 package manifest
 
-import "testing"
+import (
+	"io/ioutil"
+	"testing"
+)
 
 func TestParseManifest(t *testing.T) {
-	buf, err := ioutil.Read("./manifest_sample.json")
+	buf, err := ioutil.ReadFile("./manifest_sample.json")
 	if err != nil {
 		t.Error(err)
 	}
-	_, err := ParseManifest(buf)
+	_, err = New(buf)
 	if err != nil {
 		t.Error(err)
 	}

@@ -101,7 +101,7 @@ func (u *DeviceUpdater) UpdateDeviceStatus(n *notifications.DeviceNotification) 
 
 	deviceModel, err := pf.Get(owner, n.DeviceID)
 	if err != nil {
-		logrus.Error("ilegal device '%s' notification received", n.DeviceID)
+		logrus.Errorf("ilegal device '%s' notification received", n.DeviceID)
 		return
 	}
 	device := deviceModel.(*models.Device)

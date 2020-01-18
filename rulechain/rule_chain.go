@@ -74,11 +74,11 @@ func NewWithManifest(m *manifest.Manifest) (RuleChain, error) {
 	for _, conn := range m.Metadata.Connections {
 		originalNode, found := r.nodes[strconv.Itoa(conn.FromIndex)]
 		if !found {
-			return nil, fmt.Errorf("original node '%s' no exist in rulechain '%s'", originalNode.Name, m.RuleChain.Name)
+			return nil, fmt.Errorf("original node '%s' no exist in rulechain '%s'", originalNode.Name(), m.RuleChain.Name)
 		}
 		targetNode, found := r.nodes[strconv.Itoa(conn.ToIndex)]
 		if !found {
-			return nil, fmt.Errorf("target node '%s' no exist in rulechain '%s'", targetNode.Name, m.RuleChain.Name)
+			return nil, fmt.Errorf("target node '%s' no exist in rulechain '%s'", targetNode.Name(), m.RuleChain.Name)
 		}
 		originalNode.AddLinkedNode(conn.Type, targetNode)
 	}
@@ -103,5 +103,5 @@ func (r *ruleChain) ApplyMessage(msg models.Message) error {
 	if node, found := r.nodes[r.firstRuleNodeId]; found {
 		return node.Handle(msg)
 	}
-	return fmt.Errorf("node chain '%s' has no valid node", r.Name)
+	return fmt.Errorf("node chain '%s' has no valid node", r.Name())
 }

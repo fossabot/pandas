@@ -62,7 +62,7 @@ func (n *bareNode) GetLinkedNode(label string) Node {
 	if node, found := n.nodes[label]; found {
 		return node
 	}
-	logrus.Error("no label '%s' in node '%s'", label, n.name)
+	logrus.Errorf("no label '%s' in node '%s'", label, n.name)
 	return nil
 }
 

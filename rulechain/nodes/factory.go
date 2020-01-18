@@ -61,7 +61,7 @@ func RegisterFactory(f Factory) {
 	configFile := AssetPath + "/" + f.Name() + ".js"
 	buf, err := ioutil.ReadFile(configFile)
 	if err != nil {
-		logrus.Fatal("asset file '%s' no exist", configFile)
+		logrus.Fatalf("asset file '%s' no exist", configFile)
 	}
 	allNodeConfigs[f.Name()] = string(buf)
 }

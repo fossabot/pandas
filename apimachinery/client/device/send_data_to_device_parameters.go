@@ -142,8 +142,10 @@ func (o *SendDataToDeviceParams) WriteToRequest(r runtime.ClientRequest, reg str
 	}
 	var res []error
 
-	if err := r.SetBodyParam(o.DeviceData); err != nil {
-		return err
+	if o.DeviceData != nil {
+		if err := r.SetBodyParam(o.DeviceData); err != nil {
+			return err
+		}
 	}
 
 	// path param deviceId

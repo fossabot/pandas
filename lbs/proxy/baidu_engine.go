@@ -114,7 +114,7 @@ func (b *baiduLbsManager) AddTrackPoint(point TrackPoint) {
 		return
 	}
 	body, _ := ioutil.ReadAll(resp.Body)
-	logrus.Debugf("AddTrackPoint resp:", string(body))
+	logrus.Debugf("AddTrackPoint resp:%s", string(body))
 	return
 }
 
@@ -147,7 +147,7 @@ func (b *baiduLbsManager) AddTrackPoints(points []TrackPoint) {
 		return
 	}
 	body, _ := ioutil.ReadAll(resp.Body)
-	logrus.Debugf("AddTrackPoint resp:", string(body))
+	logrus.Debugf("AddTrackPoint resp:%s", string(body))
 	return
 }
 
@@ -206,7 +206,7 @@ func (b *baiduLbsManager) CreateCircleGeofence(c CircleGeofence) (string, error)
 		return id, fmt.Errorf("exepected status 200, return %d", resp.StatusCode)
 	} else {
 		body, _ := ioutil.ReadAll(resp.Body)
-		logrus.Debugf("resp:", string(body))
+		logrus.Debugf("resp:%s", string(body))
 		if err := json.Unmarshal(body, &rsp); err != nil {
 			return id, err
 		}
@@ -266,7 +266,7 @@ func (b *baiduLbsManager) CreatePolyGeofence(c PolyGeofence) (string, error) {
 		return id, fmt.Errorf("exepected status 200, return %d", resp.StatusCode)
 	} else {
 		body, _ := ioutil.ReadAll(resp.Body)
-		logrus.Debugf("resp:", string(body))
+		logrus.Debugf("resp:%s", string(body))
 		if err := json.Unmarshal(body, &rsp); err != nil {
 			return id, err
 		}
@@ -299,7 +299,7 @@ func (b *baiduLbsManager) UpdatePolyGeofence(c PolyGeofence) error {
 		return err
 	}
 	body, _ := ioutil.ReadAll(resp.Body)
-	logrus.Debugf("resp:", string(body))
+	logrus.Debugf("resp:%s", string(body))
 
 	return nil
 }
@@ -330,7 +330,7 @@ func (b *baiduLbsManager) UpdateCircleGeofence(c CircleGeofence) error {
 		return err
 	}
 	body, _ := ioutil.ReadAll(resp.Body)
-	logrus.Debugf("resp:", string(body))
+	logrus.Debugf("resp:%s", string(body))
 
 	return nil
 }

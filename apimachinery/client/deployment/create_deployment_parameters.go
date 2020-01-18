@@ -126,8 +126,10 @@ func (o *CreateDeploymentParams) WriteToRequest(r runtime.ClientRequest, reg str
 	}
 	var res []error
 
-	if err := r.SetBodyParam(o.Deployment); err != nil {
-		return err
+	if o.Deployment != nil {
+		if err := r.SetBodyParam(o.Deployment); err != nil {
+			return err
+		}
 	}
 
 	if len(res) > 0 {

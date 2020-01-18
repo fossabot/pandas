@@ -28,8 +28,8 @@ func LogViaLogrus(handler http.Handler) http.Handler {
 // Cross creates a new http.Handler that adds authentication logic to a given Handler
 func Cross(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logrus.Debugln("Enter into cross handler")
-		logrus.Debugln("request: %v", r)
+		logrus.Debug("Enter into cross handler")
+		logrus.Debugf("request: %v", r)
 
 		if r.Method == "OPTIONS" {
 			if r.Header.Get("Access-Control-Request-Method") != "" {
