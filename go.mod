@@ -28,9 +28,11 @@ require (
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/golang/protobuf v1.3.2
 	github.com/goods/httpbuf v0.0.0-20120503183857-5709e9bb814c // indirect
+	github.com/interpose/middleware v0.0.0-20150216143757-05ed56ed52fa // indirect
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/jinzhu/gorm v1.9.11
 	github.com/justinas/nosurf v1.1.0 // indirect
+	github.com/klauspost/cpuid v1.2.2 // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.11 // indirect
 	github.com/meatballhat/negroni-logrus v1.1.0 // indirect
@@ -43,8 +45,6 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.6.1
 	github.com/streadway/amqp v0.0.0-20190827072141-edfb9018d271
-	go.etcd.io/etcd v3.3.18+incompatible
-	go.uber.org/zap v1.10.0
 	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect

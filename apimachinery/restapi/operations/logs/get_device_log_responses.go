@@ -25,7 +25,7 @@ type GetDeviceLogOK struct {
 	/*
 	  In: Body
 	*/
-	Payload []models.DeviceLog `json:"body,omitempty"`
+	Payload []*models.DeviceLog `json:"body,omitempty"`
 }
 
 // NewGetDeviceLogOK creates GetDeviceLogOK with default headers values
@@ -35,13 +35,13 @@ func NewGetDeviceLogOK() *GetDeviceLogOK {
 }
 
 // WithPayload adds the payload to the get device log o k response
-func (o *GetDeviceLogOK) WithPayload(payload []models.DeviceLog) *GetDeviceLogOK {
+func (o *GetDeviceLogOK) WithPayload(payload []*models.DeviceLog) *GetDeviceLogOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get device log o k response
-func (o *GetDeviceLogOK) SetPayload(payload []models.DeviceLog) {
+func (o *GetDeviceLogOK) SetPayload(payload []*models.DeviceLog) {
 	o.Payload = payload
 }
 
@@ -52,7 +52,7 @@ func (o *GetDeviceLogOK) WriteResponse(rw http.ResponseWriter, producer runtime.
 	payload := o.Payload
 	if payload == nil {
 		// return empty array
-		payload = make([]models.DeviceLog, 0, 50)
+		payload = make([]*models.DeviceLog, 0, 50)
 	}
 
 	if err := producer.Produce(rw, payload); err != nil {

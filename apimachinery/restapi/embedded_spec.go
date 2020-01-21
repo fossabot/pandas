@@ -3279,11 +3279,23 @@ func init() {
     "deviceData": {
       "description": "DeviceData DeviceData",
       "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "x-go-name": "ID"
+        }
+      },
       "x-go-package": "github.com/cloustone/pandas/models"
     },
     "deviceLog": {
       "description": "DeviceLog DeviceLog",
       "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "x-go-name": "ID"
+        }
+      },
       "x-go-package": "github.com/cloustone/pandas/models"
     },
     "deviceModel": {

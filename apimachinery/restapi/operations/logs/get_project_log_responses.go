@@ -25,7 +25,7 @@ type GetProjectLogOK struct {
 	/*
 	  In: Body
 	*/
-	Payload []models.DeviceLog `json:"body,omitempty"`
+	Payload []*models.DeviceLog `json:"body,omitempty"`
 }
 
 // NewGetProjectLogOK creates GetProjectLogOK with default headers values
@@ -35,13 +35,13 @@ func NewGetProjectLogOK() *GetProjectLogOK {
 }
 
 // WithPayload adds the payload to the get project log o k response
-func (o *GetProjectLogOK) WithPayload(payload []models.DeviceLog) *GetProjectLogOK {
+func (o *GetProjectLogOK) WithPayload(payload []*models.DeviceLog) *GetProjectLogOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get project log o k response
-func (o *GetProjectLogOK) SetPayload(payload []models.DeviceLog) {
+func (o *GetProjectLogOK) SetPayload(payload []*models.DeviceLog) {
 	o.Payload = payload
 }
 
@@ -52,7 +52,7 @@ func (o *GetProjectLogOK) WriteResponse(rw http.ResponseWriter, producer runtime
 	payload := o.Payload
 	if payload == nil {
 		// return empty array
-		payload = make([]models.DeviceLog, 0, 50)
+		payload = make([]*models.DeviceLog, 0, 50)
 	}
 
 	if err := producer.Produce(rw, payload); err != nil {

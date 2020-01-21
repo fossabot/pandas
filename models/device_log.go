@@ -19,7 +19,9 @@ import (
 
 // DeviceLog DeviceLog
 // swagger:model DeviceLog
-type DeviceLog struct{}
+type DeviceLog struct {
+	ID string `json:"id"`
+}
 
 // Validate validates this deployment
 func (m *DeviceLog) Validate(formats strfmt.Registry) error {

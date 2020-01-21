@@ -52,5 +52,5 @@ func CreateProject(params project.CreateProjectParams, principal *models.Princip
 	if err != nil {
 		return serverError(err)
 	}
-	return project.NewCreateProjectOK().WithPayload(*serverconverter.NewProjectModel(resp.Project))
+	return project.NewCreateProjectOK().WithPayload(serverconverter.NewProjectModel(resp.Project))
 }

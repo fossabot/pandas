@@ -62,10 +62,10 @@ func NewProjectModel(object *grpc_pms_v1.Project) *models.Project {
 }
 
 // NewProjectModels return project models from grpc project objects
-func NewProjectModels(objects []*grpc_pms_v1.Project) []models.Project {
-	projectModels := []models.Project{}
+func NewProjectModels(objects []*grpc_pms_v1.Project) []*models.Project {
+	projectModels := []*models.Project{}
 	for _, object := range objects {
-		projectModels = append(projectModels, *NewProjectModel(object))
+		projectModels = append(projectModels, NewProjectModel(object))
 	}
 	return projectModels
 

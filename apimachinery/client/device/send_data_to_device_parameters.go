@@ -67,7 +67,7 @@ type SendDataToDeviceParams struct {
 	  data to device
 
 	*/
-	DeviceData models.DeviceData
+	DeviceData *models.DeviceData
 	/*DeviceID
 	  device identifer
 
@@ -113,13 +113,13 @@ func (o *SendDataToDeviceParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithDeviceData adds the deviceData to the send data to device params
-func (o *SendDataToDeviceParams) WithDeviceData(deviceData models.DeviceData) *SendDataToDeviceParams {
+func (o *SendDataToDeviceParams) WithDeviceData(deviceData *models.DeviceData) *SendDataToDeviceParams {
 	o.SetDeviceData(deviceData)
 	return o
 }
 
 // SetDeviceData adds the deviceData to the send data to device params
-func (o *SendDataToDeviceParams) SetDeviceData(deviceData models.DeviceData) {
+func (o *SendDataToDeviceParams) SetDeviceData(deviceData *models.DeviceData) {
 	o.DeviceData = deviceData
 }
 

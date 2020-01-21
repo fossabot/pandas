@@ -52,14 +52,14 @@ func NewGetProjectLogOK() *GetProjectLogOK {
 successful operation
 */
 type GetProjectLogOK struct {
-	Payload []models.DeviceLog
+	Payload []*models.DeviceLog
 }
 
 func (o *GetProjectLogOK) Error() string {
 	return fmt.Sprintf("[GET /logs/projects/{projectId}][%d] getProjectLogOK  %+v", 200, o.Payload)
 }
 
-func (o *GetProjectLogOK) GetPayload() []models.DeviceLog {
+func (o *GetProjectLogOK) GetPayload() []*models.DeviceLog {
 	return o.Payload
 }
 

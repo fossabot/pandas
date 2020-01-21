@@ -19,7 +19,9 @@ import (
 
 // DeviceData DeviceData
 // swagger:model DeviceData
-type DeviceData struct{}
+type DeviceData struct {
+	ID string `json:"id"`
+}
 
 // Validate validates this deployment
 func (m *DeviceData) Validate(formats strfmt.Registry) error {

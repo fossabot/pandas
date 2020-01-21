@@ -38,7 +38,7 @@ type SendDataToDeviceParams struct {
 	  Required: true
 	  In: body
 	*/
-	DeviceData models.DeviceData
+	DeviceData *models.DeviceData
 	/*device identifer
 	  Required: true
 	  In: path
@@ -65,8 +65,14 @@ func (o *SendDataToDeviceParams) BindRequest(r *http.Request, route *middleware.
 				res = append(res, errors.NewParseError("deviceData", "body", "", err))
 			}
 		} else {
-			// no validation on generic interface
-			o.DeviceData = body
+			// validate body object
+			if err := body.Validate(route.Formats); err != nil {
+				res = append(res, err)
+			}
+
+			if len(res) == 0 {
+				o.DeviceData = &body
+			}
 		}
 	} else {
 		res = append(res, errors.Required("deviceData", "body"))

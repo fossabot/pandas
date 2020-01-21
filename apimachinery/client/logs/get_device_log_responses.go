@@ -52,14 +52,14 @@ func NewGetDeviceLogOK() *GetDeviceLogOK {
 successful operation
 */
 type GetDeviceLogOK struct {
-	Payload []models.DeviceLog
+	Payload []*models.DeviceLog
 }
 
 func (o *GetDeviceLogOK) Error() string {
 	return fmt.Sprintf("[GET /logs/devices/{deviceId}][%d] getDeviceLogOK  %+v", 200, o.Payload)
 }
 
-func (o *GetDeviceLogOK) GetPayload() []models.DeviceLog {
+func (o *GetDeviceLogOK) GetPayload() []*models.DeviceLog {
 	return o.Payload
 }
 
