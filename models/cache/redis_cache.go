@@ -54,7 +54,7 @@ func (r *redisCache) Get(key string, model models.Model) error {
 
 // Delete remove a cache item from cache
 func (r *redisCache) Delete(key string) error {
-	_, err := r.conn.Do("DELETE", key)
+	_, err := r.conn.Do("DEL", key)
 	return err
 }
 
