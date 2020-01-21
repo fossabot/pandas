@@ -64,7 +64,7 @@ for the update project device operation typically these are written to a http.Re
 type UpdateProjectDeviceParams struct {
 
 	/*Device*/
-	Device models.Device
+	Device *models.Device
 	/*DeviceID
 	  device id
 
@@ -115,13 +115,13 @@ func (o *UpdateProjectDeviceParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithDevice adds the device to the update project device params
-func (o *UpdateProjectDeviceParams) WithDevice(device models.Device) *UpdateProjectDeviceParams {
+func (o *UpdateProjectDeviceParams) WithDevice(device *models.Device) *UpdateProjectDeviceParams {
 	o.SetDevice(device)
 	return o
 }
 
 // SetDevice adds the device to the update project device params
-func (o *UpdateProjectDeviceParams) SetDevice(device models.Device) {
+func (o *UpdateProjectDeviceParams) SetDevice(device *models.Device) {
 	o.Device = device
 }
 

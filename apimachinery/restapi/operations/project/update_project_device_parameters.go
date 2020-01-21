@@ -36,7 +36,7 @@ type UpdateProjectDeviceParams struct {
 	/*
 	  In: body
 	*/
-	Device models.Device
+	Device *models.Device
 	/*device id
 	  Required: true
 	  In: path
@@ -64,8 +64,14 @@ func (o *UpdateProjectDeviceParams) BindRequest(r *http.Request, route *middlewa
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			res = append(res, errors.NewParseError("device", "body", "", err))
 		} else {
-			// no validation on generic interface
-			o.Device = body
+			// validate body object
+			if err := body.Validate(route.Formats); err != nil {
+				res = append(res, err)
+			}
+
+			if len(res) == 0 {
+				o.Device = &body
+			}
 		}
 	}
 	rDeviceID, rhkDeviceID, _ := route.Params.GetOK("deviceId")

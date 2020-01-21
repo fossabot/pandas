@@ -25,7 +25,7 @@ type GetRuleChainsOK struct {
 	/*
 	  In: Body
 	*/
-	Payload []models.RuleChain `json:"body,omitempty"`
+	Payload []*models.RuleChain `json:"body,omitempty"`
 }
 
 // NewGetRuleChainsOK creates GetRuleChainsOK with default headers values
@@ -35,13 +35,13 @@ func NewGetRuleChainsOK() *GetRuleChainsOK {
 }
 
 // WithPayload adds the payload to the get rule chains o k response
-func (o *GetRuleChainsOK) WithPayload(payload []models.RuleChain) *GetRuleChainsOK {
+func (o *GetRuleChainsOK) WithPayload(payload []*models.RuleChain) *GetRuleChainsOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get rule chains o k response
-func (o *GetRuleChainsOK) SetPayload(payload []models.RuleChain) {
+func (o *GetRuleChainsOK) SetPayload(payload []*models.RuleChain) {
 	o.Payload = payload
 }
 
@@ -52,7 +52,7 @@ func (o *GetRuleChainsOK) WriteResponse(rw http.ResponseWriter, producer runtime
 	payload := o.Payload
 	if payload == nil {
 		// return empty array
-		payload = make([]models.RuleChain, 0, 50)
+		payload = make([]*models.RuleChain, 0, 50)
 	}
 
 	if err := producer.Produce(rw, payload); err != nil {

@@ -9,6 +9,8 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/runtime"
+
+	"github.com/cloustone/pandas/models"
 )
 
 // GetDeploymentsOKCode is the HTTP code returned for type GetDeploymentsOK
@@ -23,7 +25,7 @@ type GetDeploymentsOK struct {
 	/*
 	  In: Body
 	*/
-	Payload []interface{} `json:"body,omitempty"`
+	Payload []*models.Deployment `json:"body,omitempty"`
 }
 
 // NewGetDeploymentsOK creates GetDeploymentsOK with default headers values
@@ -33,13 +35,13 @@ func NewGetDeploymentsOK() *GetDeploymentsOK {
 }
 
 // WithPayload adds the payload to the get deployments o k response
-func (o *GetDeploymentsOK) WithPayload(payload []interface{}) *GetDeploymentsOK {
+func (o *GetDeploymentsOK) WithPayload(payload []*models.Deployment) *GetDeploymentsOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get deployments o k response
-func (o *GetDeploymentsOK) SetPayload(payload []interface{}) {
+func (o *GetDeploymentsOK) SetPayload(payload []*models.Deployment) {
 	o.Payload = payload
 }
 
@@ -50,7 +52,7 @@ func (o *GetDeploymentsOK) WriteResponse(rw http.ResponseWriter, producer runtim
 	payload := o.Payload
 	if payload == nil {
 		// return empty array
-		payload = make([]interface{}, 0, 50)
+		payload = make([]*models.Deployment, 0, 50)
 	}
 
 	if err := producer.Produce(rw, payload); err != nil {

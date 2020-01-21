@@ -25,7 +25,7 @@ type UploadRuleChainOK struct {
 	/*
 	  In: Body
 	*/
-	Payload []models.RuleChain `json:"body,omitempty"`
+	Payload []*models.RuleChain `json:"body,omitempty"`
 }
 
 // NewUploadRuleChainOK creates UploadRuleChainOK with default headers values
@@ -35,13 +35,13 @@ func NewUploadRuleChainOK() *UploadRuleChainOK {
 }
 
 // WithPayload adds the payload to the upload rule chain o k response
-func (o *UploadRuleChainOK) WithPayload(payload []models.RuleChain) *UploadRuleChainOK {
+func (o *UploadRuleChainOK) WithPayload(payload []*models.RuleChain) *UploadRuleChainOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the upload rule chain o k response
-func (o *UploadRuleChainOK) SetPayload(payload []models.RuleChain) {
+func (o *UploadRuleChainOK) SetPayload(payload []*models.RuleChain) {
 	o.Payload = payload
 }
 
@@ -52,7 +52,7 @@ func (o *UploadRuleChainOK) WriteResponse(rw http.ResponseWriter, producer runti
 	payload := o.Payload
 	if payload == nil {
 		// return empty array
-		payload = make([]models.RuleChain, 0, 50)
+		payload = make([]*models.RuleChain, 0, 50)
 	}
 
 	if err := producer.Produce(rw, payload); err != nil {

@@ -64,7 +64,7 @@ for the create model operation typically these are written to a http.Request
 type CreateModelParams struct {
 
 	/*DeviceModel*/
-	DeviceModel models.DeviceModel
+	DeviceModel *models.DeviceModel
 
 	timeout    time.Duration
 	Context    context.Context
@@ -105,13 +105,13 @@ func (o *CreateModelParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithDeviceModel adds the deviceModel to the create model params
-func (o *CreateModelParams) WithDeviceModel(deviceModel models.DeviceModel) *CreateModelParams {
+func (o *CreateModelParams) WithDeviceModel(deviceModel *models.DeviceModel) *CreateModelParams {
 	o.SetDeviceModel(deviceModel)
 	return o
 }
 
 // SetDeviceModel adds the deviceModel to the create model params
-func (o *CreateModelParams) SetDeviceModel(deviceModel models.DeviceModel) {
+func (o *CreateModelParams) SetDeviceModel(deviceModel *models.DeviceModel) {
 	o.DeviceModel = deviceModel
 }
 

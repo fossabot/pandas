@@ -58,14 +58,14 @@ func NewGetModelsOK() *GetModelsOK {
 successfully operation
 */
 type GetModelsOK struct {
-	Payload []models.DeviceModel
+	Payload []*models.DeviceModel
 }
 
 func (o *GetModelsOK) Error() string {
 	return fmt.Sprintf("[GET /models][%d] getModelsOK  %+v", 200, o.Payload)
 }
 
-func (o *GetModelsOK) GetPayload() []models.DeviceModel {
+func (o *GetModelsOK) GetPayload() []*models.DeviceModel {
 	return o.Payload
 }
 

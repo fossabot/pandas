@@ -52,21 +52,23 @@ func NewGetProjectsProjectIDOK() *GetProjectsProjectIDOK {
 successful operation
 */
 type GetProjectsProjectIDOK struct {
-	Payload models.Project
+	Payload *models.Project
 }
 
 func (o *GetProjectsProjectIDOK) Error() string {
 	return fmt.Sprintf("[GET /projects/{projectId}][%d] getProjectsProjectIdOK  %+v", 200, o.Payload)
 }
 
-func (o *GetProjectsProjectIDOK) GetPayload() models.Project {
+func (o *GetProjectsProjectIDOK) GetPayload() *models.Project {
 	return o.Payload
 }
 
 func (o *GetProjectsProjectIDOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(models.Project)
+
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

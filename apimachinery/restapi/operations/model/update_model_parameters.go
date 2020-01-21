@@ -34,7 +34,7 @@ type UpdateModelParams struct {
 	/*
 	  In: body
 	*/
-	DeviceModel models.DeviceModel
+	DeviceModel *models.DeviceModel
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -52,8 +52,14 @@ func (o *UpdateModelParams) BindRequest(r *http.Request, route *middleware.Match
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			res = append(res, errors.NewParseError("deviceModel", "body", "", err))
 		} else {
-			// no validation on generic interface
-			o.DeviceModel = body
+			// validate body object
+			if err := body.Validate(route.Formats); err != nil {
+				res = append(res, err)
+			}
+
+			if len(res) == 0 {
+				o.DeviceModel = &body
+			}
 		}
 	}
 	if len(res) > 0 {

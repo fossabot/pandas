@@ -64,7 +64,7 @@ for the add project device operation typically these are written to a http.Reque
 type AddProjectDeviceParams struct {
 
 	/*Device*/
-	Device models.Device
+	Device *models.Device
 	/*ProjectID
 	  specified project
 
@@ -110,13 +110,13 @@ func (o *AddProjectDeviceParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithDevice adds the device to the add project device params
-func (o *AddProjectDeviceParams) WithDevice(device models.Device) *AddProjectDeviceParams {
+func (o *AddProjectDeviceParams) WithDevice(device *models.Device) *AddProjectDeviceParams {
 	o.SetDevice(device)
 	return o
 }
 
 // SetDevice adds the device to the add project device params
-func (o *AddProjectDeviceParams) SetDevice(device models.Device) {
+func (o *AddProjectDeviceParams) SetDevice(device *models.Device) {
 	o.Device = device
 }
 

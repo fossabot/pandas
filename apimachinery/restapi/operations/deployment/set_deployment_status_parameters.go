@@ -38,7 +38,7 @@ type SetDeploymentStatusParams struct {
 	  Required: true
 	  In: body
 	*/
-	DeploymentControl models.DeploymentControl
+	DeploymentControl *models.DeploymentControl
 	/*deployment identifier
 	  Required: true
 	  In: path
@@ -65,8 +65,14 @@ func (o *SetDeploymentStatusParams) BindRequest(r *http.Request, route *middlewa
 				res = append(res, errors.NewParseError("deploymentControl", "body", "", err))
 			}
 		} else {
-			// no validation on generic interface
-			o.DeploymentControl = body
+			// validate body object
+			if err := body.Validate(route.Formats); err != nil {
+				res = append(res, err)
+			}
+
+			if len(res) == 0 {
+				o.DeploymentControl = &body
+			}
 		}
 	} else {
 		res = append(res, errors.Required("deploymentControl", "body"))

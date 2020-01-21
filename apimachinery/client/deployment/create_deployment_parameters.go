@@ -67,7 +67,7 @@ type CreateDeploymentParams struct {
 	  deployment information
 
 	*/
-	Deployment models.Deployment
+	Deployment *models.Deployment
 
 	timeout    time.Duration
 	Context    context.Context
@@ -108,13 +108,13 @@ func (o *CreateDeploymentParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithDeployment adds the deployment to the create deployment params
-func (o *CreateDeploymentParams) WithDeployment(deployment models.Deployment) *CreateDeploymentParams {
+func (o *CreateDeploymentParams) WithDeployment(deployment *models.Deployment) *CreateDeploymentParams {
 	o.SetDeployment(deployment)
 	return o
 }
 
 // SetDeployment adds the deployment to the create deployment params
-func (o *CreateDeploymentParams) SetDeployment(deployment models.Deployment) {
+func (o *CreateDeploymentParams) SetDeployment(deployment *models.Deployment) {
 	o.Deployment = deployment
 }
 

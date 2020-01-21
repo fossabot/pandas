@@ -67,7 +67,7 @@ type CreateProjectParams struct {
 	  new created project
 
 	*/
-	Project models.Project
+	Project *models.Project
 
 	timeout    time.Duration
 	Context    context.Context
@@ -108,13 +108,13 @@ func (o *CreateProjectParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithProject adds the project to the create project params
-func (o *CreateProjectParams) WithProject(project models.Project) *CreateProjectParams {
+func (o *CreateProjectParams) WithProject(project *models.Project) *CreateProjectParams {
 	o.SetProject(project)
 	return o
 }
 
 // SetProject adds the project to the create project params
-func (o *CreateProjectParams) SetProject(project models.Project) {
+func (o *CreateProjectParams) SetProject(project *models.Project) {
 	o.Project = project
 }
 

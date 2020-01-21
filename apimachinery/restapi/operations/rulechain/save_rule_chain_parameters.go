@@ -38,7 +38,7 @@ type SaveRuleChainParams struct {
 	  Required: true
 	  In: body
 	*/
-	RuleChain models.RuleChain
+	RuleChain *models.RuleChain
 	/*rule chain
 	  Required: true
 	  In: path
@@ -65,8 +65,14 @@ func (o *SaveRuleChainParams) BindRequest(r *http.Request, route *middleware.Mat
 				res = append(res, errors.NewParseError("ruleChain", "body", "", err))
 			}
 		} else {
-			// no validation on generic interface
-			o.RuleChain = body
+			// validate body object
+			if err := body.Validate(route.Formats); err != nil {
+				res = append(res, err)
+			}
+
+			if len(res) == 0 {
+				o.RuleChain = &body
+			}
 		}
 	} else {
 		res = append(res, errors.Required("ruleChain", "body"))

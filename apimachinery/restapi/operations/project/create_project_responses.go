@@ -25,7 +25,7 @@ type CreateProjectOK struct {
 	/*
 	  In: Body
 	*/
-	Payload models.Project `json:"body,omitempty"`
+	Payload *models.Project `json:"body,omitempty"`
 }
 
 // NewCreateProjectOK creates CreateProjectOK with default headers values
@@ -35,13 +35,13 @@ func NewCreateProjectOK() *CreateProjectOK {
 }
 
 // WithPayload adds the payload to the create project o k response
-func (o *CreateProjectOK) WithPayload(payload models.Project) *CreateProjectOK {
+func (o *CreateProjectOK) WithPayload(payload *models.Project) *CreateProjectOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the create project o k response
-func (o *CreateProjectOK) SetPayload(payload models.Project) {
+func (o *CreateProjectOK) SetPayload(payload *models.Project) {
 	o.Payload = payload
 }
 
@@ -49,9 +49,11 @@ func (o *CreateProjectOK) SetPayload(payload models.Project) {
 func (o *CreateProjectOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
 }
 

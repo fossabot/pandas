@@ -67,7 +67,7 @@ type UpdateDeploymentParams struct {
 	  updated deployment
 
 	*/
-	Deployment models.Deployment
+	Deployment *models.Deployment
 	/*DeploymentID
 	  deployment identifier
 
@@ -113,13 +113,13 @@ func (o *UpdateDeploymentParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithDeployment adds the deployment to the update deployment params
-func (o *UpdateDeploymentParams) WithDeployment(deployment models.Deployment) *UpdateDeploymentParams {
+func (o *UpdateDeploymentParams) WithDeployment(deployment *models.Deployment) *UpdateDeploymentParams {
 	o.SetDeployment(deployment)
 	return o
 }
 
 // SetDeployment adds the deployment to the update deployment params
-func (o *UpdateDeploymentParams) SetDeployment(deployment models.Deployment) {
+func (o *UpdateDeploymentParams) SetDeployment(deployment *models.Deployment) {
 	o.Deployment = deployment
 }
 

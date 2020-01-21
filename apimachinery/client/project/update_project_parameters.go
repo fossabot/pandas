@@ -67,7 +67,7 @@ type UpdateProjectParams struct {
 	  updated project
 
 	*/
-	Project models.Project
+	Project *models.Project
 	/*ProjectID
 	  project identifier
 
@@ -113,13 +113,13 @@ func (o *UpdateProjectParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithProject adds the project to the update project params
-func (o *UpdateProjectParams) WithProject(project models.Project) *UpdateProjectParams {
+func (o *UpdateProjectParams) WithProject(project *models.Project) *UpdateProjectParams {
 	o.SetProject(project)
 	return o
 }
 
 // SetProject adds the project to the update project params
-func (o *UpdateProjectParams) SetProject(project models.Project) {
+func (o *UpdateProjectParams) SetProject(project *models.Project) {
 	o.Project = project
 }
 

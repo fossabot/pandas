@@ -25,7 +25,7 @@ type GetRuleChainOK struct {
 	/*
 	  In: Body
 	*/
-	Payload models.RuleChain `json:"body,omitempty"`
+	Payload *models.RuleChain `json:"body,omitempty"`
 }
 
 // NewGetRuleChainOK creates GetRuleChainOK with default headers values
@@ -35,13 +35,13 @@ func NewGetRuleChainOK() *GetRuleChainOK {
 }
 
 // WithPayload adds the payload to the get rule chain o k response
-func (o *GetRuleChainOK) WithPayload(payload models.RuleChain) *GetRuleChainOK {
+func (o *GetRuleChainOK) WithPayload(payload *models.RuleChain) *GetRuleChainOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get rule chain o k response
-func (o *GetRuleChainOK) SetPayload(payload models.RuleChain) {
+func (o *GetRuleChainOK) SetPayload(payload *models.RuleChain) {
 	o.Payload = payload
 }
 
@@ -49,9 +49,11 @@ func (o *GetRuleChainOK) SetPayload(payload models.RuleChain) {
 func (o *GetRuleChainOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
 }
 

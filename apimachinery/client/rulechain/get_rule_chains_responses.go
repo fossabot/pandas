@@ -64,14 +64,14 @@ func NewGetRuleChainsOK() *GetRuleChainsOK {
 successfully operation
 */
 type GetRuleChainsOK struct {
-	Payload []models.RuleChain
+	Payload []*models.RuleChain
 }
 
 func (o *GetRuleChainsOK) Error() string {
 	return fmt.Sprintf("[GET /rulechains][%d] getRuleChainsOK  %+v", 200, o.Payload)
 }
 
-func (o *GetRuleChainsOK) GetPayload() []models.RuleChain {
+func (o *GetRuleChainsOK) GetPayload() []*models.RuleChain {
 	return o.Payload
 }
 

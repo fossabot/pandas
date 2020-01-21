@@ -25,7 +25,7 @@ type GetModelsOK struct {
 	/*
 	  In: Body
 	*/
-	Payload []models.DeviceModel `json:"body,omitempty"`
+	Payload []*models.DeviceModel `json:"body,omitempty"`
 }
 
 // NewGetModelsOK creates GetModelsOK with default headers values
@@ -35,13 +35,13 @@ func NewGetModelsOK() *GetModelsOK {
 }
 
 // WithPayload adds the payload to the get models o k response
-func (o *GetModelsOK) WithPayload(payload []models.DeviceModel) *GetModelsOK {
+func (o *GetModelsOK) WithPayload(payload []*models.DeviceModel) *GetModelsOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get models o k response
-func (o *GetModelsOK) SetPayload(payload []models.DeviceModel) {
+func (o *GetModelsOK) SetPayload(payload []*models.DeviceModel) {
 	o.Payload = payload
 }
 
@@ -52,7 +52,7 @@ func (o *GetModelsOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pro
 	payload := o.Payload
 	if payload == nil {
 		// return empty array
-		payload = make([]models.DeviceModel, 0, 50)
+		payload = make([]*models.DeviceModel, 0, 50)
 	}
 
 	if err := producer.Produce(rw, payload); err != nil {

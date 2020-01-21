@@ -52,14 +52,14 @@ func NewUploadRuleChainOK() *UploadRuleChainOK {
 excute successfully
 */
 type UploadRuleChainOK struct {
-	Payload []models.RuleChain
+	Payload []*models.RuleChain
 }
 
 func (o *UploadRuleChainOK) Error() string {
 	return fmt.Sprintf("[POST /rulechains/{ruleChainId}/upload][%d] uploadRuleChainOK  %+v", 200, o.Payload)
 }
 
-func (o *UploadRuleChainOK) GetPayload() []models.RuleChain {
+func (o *UploadRuleChainOK) GetPayload() []*models.RuleChain {
 	return o.Payload
 }
 

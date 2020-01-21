@@ -52,21 +52,23 @@ func NewGetModelOK() *GetModelOK {
 successfully operation
 */
 type GetModelOK struct {
-	Payload models.DeviceModel
+	Payload *models.DeviceModel
 }
 
 func (o *GetModelOK) Error() string {
 	return fmt.Sprintf("[GET /models/{modelId}][%d] getModelOK  %+v", 200, o.Payload)
 }
 
-func (o *GetModelOK) GetPayload() models.DeviceModel {
+func (o *GetModelOK) GetPayload() *models.DeviceModel {
 	return o.Payload
 }
 
 func (o *GetModelOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(models.DeviceModel)
+
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

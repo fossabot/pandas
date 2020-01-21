@@ -25,7 +25,7 @@ type GetProjectsOK struct {
 	/*
 	  In: Body
 	*/
-	Payload []models.Project `json:"body,omitempty"`
+	Payload []*models.Project `json:"body,omitempty"`
 }
 
 // NewGetProjectsOK creates GetProjectsOK with default headers values
@@ -35,13 +35,13 @@ func NewGetProjectsOK() *GetProjectsOK {
 }
 
 // WithPayload adds the payload to the get projects o k response
-func (o *GetProjectsOK) WithPayload(payload []models.Project) *GetProjectsOK {
+func (o *GetProjectsOK) WithPayload(payload []*models.Project) *GetProjectsOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get projects o k response
-func (o *GetProjectsOK) SetPayload(payload []models.Project) {
+func (o *GetProjectsOK) SetPayload(payload []*models.Project) {
 	o.Payload = payload
 }
 
@@ -52,7 +52,7 @@ func (o *GetProjectsOK) WriteResponse(rw http.ResponseWriter, producer runtime.P
 	payload := o.Payload
 	if payload == nil {
 		// return empty array
-		payload = make([]models.Project, 0, 50)
+		payload = make([]*models.Project, 0, 50)
 	}
 
 	if err := producer.Produce(rw, payload); err != nil {

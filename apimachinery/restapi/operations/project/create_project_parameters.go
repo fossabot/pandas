@@ -36,7 +36,7 @@ type CreateProjectParams struct {
 	  Required: true
 	  In: body
 	*/
-	Project models.Project
+	Project *models.Project
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -58,8 +58,14 @@ func (o *CreateProjectParams) BindRequest(r *http.Request, route *middleware.Mat
 				res = append(res, errors.NewParseError("project", "body", "", err))
 			}
 		} else {
-			// no validation on generic interface
-			o.Project = body
+			// validate body object
+			if err := body.Validate(route.Formats); err != nil {
+				res = append(res, err)
+			}
+
+			if len(res) == 0 {
+				o.Project = &body
+			}
 		}
 	} else {
 		res = append(res, errors.Required("project", "body"))

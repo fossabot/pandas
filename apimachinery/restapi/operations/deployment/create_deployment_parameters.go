@@ -36,7 +36,7 @@ type CreateDeploymentParams struct {
 	  Required: true
 	  In: body
 	*/
-	Deployment models.Deployment
+	Deployment *models.Deployment
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -58,8 +58,14 @@ func (o *CreateDeploymentParams) BindRequest(r *http.Request, route *middleware.
 				res = append(res, errors.NewParseError("deployment", "body", "", err))
 			}
 		} else {
-			// no validation on generic interface
-			o.Deployment = body
+			// validate body object
+			if err := body.Validate(route.Formats); err != nil {
+				res = append(res, err)
+			}
+
+			if len(res) == 0 {
+				o.Deployment = &body
+			}
 		}
 	} else {
 		res = append(res, errors.Required("deployment", "body"))

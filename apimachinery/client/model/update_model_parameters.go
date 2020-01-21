@@ -64,7 +64,7 @@ for the update model operation typically these are written to a http.Request
 type UpdateModelParams struct {
 
 	/*DeviceModel*/
-	DeviceModel models.DeviceModel
+	DeviceModel *models.DeviceModel
 
 	timeout    time.Duration
 	Context    context.Context
@@ -105,13 +105,13 @@ func (o *UpdateModelParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithDeviceModel adds the deviceModel to the update model params
-func (o *UpdateModelParams) WithDeviceModel(deviceModel models.DeviceModel) *UpdateModelParams {
+func (o *UpdateModelParams) WithDeviceModel(deviceModel *models.DeviceModel) *UpdateModelParams {
 	o.SetDeviceModel(deviceModel)
 	return o
 }
 
 // SetDeviceModel adds the deviceModel to the update model params
-func (o *UpdateModelParams) SetDeviceModel(deviceModel models.DeviceModel) {
+func (o *UpdateModelParams) SetDeviceModel(deviceModel *models.DeviceModel) {
 	o.DeviceModel = deviceModel
 }
 

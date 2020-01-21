@@ -25,7 +25,7 @@ type GetProjectDeviceOK struct {
 	/*
 	  In: Body
 	*/
-	Payload models.Device `json:"body,omitempty"`
+	Payload *models.Device `json:"body,omitempty"`
 }
 
 // NewGetProjectDeviceOK creates GetProjectDeviceOK with default headers values
@@ -35,13 +35,13 @@ func NewGetProjectDeviceOK() *GetProjectDeviceOK {
 }
 
 // WithPayload adds the payload to the get project device o k response
-func (o *GetProjectDeviceOK) WithPayload(payload models.Device) *GetProjectDeviceOK {
+func (o *GetProjectDeviceOK) WithPayload(payload *models.Device) *GetProjectDeviceOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get project device o k response
-func (o *GetProjectDeviceOK) SetPayload(payload models.Device) {
+func (o *GetProjectDeviceOK) SetPayload(payload *models.Device) {
 	o.Payload = payload
 }
 
@@ -49,9 +49,11 @@ func (o *GetProjectDeviceOK) SetPayload(payload models.Device) {
 func (o *GetProjectDeviceOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
 }
 

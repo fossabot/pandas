@@ -58,21 +58,23 @@ func NewGetRuleChainOK() *GetRuleChainOK {
 successfully operation
 */
 type GetRuleChainOK struct {
-	Payload models.RuleChain
+	Payload *models.RuleChain
 }
 
 func (o *GetRuleChainOK) Error() string {
 	return fmt.Sprintf("[GET /rulechains/{ruleChainId}][%d] getRuleChainOK  %+v", 200, o.Payload)
 }
 
-func (o *GetRuleChainOK) GetPayload() models.RuleChain {
+func (o *GetRuleChainOK) GetPayload() *models.RuleChain {
 	return o.Payload
 }
 
 func (o *GetRuleChainOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(models.RuleChain)
+
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 

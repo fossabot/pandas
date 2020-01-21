@@ -67,7 +67,7 @@ type SetDeploymentStatusParams struct {
 	  start or stop deployment
 
 	*/
-	DeploymentControl models.DeploymentControl
+	DeploymentControl *models.DeploymentControl
 	/*DeploymentID
 	  deployment identifier
 
@@ -113,13 +113,13 @@ func (o *SetDeploymentStatusParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithDeploymentControl adds the deploymentControl to the set deployment status params
-func (o *SetDeploymentStatusParams) WithDeploymentControl(deploymentControl models.DeploymentControl) *SetDeploymentStatusParams {
+func (o *SetDeploymentStatusParams) WithDeploymentControl(deploymentControl *models.DeploymentControl) *SetDeploymentStatusParams {
 	o.SetDeploymentControl(deploymentControl)
 	return o
 }
 
 // SetDeploymentControl adds the deploymentControl to the set deployment status params
-func (o *SetDeploymentStatusParams) SetDeploymentControl(deploymentControl models.DeploymentControl) {
+func (o *SetDeploymentStatusParams) SetDeploymentControl(deploymentControl *models.DeploymentControl) {
 	o.DeploymentControl = deploymentControl
 }
 

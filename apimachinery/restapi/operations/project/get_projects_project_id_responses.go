@@ -25,7 +25,7 @@ type GetProjectsProjectIDOK struct {
 	/*
 	  In: Body
 	*/
-	Payload models.Project `json:"body,omitempty"`
+	Payload *models.Project `json:"body,omitempty"`
 }
 
 // NewGetProjectsProjectIDOK creates GetProjectsProjectIDOK with default headers values
@@ -35,13 +35,13 @@ func NewGetProjectsProjectIDOK() *GetProjectsProjectIDOK {
 }
 
 // WithPayload adds the payload to the get projects project Id o k response
-func (o *GetProjectsProjectIDOK) WithPayload(payload models.Project) *GetProjectsProjectIDOK {
+func (o *GetProjectsProjectIDOK) WithPayload(payload *models.Project) *GetProjectsProjectIDOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get projects project Id o k response
-func (o *GetProjectsProjectIDOK) SetPayload(payload models.Project) {
+func (o *GetProjectsProjectIDOK) SetPayload(payload *models.Project) {
 	o.Payload = payload
 }
 
@@ -49,9 +49,11 @@ func (o *GetProjectsProjectIDOK) SetPayload(payload models.Project) {
 func (o *GetProjectsProjectIDOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
 }
 

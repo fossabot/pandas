@@ -58,12 +58,12 @@ paths:
           description: new created project
           required: true
           schema:
-            $ref: "models.json#definitions/Project"
+            $ref: "./models.json#/definitions/Project"
       responses:
         "200":
           description: Successful operation
           schema:
-            $ref: "models.json#definitions/Project"
+            $ref: "./models.json#/definitions/Project"
         "400":
           description: Bad request
         "500":
@@ -115,7 +115,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "models.json#definitions/Project"
+              $ref: "./models.json#/definitions/Project"
         "400":
           description: Bad request
         "500":
@@ -140,7 +140,7 @@ paths:
         "200":
           description: successful operation
           schema:
-            $ref: "models.json#definitions/Project"
+            $ref: "./models.json#/definitions/Project"
         "404":
           description: Bad request
 
@@ -189,7 +189,7 @@ paths:
           description: updated project
           required: true
           schema:
-            $ref: "models.json#definitions/Project"
+            $ref: "./models.json#/definitions/Project"
       responses:
         "200":
           description: successfully operation
@@ -218,7 +218,7 @@ paths:
         "200":
           description: successful operation
           schema:
-            $ref: "models.json#definitions/ProjectSummary"
+            $ref: "./models.json#/definitions/ProjectSummary"
         "404":
           description: project not found
 
@@ -244,7 +244,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "models.json#definitions/Device"
+              $ref: "./models.json#/definitions/Device"
         "404":
           description: project not found
 
@@ -266,7 +266,7 @@ paths:
         - in: body
           name: device
           schema:
-            $ref: "models.json#definitions/Device"
+            $ref: "./models.json#/definitions/Device"
       responses:
         "200":
           description: successful operation
@@ -302,7 +302,7 @@ paths:
         "200":
           description: successful operation
           schema:
-            $ref: "models.json#definitions/Device"
+            $ref: "./models.json#/definitions/Device"
         "404":
           description: project or device not found
 
@@ -357,7 +357,7 @@ paths:
         - in: body
           name: device
           schema:
-            $ref: "models.json#definitions/Device"
+            $ref: "./models.json#/definitions/Device"
       responses:
         "200":
           description: successful operation
@@ -419,7 +419,7 @@ paths:
           description: data to device
           required: true
           schema:
-            $ref: "models.json#definitions/DeviceData"
+            $ref: "./models.json#/definitions/DeviceData"
       responses:
         "200":
           description: Successful operation
@@ -475,7 +475,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "models.json#definitions/DeviceModel"
+              $ref: "./models.json#/definitions/DeviceModel"
         "400":
           description: Bad request
         "500":
@@ -493,7 +493,7 @@ paths:
         - in: body
           name: deviceModel
           schema:
-            $ref: "models.json#definitions/DeviceModel"
+            $ref: "./models.json#/definitions/DeviceModel"
       responses:
         "200":
           description: successful operation
@@ -516,7 +516,7 @@ paths:
         - in: body
           name: deviceModel
           schema:
-            $ref: "models.json#definitions/DeviceModel"
+            $ref: "./models.json#/definitions/DeviceModel"
       responses:
         "200":
           description: successful operation
@@ -546,7 +546,7 @@ paths:
         "200":
           description: successfully operation
           schema:
-            $ref: "models.json#definitions/DeviceModel"
+            $ref: "./models.json#/definitions/DeviceModel"
         "404":
           description: model not found
 
@@ -595,7 +595,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "models.json#definitions/DeviceLog"
+              $ref: "./models.json#/definitions/DeviceLog"
         "404":
           description: device not found.
 
@@ -620,7 +620,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "models.json#definitions/DeviceLog"
+              $ref: "./models.json#/definitions/DeviceLog"
         "404":
           description: device not found
   /rulechains:
@@ -671,7 +671,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "models.json#definitions/RuleChain"
+              $ref: "./models.json#/definitions/RuleChain"
             properties:
               status:
                 type: boolean
@@ -726,7 +726,7 @@ paths:
         "200":
           description: successfully operation
           schema:
-            $ref: "models.json#definitions/RuleChain"
+            $ref: "./models.json#/definitions/RuleChain"
         "400":
           description: Bad request
         "404":
@@ -751,7 +751,7 @@ paths:
           description: updated rule chain
           required: true
           schema:
-            $ref: "models.json#definitions/RuleChain"
+            $ref: "./models.json#/definitions/RuleChain"
       responses:
         "200":
           description: Successfully operation
@@ -862,7 +862,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "models.json#definitions/RuleChain"
+              $ref: "./models.json#/definitions/RuleChain"
             properties:
               status:
                 type: boolean
@@ -941,17 +941,17 @@ paths:
               {"data_format": "XML"}
           type: string
       responses:
-        '200':
-          description:  successfully operation
+        "200":
+          description: successfully operation
           schema:
             type: array
             items:
-              $ref: 'models.json#definitions/deployment'
+              $ref: "./models.json#/definitions/Deployment"
             properties:
               status:
                 type: boolean
-        '400':
-           description: Internal server rooro
+        "400":
+          description: Internal server rooro
         default:
           description: failed operation
           schema:
@@ -974,12 +974,12 @@ paths:
           description: deployment information
           required: true
           schema:
-            $ref: "models.json#definitions/Deployment"
+            $ref: "./models.json#/definitions/Deployment"
       responses:
         "200":
           description: Successfully operation
           schema:
-            $ref: "models.json#definitions/Deployment"
+            $ref: "./models.json#/definitions/Deployment"
         "400":
           description: Bad request
         "405":
@@ -1006,7 +1006,7 @@ paths:
         "200":
           description: successfully operation
           schema:
-            $ref: "models.json#definitions/Deployment"
+            $ref: "./models.json#/definitions/Deployment"
         "404":
           description: deployment not found
 
@@ -1052,7 +1052,7 @@ paths:
           description: updated deployment
           required: true
           schema:
-            $ref: "models.json#definitions/Deployment"
+            $ref: "./models.json#/definitions/Deployment"
       responses:
         "200":
           description: successfully operation
@@ -1080,7 +1080,7 @@ paths:
           description: start or stop deployment
           required: true
           schema:
-            $ref: "models.json#definitions/DeploymentControl"
+            $ref: "./models.json#/definitions/DeploymentControl"
       responses:
         "200":
           description: Successfully operation

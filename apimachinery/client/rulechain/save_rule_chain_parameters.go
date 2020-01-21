@@ -67,7 +67,7 @@ type SaveRuleChainParams struct {
 	  updated rule chain
 
 	*/
-	RuleChain models.RuleChain
+	RuleChain *models.RuleChain
 	/*RuleChainID
 	  rule chain
 
@@ -113,13 +113,13 @@ func (o *SaveRuleChainParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithRuleChain adds the ruleChain to the save rule chain params
-func (o *SaveRuleChainParams) WithRuleChain(ruleChain models.RuleChain) *SaveRuleChainParams {
+func (o *SaveRuleChainParams) WithRuleChain(ruleChain *models.RuleChain) *SaveRuleChainParams {
 	o.SetRuleChain(ruleChain)
 	return o
 }
 
 // SetRuleChain adds the ruleChain to the save rule chain params
-func (o *SaveRuleChainParams) SetRuleChain(ruleChain models.RuleChain) {
+func (o *SaveRuleChainParams) SetRuleChain(ruleChain *models.RuleChain) {
 	o.RuleChain = ruleChain
 }
 

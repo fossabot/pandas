@@ -13,6 +13,8 @@ import (
 	"github.com/go-openapi/swag"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	"github.com/cloustone/pandas/models"
 )
 
 // GetDeploymentsReader is a Reader for the GetDeployments structure.
@@ -57,14 +59,14 @@ func NewGetDeploymentsOK() *GetDeploymentsOK {
 successfully operation
 */
 type GetDeploymentsOK struct {
-	Payload []interface{}
+	Payload []*models.Deployment
 }
 
 func (o *GetDeploymentsOK) Error() string {
 	return fmt.Sprintf("[GET /deployments][%d] getDeploymentsOK  %+v", 200, o.Payload)
 }
 
-func (o *GetDeploymentsOK) GetPayload() []interface{} {
+func (o *GetDeploymentsOK) GetPayload() []*models.Deployment {
 	return o.Payload
 }
 

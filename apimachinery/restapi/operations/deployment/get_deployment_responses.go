@@ -25,7 +25,7 @@ type GetDeploymentOK struct {
 	/*
 	  In: Body
 	*/
-	Payload models.Deployment `json:"body,omitempty"`
+	Payload *models.Deployment `json:"body,omitempty"`
 }
 
 // NewGetDeploymentOK creates GetDeploymentOK with default headers values
@@ -35,13 +35,13 @@ func NewGetDeploymentOK() *GetDeploymentOK {
 }
 
 // WithPayload adds the payload to the get deployment o k response
-func (o *GetDeploymentOK) WithPayload(payload models.Deployment) *GetDeploymentOK {
+func (o *GetDeploymentOK) WithPayload(payload *models.Deployment) *GetDeploymentOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get deployment o k response
-func (o *GetDeploymentOK) SetPayload(payload models.Deployment) {
+func (o *GetDeploymentOK) SetPayload(payload *models.Deployment) {
 	o.Payload = payload
 }
 
@@ -49,9 +49,11 @@ func (o *GetDeploymentOK) SetPayload(payload models.Deployment) {
 func (o *GetDeploymentOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
 	}
 }
 
