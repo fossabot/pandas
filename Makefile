@@ -37,7 +37,7 @@ rulechain: cmd/rulechain
 
 .PHONY: test
 test: 
-	go test -v ./...
+	$Q go test  ./...
 
 
 
