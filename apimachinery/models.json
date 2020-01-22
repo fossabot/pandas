@@ -2,6 +2,49 @@
   "swagger": "2.0",
   "paths": {},
   "definitions": {
+    "Dashboard": {
+      "description": "Dashboard Dashboard",
+      "type": "object",
+      "properties": {
+        "deviceActiveNumber": {
+          "type": "string",
+          "x-go-name": "DeviceActiveNumber"
+        },
+        "deviceModelActiveNumber": {
+          "type": "string",
+          "x-go-name": "DeviceModelActiveNumber"
+        },
+        "deviceNumber": {
+          "type": "string",
+          "x-go-name": "DeviceNumber"
+        },
+        "id": {
+          "type": "string",
+          "x-go-name": "ID"
+        },
+        "modelNumber": {
+          "type": "string",
+          "x-go-name": "DeviceModelNumber"
+        },
+        "projectActivieNumber": {
+          "type": "string",
+          "x-go-name": "ProjectActiveNumber"
+        },
+        "projectNumber": {
+          "type": "string",
+          "x-go-name": "ProjectNumber"
+        },
+        "workshopActiveNumber": {
+          "type": "string",
+          "x-go-name": "WorkshopActiveNumber"
+        },
+        "workshopNumber": {
+          "type": "string",
+          "x-go-name": "WorkshopNumber"
+        }
+      },
+      "x-go-package": "github.com/cloustone/pandas/models"
+    },
     "DataModel": {
       "type": "object",
       "title": "DataModel ...",

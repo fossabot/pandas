@@ -27,6 +27,8 @@ securityDefinitions:
       admin: scope of registere admin
 
 tags:
+  - name: Dashboard
+    description: operation about dashboard
   - name: Project
     description: Operations about projects
   - name: Device
@@ -44,6 +46,26 @@ schemes:
   - http
 
 paths:
+  /dashboard:
+    get:
+      tags:
+        - Dashboard
+      description: dashboard information
+      operationId: getDashboard
+      produces:
+        - application/json
+      security:
+        - roleAuth:
+            - user
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: "./models.json#/definitions/Dashboard"
+        "400":
+          description: Bad request
+        "500":
+          description: Server internal error
   /projects:
     post:
       tags:

@@ -11,6 +11,7 @@ import (
 	middleware "github.com/go-openapi/runtime/middleware"
 
 	"github.com/cloustone/pandas/apimachinery/restapi/operations"
+	"github.com/cloustone/pandas/apimachinery/restapi/operations/dashboard"
 	"github.com/cloustone/pandas/apimachinery/restapi/operations/device"
 	"github.com/cloustone/pandas/apimachinery/restapi/operations/logs"
 	"github.com/cloustone/pandas/apimachinery/restapi/operations/model"
@@ -108,6 +109,10 @@ func configureAPI(api *operations.SwaggerPandasAPI) http.Handler {
 	})
 	api.ProjectUpdateProjectDeviceStatusHandler = project.UpdateProjectDeviceStatusHandlerFunc(func(params project.UpdateProjectDeviceStatusParams, principal *models.Principal) middleware.Responder {
 		return middleware.NotImplemented("operation project.UpdateProjectDeviceStatus has not yet been implemented")
+	})
+
+	api.DashboardGetDashboardHandler = dashboard.GetDashboardHandlerFunc(func(params dashboard.GetDashboardParams, principal *models.Principal) middleware.Responder {
+		return server.GetDashboard(params, principal)
 	})
 
 	api.ServerShutdown = func() {}

@@ -42,6 +42,39 @@ func init() {
   "host": "localhost:8080",
   "basePath": "/v1",
   "paths": {
+    "/dashboard": {
+      "get": {
+        "security": [
+          {
+            "roleAuth": [
+              "user"
+            ]
+          }
+        ],
+        "description": "dashboard information",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Dashboard"
+        ],
+        "operationId": "getDashboard",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "./models.json#/definitions/Dashboard"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server internal error"
+          }
+        }
+      }
+    },
     "/deployments": {
       "get": {
         "security": [
@@ -1546,6 +1579,10 @@ func init() {
   ],
   "tags": [
     {
+      "description": "operation about dashboard",
+      "name": "Dashboard"
+    },
+    {
       "description": "Operations about projects",
       "name": "Project"
     },
@@ -1596,6 +1633,39 @@ func init() {
   "host": "localhost:8080",
   "basePath": "/v1",
   "paths": {
+    "/dashboard": {
+      "get": {
+        "security": [
+          {
+            "roleAuth": [
+              "user"
+            ]
+          }
+        ],
+        "description": "dashboard information",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Dashboard"
+        ],
+        "operationId": "getDashboard",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/dashboard"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Server internal error"
+          }
+        }
+      }
+    },
     "/deployments": {
       "get": {
         "security": [
@@ -3081,6 +3151,49 @@ func init() {
     }
   },
   "definitions": {
+    "dashboard": {
+      "description": "Dashboard Dashboard",
+      "type": "object",
+      "properties": {
+        "deviceActiveNumber": {
+          "type": "string",
+          "x-go-name": "DeviceActiveNumber"
+        },
+        "deviceModelActiveNumber": {
+          "type": "string",
+          "x-go-name": "DeviceModelActiveNumber"
+        },
+        "deviceNumber": {
+          "type": "string",
+          "x-go-name": "DeviceNumber"
+        },
+        "id": {
+          "type": "string",
+          "x-go-name": "ID"
+        },
+        "modelNumber": {
+          "type": "string",
+          "x-go-name": "DeviceModelNumber"
+        },
+        "projectActivieNumber": {
+          "type": "string",
+          "x-go-name": "ProjectActiveNumber"
+        },
+        "projectNumber": {
+          "type": "string",
+          "x-go-name": "ProjectNumber"
+        },
+        "workshopActiveNumber": {
+          "type": "string",
+          "x-go-name": "WorkshopActiveNumber"
+        },
+        "workshopNumber": {
+          "type": "string",
+          "x-go-name": "WorkshopNumber"
+        }
+      },
+      "x-go-package": "github.com/cloustone/pandas/models"
+    },
     "dataModel": {
       "type": "object",
       "title": "DataModel ...",
@@ -3581,6 +3694,10 @@ func init() {
     }
   ],
   "tags": [
+    {
+      "description": "operation about dashboard",
+      "name": "Dashboard"
+    },
     {
       "description": "Operations about projects",
       "name": "Project"

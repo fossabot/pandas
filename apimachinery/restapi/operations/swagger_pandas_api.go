@@ -19,6 +19,7 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
+	"github.com/cloustone/pandas/apimachinery/restapi/operations/dashboard"
 	"github.com/cloustone/pandas/apimachinery/restapi/operations/deployment"
 	"github.com/cloustone/pandas/apimachinery/restapi/operations/device"
 	"github.com/cloustone/pandas/apimachinery/restapi/operations/logs"
@@ -68,6 +69,8 @@ func NewSwaggerPandasAPI(spec *loads.Document) *SwaggerPandasAPI {
 			return middleware.NotImplemented("operation RulechainDeleteRuleChain has not yet been implemented")
 		}), RulechainDownloadRuleChainHandler: rulechain.DownloadRuleChainHandlerFunc(func(params rulechain.DownloadRuleChainParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation RulechainDownloadRuleChain has not yet been implemented")
+		}), DashboardGetDashboardHandler: dashboard.GetDashboardHandlerFunc(func(params dashboard.GetDashboardParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DashboardGetDashboard has not yet been implemented")
 		}), DeploymentGetDeploymentHandler: deployment.GetDeploymentHandlerFunc(func(params deployment.GetDeploymentParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation DeploymentGetDeployment has not yet been implemented")
 		}), DeploymentGetDeploymentsHandler: deployment.GetDeploymentsHandlerFunc(func(params deployment.GetDeploymentsParams, principal *models.Principal) middleware.Responder {
@@ -183,6 +186,8 @@ type SwaggerPandasAPI struct {
 	RulechainDeleteRuleChainHandler rulechain.DeleteRuleChainHandler
 	// RulechainDownloadRuleChainHandler sets the operation handler for the download rule chain operation
 	RulechainDownloadRuleChainHandler rulechain.DownloadRuleChainHandler
+	// DashboardGetDashboardHandler sets the operation handler for the get dashboard operation
+	DashboardGetDashboardHandler dashboard.GetDashboardHandler
 	// DeploymentGetDeploymentHandler sets the operation handler for the get deployment operation
 	DeploymentGetDeploymentHandler deployment.GetDeploymentHandler
 	// DeploymentGetDeploymentsHandler sets the operation handler for the get deployments operation
@@ -344,6 +349,10 @@ func (o *SwaggerPandasAPI) Validate() error {
 
 	if o.RulechainDownloadRuleChainHandler == nil {
 		unregistered = append(unregistered, "rulechain.DownloadRuleChainHandler")
+	}
+
+	if o.DashboardGetDashboardHandler == nil {
+		unregistered = append(unregistered, "dashboard.GetDashboardHandler")
 	}
 
 	if o.DeploymentGetDeploymentHandler == nil {
@@ -600,6 +609,11 @@ func (o *SwaggerPandasAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/rulechains/{ruleChainId}/download"] = rulechain.NewDownloadRuleChain(o.context, o.RulechainDownloadRuleChainHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/dashboard"] = dashboard.NewGetDashboard(o.context, o.DashboardGetDashboardHandler)
 
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)

@@ -11,6 +11,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
+	"github.com/cloustone/pandas/apimachinery/client/dashboard"
 	"github.com/cloustone/pandas/apimachinery/client/deployment"
 	"github.com/cloustone/pandas/apimachinery/client/device"
 	"github.com/cloustone/pandas/apimachinery/client/logs"
@@ -61,6 +62,8 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *SwaggerPan
 
 	cli := new(SwaggerPandas)
 	cli.Transport = transport
+
+	cli.Dashboard = dashboard.New(transport, formats)
 
 	cli.Deployment = deployment.New(transport, formats)
 
@@ -118,6 +121,8 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 
 // SwaggerPandas is a client for swagger pandas
 type SwaggerPandas struct {
+	Dashboard *dashboard.Client
+
 	Deployment *deployment.Client
 
 	Device *device.Client
@@ -136,6 +141,8 @@ type SwaggerPandas struct {
 // SetTransport changes the transport on the client and all its subresources
 func (c *SwaggerPandas) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
+
+	c.Dashboard.SetTransport(transport)
 
 	c.Deployment.SetTransport(transport)
 
