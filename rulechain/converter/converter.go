@@ -19,3 +19,11 @@ import (
 func NewRuleChainModel(obj *grpc_rulechain_v1.RuleChain) *models.RuleChain {
 	return &models.RuleChain{}
 }
+
+func NewRuleChain(model models.Model) *grpc_rulechain_v1.RuleChain {
+	return &grpc_rulechain_v1.RuleChain{}
+}
+
+func NewRuleChains(objs []models.Model) []*grpc_rulechain_v1.RuleChain {
+	return []*grpc_rulechain_v1.RuleChain{}
+}

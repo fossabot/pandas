@@ -58,38 +58,36 @@ message DeleteRuleChainResponse {}
 
 // Update RuleChain
 message UpdateRuleChainRequest {
-    RuleChain rule = 1;
+    RuleChain ruleChain = 1;
 }
 
 message UpdateRuleChainResponse {}
 message GetRuleChainRequest {
     string userID = 1;
     string domain = 2;
-    string rule_name = 3;
+    string rule_chainID = 3;
 }
 
 message GetRuleChainResponse {
-    RuleChain rule = 1;
+    RuleChain rule_chain = 1;
 }
 
 message GetRuleChainsRequest {
     string userID = 1;
-    string domain = 2;
 }
 message GetRuleChainsResponse {
-    repeated RuleChain rules = 1;
+    repeated RuleChain rule_chains = 1;
 }
 
 message StartRuleChainRequest {
     string userID = 1;
-    string rule_name = 2;
-    string type = 3;
+    string rule_chainID = 2;
 }
 message StartRuleChainResponse {}
+
 message StopRuleChainRequest {
     string userID = 1;
-    string rule_name = 2;
-    string type = 3;
+    string rule_chainID = 2;
 }
 message StopRuleChainResponse {}
 
