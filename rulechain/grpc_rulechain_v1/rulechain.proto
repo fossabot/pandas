@@ -10,22 +10,23 @@ service RuleChainService {
     rpc DeleteRuleChain(DeleteRuleChainRequest) returns (DeleteRuleChainResponse){}
     rpc UpdateRuleChain(UpdateRuleChainRequest) returns (UpdateRuleChainResponse) {}
     rpc GetRuleChain(GetRuleChainRequest) returns (GetRuleChainResponse) {}
-    rpc GetUserRuleChains(GetUserRuleChainsRequest) returns (GetUserRuleChainsResponse) {}
+    rpc GetRuleChains(GetRuleChainsRequest) returns (GetRuleChainsResponse) {}
     rpc StartRuleChain(StartRuleChainRequest) returns (StartRuleChainResponse) {}
     rpc StopRuleChain(StopRuleChainRequest) returns (StopRuleChainResponse) {}
 }
 
 message RuleChain {
-    string user_id = 1;
-    string rule_name = 2;
-    string type = 3;
-    string domain = 4;
-    string status = 6;
-    bytes payload = 7;
+    string name = 1;
+    string ID = 2;
+    string userID = 3;
+    string type = 4;
+    string domain = 5;
+    bytes payload = 6;
+    string status = 7;
 }
 
 message CheckRuleChainRequest {
-    RuleChain rule = 1;
+    RuleChain rule_chain = 1;
 }
 
 message CheckRuleChainResponse {
@@ -34,24 +35,23 @@ message CheckRuleChainResponse {
 }
 
 message CreateRuleChainRequest {
-    RuleChain rule = 1;
+    RuleChain rule_chain = 1;
+    RuleChainConfig config = 2;
 }
 
-message PullerAttribute {
-    string endpoint_URL = 1;
+message RuleChainConfig {
+    string endpointURL = 1;
     string port = 2;
 }
 
-message TLSAttribute {}
-
-
-message CreateRuleChainResponse {}
+message CreateRuleChainResponse {
+    repeated string reasons = 1;
+}
 // Delete RuleChain
 message DeleteRuleChainRequest {
-    string user_id = 1;
-    string rule_name = 2;
-    string type = 3;
-    string domain_id = 4;
+    string userID = 1;
+    string domainID = 2;
+    string ruleChainID = 3;
 }
 
 message DeleteRuleChainResponse {}
@@ -63,7 +63,7 @@ message UpdateRuleChainRequest {
 
 message UpdateRuleChainResponse {}
 message GetRuleChainRequest {
-    string user_id = 1;
+    string userID = 1;
     string domain = 2;
     string rule_name = 3;
 }
@@ -72,22 +72,22 @@ message GetRuleChainResponse {
     RuleChain rule = 1;
 }
 
-message GetUserRuleChainsRequest {
-    string user_id = 1;
+message GetRuleChainsRequest {
+    string userID = 1;
     string domain = 2;
 }
-message GetUserRuleChainsResponse {
+message GetRuleChainsResponse {
     repeated RuleChain rules = 1;
 }
 
 message StartRuleChainRequest {
-    string user_id = 1;
+    string userID = 1;
     string rule_name = 2;
     string type = 3;
 }
 message StartRuleChainResponse {}
 message StopRuleChainRequest {
-    string user_id = 1;
+    string userID = 1;
     string rule_name = 2;
     string type = 3;
 }

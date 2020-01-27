@@ -13,15 +13,22 @@ package rulechain
 
 import (
 	"context"
+	"errors"
+	"reflect"
 
+	"github.com/cloustone/pandas/models"
+	"github.com/cloustone/pandas/models/factory"
 	"github.com/cloustone/pandas/pkg/broadcast"
 	broadcast_util "github.com/cloustone/pandas/pkg/broadcast/util"
+	"github.com/cloustone/pandas/rulechain/converter"
 	pb "github.com/cloustone/pandas/rulechain/grpc_rulechain_v1"
 	logr "github.com/sirupsen/logrus"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 var (
-	broadcastizer broadcast.Broadcast
+	nameOfRuleChain = reflect.TypeOf(models.RuleChain{}).Name()
 )
 
 // Controller monitor rulechain's change and adjust the deployment dynamically
@@ -69,31 +76,83 @@ func loadControllers() map[string]Controller {
 }
 
 // notify is internal helper to simplify broadcastization notificaiton
-func notify(action string, path string) {
-	broadcast_util.Notify(action, path)
+func notify(action string, path string, param interface{}) {
+	broadcast_util.Notify(action, path, param)
 }
 
-func (s *RuleChainService) CheckRuleChain(context.Context, *pb.CheckRuleChainRequest) (*pb.CheckRuleChainResponse, error) {
-	return nil, nil
+// CheckRuleChain check wether the rule chain is valid
+func (s *RuleChainService) CheckRuleChain(ctx context.Context, in *pb.CheckRuleChainRequest) (*pb.CheckRuleChainResponse, error) {
+	resp := pb.CheckRuleChainResponse{
+		Reasons: []string{},
+	}
+
+	_, errs := NewRuleChain(in.RuleChain.Payload)
+	if len(errs) > 0 {
+		for _, err := range errs {
+			resp.Reasons = append(resp.Reasons, err.Error())
+		}
+		return &resp, status.Error(codes.InvalidArgument, "")
+	}
+
+	return &resp, nil
 }
 
-func (s *RuleChainService) CreateRuleChain(context.Context, *pb.CreateRuleChainRequest) (*pb.CreateRuleChainResponse, error) {
-	return nil, nil
+// CreateRuleChain add a new rulechain into  repository
+func (s *RuleChainService) CreateRuleChain(ctx context.Context, in *pb.CreateRuleChainRequest) (*pb.CreateRuleChainResponse, error) {
+	resp := pb.CreateRuleChainResponse{
+		Reasons: []string{},
+	}
+	_, errs := NewRuleChain(in.RuleChain.Payload)
+	if len(errs) > 0 {
+		for _, err := range errs {
+			resp.Reasons = append(resp.Reasons, err.Error())
+		}
+		return &resp, status.Error(codes.InvalidArgument, "")
+	}
+
+	pf := factory.NewFactory(models.RuleChain{})
+	owner := factory.NewOwner(in.RuleChain.UserID)
+	rulechain := converter.NewRuleChainModel(in.RuleChain)
+	_, err := pf.Save(owner, rulechain)
+
+	return &resp, grpcError(err)
 }
 
-func (s *RuleChainService) DeleteRuleChain(context.Context, *pb.DeleteRuleChainRequest) (*pb.DeleteRuleChainResponse, error) {
-	return nil, nil
+// DeleteRuleChain remove a rulechain from rulechain service
+// In the cluster environmnent, the peer nodes should be notified
+func (s *RuleChainService) DeleteRuleChain(ctx context.Context, in *pb.DeleteRuleChainRequest) (*pb.DeleteRuleChainResponse, error) {
+	pf := factory.NewFactory(models.RuleChain{})
+	owner := factory.NewOwner(in.UserID)
+
+	// If the rule chain no exist, just return error
+	rulechain, err := pf.Get(owner, in.RuleChainID)
+	if err != nil {
+		return &pb.DeleteRuleChainResponse{}, grpcError(err)
+	}
+	// if rule chain's status is not allowed to be deleted, also return errors
+	if rulechain.(*models.RuleChain).Status != models.RuleStatusStarted {
+		return nil, status.Error(codes.FailedPrecondition, "")
+	}
+
+	if err := pf.Delete(owner, in.RuleChainID); err != nil {
+		return nil, grpcError(err)
+	}
+	notify(broadcast.ActionDeleted, nameOfRuleChain, rulechain)
+	return &pb.DeleteRuleChainResponse{}, nil
 }
 
+// UpdateRuleChain update an existed rule chain
 func (s *RuleChainService) UpdateRuleChain(context.Context, *pb.UpdateRuleChainRequest) (*pb.UpdateRuleChainResponse, error) {
 	return nil, nil
 }
 
+// GetRuleChian return specified rulechain
 func (s *RuleChainService) GetRuleChain(context.Context, *pb.GetRuleChainRequest) (*pb.GetRuleChainResponse, error) {
 	return nil, nil
 }
 
-func (s *RuleChainService) GetUserRuleChains(context.Context, *pb.GetUserRuleChainsRequest) (*pb.GetUserRuleChainsResponse, error) {
+// GetruleChain returns user's all rulechain informations
+func (s *RuleChainService) GetRuleChains(context.Context, *pb.GetRuleChainsRequest) (*pb.GetRuleChainsResponse, error) {
 	return nil, nil
 }
 
@@ -103,4 +162,19 @@ func (s *RuleChainService) StartRuleChain(context.Context, *pb.StartRuleChainReq
 
 func (s *RuleChainService) StopRuleChain(context.Context, *pb.StopRuleChainRequest) (*pb.StopRuleChainResponse, error) {
 	return nil, nil
+}
+
+// grpcError return grpc error according to models errors
+func grpcError(err error) error {
+	if err == nil {
+		return nil
+	} else if errors.Is(err, factory.ErrObjectNotFound) {
+		return status.Errorf(codes.NotFound, "%w", err)
+	} else if errors.Is(err, factory.ErrObjectAlreadyExist) {
+		return status.Errorf(codes.AlreadyExists, "%w", err)
+	} else if errors.Is(err, factory.ErrObjectInvalidArg) {
+		return status.Errorf(codes.InvalidArgument, "%w", err)
+	} else {
+		return status.Errorf(codes.Internal, "%s", err)
+	}
 }

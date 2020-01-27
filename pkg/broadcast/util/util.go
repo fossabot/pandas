@@ -44,10 +44,10 @@ func RegisterObserver(obs broadcast.Observer, path string) {
 }
 
 // Notify fire the global broadcast
-func Notify(action, path string) {
+func Notify(action, path string, param interface{}) {
 	globalBroadcast.Notify(broadcast.Notification{
 		Path:   path,
 		Action: action,
-		Param:  path, // TODO
+		Param:  param,
 	})
 }

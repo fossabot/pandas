@@ -30,25 +30,30 @@ type RuleChain interface {
 // Only one input node exist in chain as precondition, and with many output nodes
 // Relations within nodes is maintained by link object
 type ruleChain struct {
-	name            string                 `json:"name" yaml:"name"`
-	firstRuleNodeId string                 `json:"firstRuleNodeId" yaml:"firstRuleNodeid"`
-	root            bool                   `json:"root" yaml:"boot"`
-	debugMode       bool                   `json:"debugMode" yaml:"debugMode"`
-	configuration   map[string]interface{} `json:"configuration" yaml:"configuration"`
-	nodes           map[string]nodes.Node  `json:"nodes" yaml:"nodes"`
+	name            string                 `json:"name"`
+	firstRuleNodeId string                 `json:"firstRuleNodeId"`
+	root            bool                   `json:"root"`
+	debugMode       bool                   `json:"debugMode"`
+	configuration   map[string]interface{} `json:"configuration"`
+	nodes           map[string]nodes.Node  `json:"nodes"`
 }
 
-func NewRuleChain(data []byte) (RuleChain, error) {
+func NewRuleChain(data []byte) (RuleChain, []error) {
+	errors := []error{}
+
 	manifest, err := manifest.New(data)
 	if err != nil {
+		errors = append(errors, err)
 		logrus.WithError(err).Errorf("invalidi manifest file")
-		return nil, err
+		return nil, errors
 	}
 	return NewWithManifest(manifest)
 }
 
 // NewWithManifest create rule chain by user's manifest file
-func NewWithManifest(m *manifest.Manifest) (RuleChain, error) {
+func NewWithManifest(m *manifest.Manifest) (RuleChain, []error) {
+	errs := []error{}
+
 	r := &ruleChain{
 		name:            m.RuleChain.Name,
 		firstRuleNodeId: m.RuleChain.FirstRuleNodeId,
@@ -62,10 +67,13 @@ func NewWithManifest(m *manifest.Manifest) (RuleChain, error) {
 		metadata := nodes.NewMetadataWithValues(n.Configuration).With("debugMode", r.debugMode)
 		node, err := nodes.NewNode(n.Type, n.Name, metadata)
 		if err != nil {
-			return nil, err
+			errs = append(errs, err)
+			continue
 		}
 		if _, found := r.nodes[n.Name]; found {
-			return nil, fmt.Errorf("node '%s' already exist in rulechain '%s'", n.Name, m.RuleChain.Name)
+			err := fmt.Errorf("node '%s' already exist in rulechain '%s'", n.Name, m.RuleChain.Name)
+			errs = append(errs, err)
+			continue
 		}
 		r.nodes[n.Name] = node
 	}
@@ -74,11 +82,15 @@ func NewWithManifest(m *manifest.Manifest) (RuleChain, error) {
 	for _, conn := range m.Metadata.Connections {
 		originalNode, found := r.nodes[strconv.Itoa(conn.FromIndex)]
 		if !found {
-			return nil, fmt.Errorf("original node '%s' no exist in rulechain '%s'", originalNode.Name(), m.RuleChain.Name)
+			err := fmt.Errorf("original node '%s' no exist in rulechain '%s'", originalNode.Name(), m.RuleChain.Name)
+			errs = append(errs, err)
+			continue
 		}
 		targetNode, found := r.nodes[strconv.Itoa(conn.ToIndex)]
 		if !found {
-			return nil, fmt.Errorf("target node '%s' no exist in rulechain '%s'", targetNode.Name(), m.RuleChain.Name)
+			err := fmt.Errorf("target node '%s' no exist in rulechain '%s'", targetNode.Name(), m.RuleChain.Name)
+			errs = append(errs, err)
+			continue
 		}
 		originalNode.AddLinkedNode(conn.Type, targetNode)
 	}
@@ -88,12 +100,14 @@ func NewWithManifest(m *manifest.Manifest) (RuleChain, error) {
 		mustLabels := node.MustLabels()
 		for _, label := range mustLabels {
 			if _, found := targetNodes[label]; !found {
-				return nil, fmt.Errorf("the label '%s' in node '%s' no exist'", label, name)
+				err := fmt.Errorf("the label '%s' in node '%s' no exist'", label, name)
+				errs = append(errs, err)
+				continue
 			}
 		}
 	}
 
-	return r, nil
+	return r, errs
 }
 
 func (r *ruleChain) Name() string { return r.name }

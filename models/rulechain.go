@@ -33,15 +33,15 @@ const (
 type RuleChain struct {
 	ModelTypeInfo
 	gorm.Model
-	DebugMode     bool      `json:"debugMode" `
-	Description   string    `json:"description"gorm:"size:255"`
 	Name          string    `json:"name" gorm:"size:255"`
 	ID            string    `json:"chainId" gorm:"size:100,unique_index"`
+	Description   string    `json:"description"gorm:"size:255"`
+	DebugMode     bool      `json:"debugMode" `
 	UserID        string    `json:"userId" gorm:"size:255"`
 	Type          string    `json:"type" gorm:"type:char(100)"`
 	Domain        string    `json:"domain"`
 	Status        string    `json:"status""`
-	Metadata      []byte    `json:"metadata"`
+	Payload       []byte    `json:"payload"`
 	Root          bool      `json:"bool"`
 	CreatedAt     time.Time `json:"createdAt"`
 	LastUpdatedAt time.Time `json:"lastUpdatedAt"`
