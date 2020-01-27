@@ -18,11 +18,11 @@ import (
 
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/factory"
+	"github.com/cloustone/pandas/models/notifications"
 	"github.com/cloustone/pandas/pkg/broadcast"
 	broadcast_util "github.com/cloustone/pandas/pkg/broadcast/util"
 	"github.com/cloustone/pandas/rulechain/converter"
 	pb "github.com/cloustone/pandas/rulechain/grpc_rulechain_v1"
-	logr "github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -31,48 +31,20 @@ var (
 	nameOfRuleChain = reflect.TypeOf(models.RuleChain{}).Name()
 )
 
-// Controller monitor rulechain's change and adjust the deployment dynamically
-type Controller interface {
-	OnModelNotified(path string, reason string, obj interface{})
-	Shutdown()
-}
-
 // RuleChainService implement all rulechain interface
 type RuleChainService struct {
-	controllers map[string]Controller
+	controller *runtimeController
 }
 
 // NewRuleChainService return rulechain service object
 func NewRuleChainService() *RuleChainService {
 	return &RuleChainService{
-		controllers: make(map[string]Controller),
+		controller: newRuntimeController(),
 	}
 }
 
 // Initialize will add prestart behaivor such as broadcastization initialization
 func (s *RuleChainService) Initialize(options *broadcast.ServingOptions) {
-	s.controllers = loadControllers()
-	for path, _ := range s.controllers {
-		broadcast_util.RegisterObserver(s, path)
-	}
-}
-
-// OnSynchonronizedNotified will be notified when rulechain model object is changed
-func (s *RuleChainService) Onbroadcast(b broadcast.Broadcast, notify broadcast.Notification) {
-	if controller, found := s.controllers[notify.Path]; found {
-		controller.OnModelNotified(notify.Path, notify.Action, notify.Param)
-		return
-	}
-	logr.Errorf("no observer existed for model '%s'", notify.Path)
-}
-
-// loadControllers will create controllers according to evnrionment's setting
-// in future, the loaded controllers can be configured with config file
-func loadControllers() map[string]Controller {
-	controllers := map[string]Controller{
-		"deployments": newDeploymentController(),
-	}
-	return controllers
 }
 
 // notify is internal helper to simplify broadcastization notificaiton
@@ -86,7 +58,7 @@ func (s *RuleChainService) CheckRuleChain(ctx context.Context, in *pb.CheckRuleC
 		Reasons: []string{},
 	}
 
-	_, errs := NewRuleChain(in.RuleChain.Payload)
+	_, errs := newRuleChain(in.RuleChain.Payload)
 	if len(errs) > 0 {
 		for _, err := range errs {
 			resp.Reasons = append(resp.Reasons, err.Error())
@@ -102,7 +74,7 @@ func (s *RuleChainService) CreateRuleChain(ctx context.Context, in *pb.CreateRul
 	resp := pb.CreateRuleChainResponse{
 		Reasons: []string{},
 	}
-	_, errs := NewRuleChain(in.RuleChain.Payload)
+	_, errs := newRuleChain(in.RuleChain.Payload)
 	if len(errs) > 0 {
 		for _, err := range errs {
 			resp.Reasons = append(resp.Reasons, err.Error())
@@ -159,7 +131,11 @@ func (s *RuleChainService) UpdateRuleChain(ctx context.Context, in *pb.UpdateRul
 	if err := pf.Update(owner, rulechainModel); err != nil {
 		return nil, grpcError(err)
 	}
-	notify(broadcast.ActionUpdated, nameOfRuleChain, rulechainModel)
+	notify(broadcast.ActionUpdated, nameOfRuleChain,
+		notifications.RuleChainNotification{
+			UserID:      in.RuleChain.UserID,
+			RuleChainID: rulechainModel.ID,
+		})
 	return &pb.UpdateRuleChainResponse{}, nil
 }
 
@@ -208,7 +184,11 @@ func (s *RuleChainService) StartRuleChain(ctx context.Context, in *pb.StartRuleC
 		rulechain.Status != models.RuleStatusStopped {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
-	notify(broadcast.ActionUpdated, nameOfRuleChain, rulechain)
+	notify(broadcast.ActionUpdated, nameOfRuleChain,
+		notifications.RuleChainNotification{
+			UserID:      in.UserID,
+			RuleChainID: in.RuleChainID,
+		})
 	return &pb.StartRuleChainResponse{}, nil
 }
 
@@ -226,7 +206,11 @@ func (s *RuleChainService) StopRuleChain(ctx context.Context, in *pb.StopRuleCha
 	if rulechain.Status != models.RuleStatusStarted {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
-	notify(broadcast.ActionUpdated, nameOfRuleChain, rulechain)
+	notify(broadcast.ActionUpdated, nameOfRuleChain,
+		notifications.RuleChainNotification{
+			UserID:      in.UserID,
+			RuleChainID: in.RuleChainID,
+		})
 	return &pb.StopRuleChainResponse{}, nil
 }
 

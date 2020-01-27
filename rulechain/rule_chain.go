@@ -15,16 +15,12 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/cloustone/pandas/models"
+	"github.com/cloustone/pandas/pkg/readers"
+	"github.com/cloustone/pandas/plugins"
 	"github.com/cloustone/pandas/rulechain/manifest"
 	"github.com/cloustone/pandas/rulechain/nodes"
 	"github.com/sirupsen/logrus"
 )
-
-type RuleChain interface {
-	Name() string
-	ApplyMessage(models.Message) error
-}
 
 // RuleChain manage all nodes in this chain, validate and apply data
 // Only one input node exist in chain as precondition, and with many output nodes
@@ -36,9 +32,11 @@ type ruleChain struct {
 	debugMode       bool                   `json:"debugMode"`
 	configuration   map[string]interface{} `json:"configuration"`
 	nodes           map[string]nodes.Node  `json:"nodes"`
+	reader          readers.Reader         `json:"-"`
+	plugin          plugins.Plugin         `json:"-"`
 }
 
-func NewRuleChain(data []byte) (RuleChain, []error) {
+func newRuleChain(data []byte) (*ruleChain, []error) {
 	errors := []error{}
 
 	manifest, err := manifest.New(data)
@@ -51,7 +49,7 @@ func NewRuleChain(data []byte) (RuleChain, []error) {
 }
 
 // NewWithManifest create rule chain by user's manifest file
-func NewWithManifest(m *manifest.Manifest) (RuleChain, []error) {
+func NewWithManifest(m *manifest.Manifest) (*ruleChain, []error) {
 	errs := []error{}
 
 	r := &ruleChain{
@@ -112,10 +110,15 @@ func NewWithManifest(m *manifest.Manifest) (RuleChain, []error) {
 
 func (r *ruleChain) Name() string { return r.name }
 
-// ApplyMessage push message into node chain, so that data processing will be triggered
-func (r *ruleChain) ApplyMessage(msg models.Message) error {
-	if node, found := r.nodes[r.firstRuleNodeId]; found {
-		return node.Handle(msg)
+func (r *ruleChain) OnDataAvailable(reader readers.Reader, payload []byte, param interface{}) {
+	msg, err := r.plugin.ConstructMessage(payload)
+	if err != nil {
+		logrus.WithError(err)
+		return
 	}
-	return fmt.Errorf("node chain '%s' has no valid node", r.Name())
+	if node, found := r.nodes[r.firstRuleNodeId]; found {
+		go node.Handle(msg)
+		return
+	}
+	logrus.Errorf("node chain '%s' has no valid node", r.Name())
 }
