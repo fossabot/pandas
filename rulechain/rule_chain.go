@@ -22,18 +22,18 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// RuleChain manage all nodes in this chain, validate and apply data
+// ruleChain manage all nodes in this chain, validate and apply data
 // Only one input node exist in chain as precondition, and with many output nodes
 // Relations within nodes is maintained by link object
 type ruleChain struct {
-	name            string                 `json:"name"`
-	firstRuleNodeId string                 `json:"firstRuleNodeId"`
-	root            bool                   `json:"root"`
-	debugMode       bool                   `json:"debugMode"`
-	configuration   map[string]interface{} `json:"configuration"`
-	nodes           map[string]nodes.Node  `json:"nodes"`
-	reader          readers.Reader         `json:"-"`
-	plugin          plugins.Plugin         `json:"-"`
+	name            string
+	firstRuleNodeId string
+	root            bool
+	debugMode       bool
+	configuration   map[string]interface{}
+	nodes           map[string]nodes.Node
+	reader          readers.Reader
+	plugin          plugins.Plugin
 }
 
 func newRuleChain(data []byte) (*ruleChain, []error) {

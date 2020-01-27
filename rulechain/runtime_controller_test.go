@@ -12,22 +12,8 @@
 package rulechain
 
 import (
-	"io/ioutil"
 	"testing"
-
-	"github.com/cloustone/pandas/rulechain/manifest"
-	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestNodeChains(t *testing.T) {
-	manifestNormalSample, errs := ioutil.ReadFile("../manifest_sample.json")
-	So(errs, ShouldBeNil)
-
-	Convey("Construct node chanis", t, func() {
-		manifest, err := manifest.New([]byte(manifestNormalSample))
-		So(err, ShouldBeNil)
-
-		_, errs := NewWithManifest(manifest)
-		So(len(errs), ShouldEqual, 0)
-	})
+func TestOnboradcast(t *testing.T) {
 }

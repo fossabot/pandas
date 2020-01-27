@@ -108,7 +108,7 @@ func (r *runtimeController) startRuleChain(rulechainModel *models.RuleChain) err
 		return errs[0]
 	}
 	// create reader for the rule chain
-	reader, err := readers.NewReader("", nil) // todo
+	reader, err := readers.NewReader("", nil) // TODO
 	if err != nil {
 		logr.WithError(err)
 		return err

@@ -180,7 +180,7 @@ func (s *RuleChainService) StartRuleChain(ctx context.Context, in *pb.StartRuleC
 		return &pb.StartRuleChainResponse{}, grpcError(err)
 	}
 	rulechain := rulechainModel.(*models.RuleChain)
-	if rulechain.Status != models.RuleStatusCreated ||
+	if rulechain.Status != models.RuleStatusCreated &&
 		rulechain.Status != models.RuleStatusStopped {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
