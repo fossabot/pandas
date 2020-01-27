@@ -13,22 +13,26 @@ package grpc
 
 import (
 	"context"
+	"log"
 	"net"
 
-	"github.com/cloustone/pandas/models"
+	"github.com/cloustone/pandas/pkg/readers"
 	logr "github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/status"
 )
 
+const Name = "grpc"
+
 type ReaderFactory struct{}
 
-func (r ReaderFactory) Create(configs map[string]interface{}) (models.Reader, error) {
-	return newGrpcReader(configs)
+func (r ReaderFactory) Create(servingOptions *readers.SecureServingOptions) (readers.Reader, error) {
+	return newGrpcReader(servingOptions)
 }
 
 type grpcReader struct {
@@ -36,54 +40,45 @@ type grpcReader struct {
 	shutdownFn    context.CancelFunc
 	childRoutines *errgroup.Group
 	grpcServer    *grpc.Server
-	configs       map[string]interface{}
-	observer      models.ReaderObserver
+	observer      readers.ReaderObserver
 }
 
-func newGrpcReader(configs map[string]interface{}) (models.Reader, error) {
-	/*
-		var opts []grpc.ServerOption
+func newGrpcReader(servingOptions *readers.SecureServingOptions) (readers.Reader, error) {
+	rootCtx, shutdownFn := context.WithCancel(context.Background())
+	childRoutines, childCtx := errgroup.WithContext(rootCtx)
 
-		if config.IsTLSEnabled() {
-			config.FatalOnAbsentKey(config.ServerCertKey)
-			config.FatalOnAbsentKey(config.ServerPrivateKey)
-
-			creds, err := credentials.NewServerTLSFromFile(config.GetServerCert(), config.GetServerPrivateKey())
-			if err != nil {
-				logr.Fatalf("Failed to generate credentials %v", err)
-				return nil, err
-			}
-			opts = []grpc.ServerOption{grpc.Creds(creds)}
+	var opts []grpc.ServerOption
+	if servingOptions.IsTlsEnabled() {
+		creds, err := credentials.NewServerTLSFromFile(
+			servingOptions.ServerCert.CertKey.CertFile,
+			servingOptions.ServerCert.CertKey.KeyFile,
+		)
+		if err != nil {
+			log.Fatalf("failed to generate credentials %v", err)
 		}
+		opts = []grpc.ServerOption{grpc.Creds(creds)}
+	}
 
-		rootCtx, shutdownFn := context.WithCancel(context.Background())
-		childRoutines, childCtx := errgroup.WithContext(rootCtx)
-
-		return &grpcReader{
-			context:       childCtx,
-			shutdownFn:    shutdownFn,
-			childRoutines: childRoutines,
-			grpcServer:    grpc.NewServer(opts...),
-			configs:       configs,
-		}, nil
-	*/
-	return nil, nil
+	return &grpcReader{
+		context:       childCtx,
+		shutdownFn:    shutdownFn,
+		childRoutines: childRoutines,
+		grpcServer:    grpc.NewServer(opts...),
+	}, nil
 }
 
-func (r *grpcReader) Config() map[string]interface{} { return r.configs }
+func (r *grpcReader) Start() error {
+	grpc_health_v1.RegisterHealthServer(r.grpcServer, health.NewServer())
+	RegisterReaderServer(r.grpcServer, r)
 
-func (g *grpcReader) Start() error {
-	grpc_health_v1.RegisterHealthServer(g.grpcServer, health.NewServer())
-	RegisterReaderServer(g.grpcServer, g)
-
-	g.childRoutines.Go(func() error {
+	r.childRoutines.Go(func() error {
 		port := "4001" //TODO:
 		listen, err := net.Listen("tcp", port)
 		if err != nil {
 			logr.Fatal(err)
 		}
 		logr.Infof("rpc service is listening on '%s'...", port)
-		if err := g.grpcServer.Serve(listen); err != nil {
+		if err := r.grpcServer.Serve(listen); err != nil {
 			logr.Fatal(err)
 		}
 		return nil
@@ -91,7 +86,7 @@ func (g *grpcReader) Start() error {
 	return nil
 }
 
-func (r *grpcReader) Name() string { return "grpc-reader" }
+func (r *grpcReader) Name() string { return Name }
 
 func gerrf(err error, c codes.Code, format string, a ...interface{}) error {
 	if err != nil && c != codes.OK {
@@ -107,7 +102,7 @@ func (r *grpcReader) GracefulShutdown() error {
 
 	err := r.childRoutines.Wait()
 	if err != nil && err != context.Canceled {
-		logr.WithError(err).Errorf("rpc endpoint hutdown failed")
+		logr.WithError(err).Errorf("rpc endpoint shutdown failed")
 	}
 	return nil
 }
@@ -119,6 +114,10 @@ func (r *grpcReader) PostMessage(ctx context.Context, in *PostMessageRequest) (*
 	return &PostMessageResponse{}, nil
 }
 
-func (r *grpcReader) RegisterObserver(obs models.ReaderObserver) {
+func (r *grpcReader) RegisterObserver(obs readers.ReaderObserver) {
 	r.observer = obs
+}
+
+func init() {
+	readers.RegisterReader(Name, &ReaderFactory{})
 }

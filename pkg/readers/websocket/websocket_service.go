@@ -10,9 +10,3 @@
 //  License for the specific language governing permissions and limitations
 //  under the License.
 package websocket
-
-type websocketDataSource struct{}
-
-func (g *websocketDataSource) Name() string                               { return "websocket" }
-func (g *websocketDataSource) Start(configs map[string]interface{}) error { return nil }
-func (g *websocketDataSource) GracefulStop() error                        { return nil }

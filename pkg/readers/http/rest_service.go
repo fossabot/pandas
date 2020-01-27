@@ -10,9 +10,3 @@
 //  License for the specific language governing permissions and limitations
 //  under the License.
 package http
-
-type httpDataSource struct{}
-
-func (g *httpDataSource) Name() string                               { return "http" }
-func (g *httpDataSource) Start(configs map[string]interface{}) error { return nil }
-func (g *httpDataSource) GracefulStop() error                        { return nil }

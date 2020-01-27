@@ -10,9 +10,3 @@
 //  License for the specific language governing permissions and limitations
 //  under the License.
 package rabbitmq
-
-type rabbitmqDataSource struct{}
-
-func (g *rabbitmqDataSource) Name() string                               { return "rabbitmq" }
-func (g *rabbitmqDataSource) Start(configs map[string]interface{}) error { return nil }
-func (g *rabbitmqDataSource) GracefulStop() error                        { return nil }

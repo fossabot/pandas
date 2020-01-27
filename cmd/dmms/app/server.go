@@ -19,6 +19,7 @@ import (
 	"github.com/cloustone/pandas/lbs/grpc_lbs_v1"
 	lbsproxy "github.com/cloustone/pandas/lbs/proxy"
 	"github.com/cloustone/pandas/models/factory"
+	_ "github.com/cloustone/pandas/pkg/readers/grpc"
 	"github.com/cloustone/pandas/pkg/server"
 	"github.com/gogo/protobuf/version"
 	"github.com/sirupsen/logrus"

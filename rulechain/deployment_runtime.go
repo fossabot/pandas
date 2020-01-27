@@ -14,13 +14,14 @@ package rulechain
 
 import (
 	"github.com/cloustone/pandas/models"
+	"github.com/cloustone/pandas/pkg/readers"
 	"github.com/cloustone/pandas/plugins"
 	"github.com/sirupsen/logrus"
 )
 
 type deploymentRuntime struct {
 	models.Deployment
-	reader    models.Reader
+	reader    readers.Reader
 	configs   map[string]interface{}
 	rulechain RuleChain
 	plugin    plugins.Plugin
@@ -68,7 +69,7 @@ func (r *deploymentRuntime) stop() error {
 	return err
 }
 
-func (r *deploymentRuntime) OnDataAvailable(reader models.Reader, payload []byte, param interface{}) {
+func (r *deploymentRuntime) OnDataAvailable(reader readers.Reader, payload []byte, param interface{}) {
 	msg, err := r.plugin.ConstructMessage(payload)
 	if err != nil {
 		logrus.WithError(err)

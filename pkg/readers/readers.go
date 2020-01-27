@@ -14,12 +14,23 @@ package readers
 import (
 	"fmt"
 
-	"github.com/cloustone/pandas/models"
 	"github.com/sirupsen/logrus"
 )
 
+// ReaderObserver ...
+type ReaderObserver interface {
+	OnDataAvailable(Reader, []byte, interface{})
+}
+
+// Reader ...
+type Reader interface {
+	Name() string
+	Start() error
+	RegisterObserver(ReaderObserver)
+	GracefulShutdown() error
+}
 type ReaderFactory interface {
-	Create(map[string]interface{}) (models.Reader, error)
+	Create(*SecureServingOptions) (Reader, error)
 }
 
 // allReaderFactories hold all embeded data source factory
@@ -47,20 +58,11 @@ func DumpAllReaders() {
 }
 
 // NewReader create a new data source with source configuration
-func NewReader(name string, c map[string]string) (models.Reader, error) {
-	// convert config models
-	configs := make(map[string]interface{})
-	for k, v := range c {
-		configs[k] = v
-	}
-
+func NewReader(name string, servingOptions *SecureServingOptions) (Reader, error) {
 	for name, factory := range allReaderFactories {
 		if name == name && factory != nil {
-			return factory.Create(configs)
+			return factory.Create(servingOptions)
 		}
 	}
 	return nil, fmt.Errorf("unknown reader '%s'", name)
-}
-
-func init() {
 }
