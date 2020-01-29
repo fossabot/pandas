@@ -23,6 +23,7 @@ import (
 	broadcast_util "github.com/cloustone/pandas/pkg/broadcast/util"
 	"github.com/cloustone/pandas/rulechain/converter"
 	pb "github.com/cloustone/pandas/rulechain/grpc_rulechain_v1"
+	"github.com/cloustone/pandas/rulechain/options"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -33,23 +34,21 @@ var (
 
 // RuleChainService implement all rulechain interface
 type RuleChainService struct {
-	controller *runtimeController
+	servingOptions *options.ServerRunOptions
+	controller     *runtimeController
 }
 
 // NewRuleChainService return rulechain service object
-func NewRuleChainService() *RuleChainService {
+func NewRuleChainService(servingOptions *options.ServerRunOptions) *RuleChainService {
 	return &RuleChainService{
-		controller: newRuntimeController(),
+		servingOptions: servingOptions,
+		controller:     newRuntimeController(),
 	}
 }
 
-// Initialize will add prestart behaivor such as broadcastization initialization
-func (s *RuleChainService) Initialize(options *broadcast.ServingOptions) {
-}
-
 // notify is internal helper to simplify broadcastization notificaiton
-func notify(action string, path string, param models.Model) {
-	broadcast_util.Notify(action, path, param)
+func notify(path string, action string, param models.Model) {
+	broadcast_util.Notify(path, action, param)
 }
 
 // CheckRuleChain check wether the rule chain is valid

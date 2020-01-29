@@ -12,11 +12,10 @@
 package app
 
 import (
-	"github.com/cloustone/pandas/cmd/rulechain/app/options"
-	"github.com/cloustone/pandas/models/factory"
 	"github.com/cloustone/pandas/pkg/server"
 	"github.com/cloustone/pandas/rulechain"
 	"github.com/cloustone/pandas/rulechain/grpc_rulechain_v1"
+	"github.com/cloustone/pandas/rulechain/options"
 	"github.com/gogo/protobuf/version"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -28,8 +27,10 @@ type ManagementServer struct {
 	server.GenericGrpcServer
 }
 
-func NewManagementServer() *ManagementServer {
-	s := &ManagementServer{}
+func NewManagementServer(servingOptions *options.ServerRunOptions) *ManagementServer {
+	s := &ManagementServer{
+		RuleChainService: *rulechain.NewRuleChainService(servingOptions),
+	}
 	s.RegisterService = func() {
 		grpc_rulechain_v1.RegisterRuleChainServiceServer(s.Server, s)
 	}
@@ -49,20 +50,12 @@ func NewAPIServerCommand() *cobra.Command {
 	return cmd
 }
 
-func (s *ManagementServer) PreRun(runOptions *options.ServerRunOptions) *ManagementServer {
-	s.Initialize(runOptions.BroadcastServing)
-	return s
-}
-
 // Run runs the specified APIServer.  This should never exit.
 func Run(runOptions *options.ServerRunOptions, stopCh <-chan struct{}) error {
 	// To help debugging, immediately log version
 	logrus.Infof("Version: %+v", version.Get())
 
-	// Initialize object factory
-	factory.Initialize(runOptions.ModelsServing)
-
-	NewManagementServer().PreRun(runOptions).Run(runOptions.SecureServing)
+	NewManagementServer(runOptions).Run(runOptions.SecureServing)
 	<-stopCh
 	return nil
 }

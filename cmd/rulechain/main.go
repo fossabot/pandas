@@ -18,10 +18,10 @@ import (
 	"time"
 
 	"github.com/cloustone/pandas/cmd/rulechain/app"
-	"github.com/cloustone/pandas/cmd/rulechain/app/options"
 	"github.com/cloustone/pandas/pkg/util/flag"
 	"github.com/cloustone/pandas/pkg/util/logs"
 	"github.com/cloustone/pandas/pkg/util/wait"
+	"github.com/cloustone/pandas/rulechain/options"
 	"github.com/spf13/pflag"
 )
 
