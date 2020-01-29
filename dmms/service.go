@@ -56,11 +56,12 @@ func (s *DeviceManagementService) Initialize(servingOptions *ServingOptions) {
 
 // Onbroadcast handle notifications received from other component service
 func (s *DeviceManagementService) Onbroadcast(b broadcast.Broadcast, notify broadcast.Notification) {
-	switch notify.Path {
+	switch notify.ObjectPath {
 	// DMMS receive DeviceNotifications from rulechain service when a device status or behaivour is changed
 	// For example. device is connected, or device message is received
 	case nameOfDeviceNotification:
-		notification := notify.Param.(notifications.DeviceNotification)
+		notification := notifications.DeviceNotification{}
+		notification.UnmarshalBinary(notify.Param)
 		s.handleDeviceNotifications(&notification)
 	}
 }

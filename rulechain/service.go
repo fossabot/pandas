@@ -48,7 +48,7 @@ func (s *RuleChainService) Initialize(options *broadcast.ServingOptions) {
 }
 
 // notify is internal helper to simplify broadcastization notificaiton
-func notify(action string, path string, param interface{}) {
+func notify(action string, path string, param models.Model) {
 	broadcast_util.Notify(action, path, param)
 }
 
@@ -109,7 +109,7 @@ func (s *RuleChainService) DeleteRuleChain(ctx context.Context, in *pb.DeleteRul
 	if err := pf.Delete(owner, in.RuleChainID); err != nil {
 		return nil, grpcError(err)
 	}
-	notify(broadcast.ActionDeleted, nameOfRuleChain, rulechain)
+	notify(broadcast.ObjectDeleted, nameOfRuleChain, rulechain)
 	return &pb.DeleteRuleChainResponse{}, nil
 }
 
@@ -131,8 +131,8 @@ func (s *RuleChainService) UpdateRuleChain(ctx context.Context, in *pb.UpdateRul
 	if err := pf.Update(owner, rulechainModel); err != nil {
 		return nil, grpcError(err)
 	}
-	notify(broadcast.ActionUpdated, nameOfRuleChain,
-		notifications.RuleChainNotification{
+	notify(broadcast.ObjectUpdated, nameOfRuleChain,
+		&notifications.RuleChainNotification{
 			UserID:      in.RuleChain.UserID,
 			RuleChainID: rulechainModel.ID,
 		})
@@ -184,8 +184,8 @@ func (s *RuleChainService) StartRuleChain(ctx context.Context, in *pb.StartRuleC
 		rulechain.Status != models.RuleStatusStopped {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
-	notify(broadcast.ActionUpdated, nameOfRuleChain,
-		notifications.RuleChainNotification{
+	notify(broadcast.ObjectUpdated, nameOfRuleChain,
+		&notifications.RuleChainNotification{
 			UserID:      in.UserID,
 			RuleChainID: in.RuleChainID,
 		})
@@ -206,8 +206,8 @@ func (s *RuleChainService) StopRuleChain(ctx context.Context, in *pb.StopRuleCha
 	if rulechain.Status != models.RuleStatusStarted {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
-	notify(broadcast.ActionUpdated, nameOfRuleChain,
-		notifications.RuleChainNotification{
+	notify(broadcast.ObjectUpdated, nameOfRuleChain,
+		&notifications.RuleChainNotification{
 			UserID:      in.UserID,
 			RuleChainID: in.RuleChainID,
 		})

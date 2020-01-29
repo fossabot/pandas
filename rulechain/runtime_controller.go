@@ -43,7 +43,11 @@ func newRuntimeController() *runtimeController {
 
 // OnBroadcase will be notified when rulechain model object is changed
 func (r *runtimeController) Onbroadcast(b broadcast.Broadcast, notify broadcast.Notification) {
-	rulechainNotify := notify.Param.(notifications.RuleChainNotification)
+	rulechainNotify := notifications.RuleChainNotification{}
+	if err := rulechainNotify.UnmarshalBinary(notify.Param); err != nil {
+		logr.Errorf("unmarshal rulechain notifications '%s' failed", notify.ObjectPath)
+		return
+	}
 	pf := factory.NewFactory(models.RuleChain{})
 	owner := factory.NewOwner(rulechainNotify.UserID)
 
@@ -55,8 +59,8 @@ func (r *runtimeController) Onbroadcast(b broadcast.Broadcast, notify broadcast.
 	rulechain := rulechainModel.(*models.RuleChain)
 
 	switch notify.Action {
-	case broadcast.ActionCreated:
-	case broadcast.ActionUpdated:
+	case broadcast.ObjectCreated:
+	case broadcast.ObjectUpdated:
 		switch rulechain.Status {
 		case models.RuleStatusStarted:
 			err = r.startRuleChain(rulechain)
@@ -66,7 +70,7 @@ func (r *runtimeController) Onbroadcast(b broadcast.Broadcast, notify broadcast.
 			err = fmt.Errorf("invalid runtime status '%s'", rulechain.Status)
 		}
 
-	case broadcast.ActionDeleted:
+	case broadcast.ObjectDeleted:
 		err = r.deleteRuleChain(rulechain)
 	default:
 		err = fmt.Errorf("invalid model action '%s'", notify.Action)

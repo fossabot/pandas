@@ -67,7 +67,7 @@ func (r *RabbitmqBroadcast) Notify(n broadcast.Notification) {
 		ContentType: "text/json",
 		Body:        body,
 	}
-	if err := r.ch.Publish(n.Path, "", false, false, pub); err != nil {
+	if err := r.ch.Publish(n.ObjectPath, "", false, false, pub); err != nil {
 		logrus.WithError(err)
 	}
 }

@@ -13,15 +13,15 @@
 package broadcast
 
 const (
-	ActionCreated = "created"
-	ActionUpdated = "updated"
-	ActionDeleted = "deleted"
+	ObjectCreated = "created"
+	ObjectUpdated = "updated"
+	ObjectDeleted = "deleted"
 )
 
 type Notification struct {
-	Path   string      `json:"path"`
-	Action string      `json:"action"`
-	Param  interface{} `json:"param"`
+	Action     string `json:"action"`
+	ObjectPath string `json:"path"`
+	Param      []byte `json:"param"`
 }
 
 type Observer interface {

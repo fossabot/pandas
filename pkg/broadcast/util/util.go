@@ -12,6 +12,7 @@
 package util
 
 import (
+	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/pkg/broadcast"
 	"github.com/cloustone/pandas/pkg/broadcast/inproc"
 	"github.com/cloustone/pandas/pkg/broadcast/rabbitmq"
@@ -44,10 +45,11 @@ func RegisterObserver(obs broadcast.Observer, path string) {
 }
 
 // Notify fire the global broadcast
-func Notify(action, path string, param interface{}) {
+func Notify(objectPath string, action string, obj models.Model) {
+	param, _ := obj.MarshalBinary()
 	globalBroadcast.Notify(broadcast.Notification{
-		Path:   path,
-		Action: action,
-		Param:  param,
+		ObjectPath: objectPath,
+		Action:     action,
+		Param:      param,
 	})
 }
