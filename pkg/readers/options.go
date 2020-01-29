@@ -19,13 +19,12 @@ import (
 )
 
 type SecureServingOptions struct {
-	TargetServer string
-	TargetPort   string
-	Endpoint     string
-	Username     string
-	Pwd          string
-	Address      net.IP
-	Port         int
+	ConnectURL string
+	Endpoint   string
+	Username   string
+	Pwd        string
+	Address    net.IP
+	Port       int
 
 	// ServerCert is the TLS cert info for serving secure traffic
 	ServerCert GeneratableKeyCert

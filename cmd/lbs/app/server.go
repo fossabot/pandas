@@ -12,10 +12,10 @@
 package app
 
 import (
-	"github.com/cloustone/pandas/cmd/dmms/app/options"
-	"github.com/cloustone/pandas/dmms"
-	"github.com/cloustone/pandas/dmms/grpc_dmms_v1"
-	"github.com/cloustone/pandas/models/factory"
+	"github.com/cloustone/pandas/cmd/lbs/app/options"
+	"github.com/cloustone/pandas/lbs"
+	"github.com/cloustone/pandas/lbs/grpc_lbs_v1"
+	lbsproxy "github.com/cloustone/pandas/lbs/proxy"
 	_ "github.com/cloustone/pandas/pkg/readers/grpc"
 	"github.com/cloustone/pandas/pkg/server"
 	"github.com/gogo/protobuf/version"
@@ -24,15 +24,19 @@ import (
 	"github.com/spf13/pflag"
 )
 
-type DeviceManagementServer struct {
-	dmms.DeviceManagementService
+type LocationBasedServer struct {
+	lbs.LbsService
 	server.GenericGrpcServer
 }
 
-func NewDeviceManagementServer(runOptions *options.ServerRunOptions) *DeviceManagementServer {
-	s := &DeviceManagementServer{}
+func NewLocationBasedServer(runOptions *options.ServerRunOptions) *LocationBasedServer {
+	s := &LocationBasedServer{
+		LbsService: lbs.LbsService{
+			Proxy: lbsproxy.NewProxy(runOptions.LocationServing),
+		},
+	}
 	s.RegisterService = func() {
-		grpc_dmms_v1.RegisterDMMSServer(s.Server, s)
+		grpc_lbs_v1.RegisterLBSServer(s.Server, s)
 	}
 	return s
 }
@@ -42,7 +46,7 @@ func NewAPIServerCommand() *cobra.Command {
 	s := options.NewServerRunOptions()
 	s.AddFlags(pflag.CommandLine)
 	cmd := &cobra.Command{
-		Use:  "dmms",
+		Use:  "lbs",
 		Long: ``,
 		Run: func(cmd *cobra.Command, args []string) {
 		},
@@ -55,11 +59,7 @@ func Run(runOptions *options.ServerRunOptions, stopCh <-chan struct{}) error {
 	// To help debugging, immediately log version
 	logrus.Infof("Version: %+v", version.Get())
 
-	// Initialize object factory
-	factory.Initialize(runOptions.ModelServing)
-
-	service := NewDeviceManagementServer(runOptions)
-	service.Initialize(runOptions.DeviceServing)
+	service := NewLocationBasedServer(runOptions)
 	service.Run(runOptions.SecureServing)
 	<-stopCh
 	return nil

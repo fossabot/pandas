@@ -28,23 +28,32 @@ const (
 	RuleStatusUnknown = "unknown"
 )
 
+type DataSource struct {
+	Name       string `json:"name"`
+	ConnectURL string `json:"connectURL"`
+	Endpoint   string `json:"endpoint"`
+	Username   string `json:"username"`
+	Pwd        string `json:"pwd"`
+}
+
 // RuleChain RuleChain
 // swagger:model RuleChain
 type RuleChain struct {
 	ModelTypeInfo
 	gorm.Model
-	Name          string    `json:"name" gorm:"size:255"`
-	ID            string    `json:"chainId" gorm:"size:100,unique_index"`
-	Description   string    `json:"description"gorm:"size:255"`
-	DebugMode     bool      `json:"debugMode" `
-	UserID        string    `json:"userId" gorm:"size:255"`
-	Type          string    `json:"type" gorm:"type:char(100)"`
-	Domain        string    `json:"domain"`
-	Status        string    `json:"status""`
-	Payload       []byte    `json:"payload"`
-	Root          bool      `json:"bool"`
-	CreatedAt     time.Time `json:"createdAt"`
-	LastUpdatedAt time.Time `json:"lastUpdatedAt"`
+	Name          string     `json:"name" gorm:"size:255"`
+	ID            string     `json:"chainId" gorm:"size:100,unique_index"`
+	Description   string     `json:"description"gorm:"size:255"`
+	DebugMode     bool       `json:"debugMode" `
+	UserID        string     `json:"userId" gorm:"size:255"`
+	Type          string     `json:"type" gorm:"type:char(100)"`
+	Domain        string     `json:"domain"`
+	Status        string     `json:"status""`
+	Payload       []byte     `json:"payload"`
+	Root          bool       `json:"bool"`
+	CreatedAt     time.Time  `json:"createdAt"`
+	LastUpdatedAt time.Time  `json:"lastUpdatedAt"`
+	DataSource    DataSource `json:"dataSource"`
 }
 
 // Validate validates this deployment

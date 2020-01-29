@@ -12,28 +12,24 @@
 package options
 
 import (
-	"github.com/cloustone/pandas/dmms"
-	modeloptions "github.com/cloustone/pandas/models/options"
 	genericoptions "github.com/cloustone/pandas/pkg/server/options"
 	"github.com/spf13/pflag"
 )
 
 type ServerRunOptions struct {
-	SecureServing *genericoptions.SecureServingOptions
-	ModelServing  *modeloptions.ServingOptions
-	DeviceServing *dmms.ServingOptions
+	SecureServing   *genericoptions.SecureServingOptions
+	LocationServing *genericoptions.LocationServingOptions
 }
 
 func NewServerRunOptions() *ServerRunOptions {
 	s := ServerRunOptions{
-		SecureServing: genericoptions.NewSecureServingOptions("dmms"),
-		ModelServing:  modeloptions.NewServingOptions(),
-		DeviceServing: dmms.NewServingOptions(),
+		SecureServing:   genericoptions.NewSecureServingOptions("dmms"),
+		LocationServing: genericoptions.NewLocationServingOptions(),
 	}
 	return &s
 }
 
 func (s *ServerRunOptions) AddFlags(fs *pflag.FlagSet) {
 	s.SecureServing.AddFlags(fs)
-	s.ModelServing.AddFlags(fs)
+	s.LocationServing.AddFlags(fs)
 }
