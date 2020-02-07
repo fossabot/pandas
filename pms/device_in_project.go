@@ -9,13 +9,14 @@
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 //  License for the specific language governing permissions and limitations
 //  under the License.
-package factory
+package pms
 
 import (
 	"time"
 
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/cache"
+	"github.com/cloustone/pandas/models/factory"
 	modelsoptions "github.com/cloustone/pandas/models/options"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
@@ -27,7 +28,7 @@ type deviceInProjectFactory struct {
 	servingOptions *modelsoptions.ServingOptions
 }
 
-func newDeviceInProjectFactory(servingOptions *modelsoptions.ServingOptions) Factory {
+func newDeviceInProjectFactory(servingOptions *modelsoptions.ServingOptions) factory.Factory {
 	modelDB, err := gorm.Open(servingOptions.StorePath, "pandas-devices.db")
 	if err != nil {
 		logrus.Fatal(err)
@@ -40,23 +41,23 @@ func newDeviceInProjectFactory(servingOptions *modelsoptions.ServingOptions) Fac
 	}
 }
 
-func (pf *deviceInProjectFactory) Save(owner Owner, model models.Model) (models.Model, error) {
+func (pf *deviceInProjectFactory) Save(owner factory.Owner, model models.Model) (models.Model, error) {
 	deviceInProject := model.(*models.Project)
 	deviceInProject.CreatedAt = time.Now()
 	deviceInProject.LastUpdatedAt = time.Now()
 
 	pf.modelDB.Save(deviceInProject)
-	if err := ModelError(pf.modelDB); err != nil {
+	if err := factory.ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return deviceInProject, nil
 }
 
-func (pf *deviceInProjectFactory) List(owner Owner, query *models.Query) ([]models.Model, error) {
+func (pf *deviceInProjectFactory) List(owner factory.Owner, query *models.Query) ([]models.Model, error) {
 	values := []*models.Project{}
 
 	pf.modelDB.Where("userId = ?", owner.User()).Find(values)
-	if err := ModelError(pf.modelDB); err != nil {
+	if err := factory.ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 
@@ -67,25 +68,25 @@ func (pf *deviceInProjectFactory) List(owner Owner, query *models.Query) ([]mode
 	return deviceInProjects, nil
 }
 
-func (pf *deviceInProjectFactory) Get(owner Owner, deviceInProjectId string) (models.Model, error) {
+func (pf *deviceInProjectFactory) Get(owner factory.Owner, deviceInProjectId string) (models.Model, error) {
 	deviceInProject := models.Project{}
 
 	pf.modelDB.Where("userId = ? AND deviceInProjectId = ?", owner.User(), deviceInProjectId).Find(&deviceInProject)
-	if err := ModelError(pf.modelDB); err != nil {
+	if err := factory.ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return &deviceInProject, nil
 }
 
-func (pf *deviceInProjectFactory) Delete(owner Owner, deviceInProjectID string) error {
+func (pf *deviceInProjectFactory) Delete(owner factory.Owner, deviceInProjectID string) error {
 	pf.modelDB.Delete(&models.Project{
 		UserID: owner.User(),
 		ID:     deviceInProjectID,
 	})
-	return ModelError(pf.modelDB)
+	return factory.ModelError(pf.modelDB)
 }
 
-func (pf *deviceInProjectFactory) Update(owner Owner, model models.Model) error {
+func (pf *deviceInProjectFactory) Update(owner factory.Owner, model models.Model) error {
 	deviceInProject := model.(*models.Project)
 	deviceInProject.LastUpdatedAt = time.Now()
 
@@ -94,5 +95,5 @@ func (pf *deviceInProjectFactory) Update(owner Owner, model models.Model) error 
 		return err
 	}
 	pf.modelDB.Save(deviceInProject)
-	return ModelError(pf.modelDB)
+	return factory.ModelError(pf.modelDB)
 }

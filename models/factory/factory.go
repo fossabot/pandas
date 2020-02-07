@@ -62,5 +62,4 @@ func Initialize(servingOptions *modeloptions.ServingOptions) {
 	}
 	defer db.Close()
 
-	RegisterFactory(models.DeviceInProject{}, newDeviceInProjectFactory(servingOptions))
 }

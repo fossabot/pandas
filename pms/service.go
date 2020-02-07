@@ -33,7 +33,7 @@ func NewProjectManagementService(servingOptions *modeloptions.ServingOptions) *P
 	factory.RegisterFactory(models.Project{}, newProjectFactory(servingOptions))
 	factory.RegisterFactory(models.Workshop{}, newWorkshopFactory(servingOptions))
 	factory.RegisterFactory(models.View{}, newViewFactory(servingOptions))
-
+	factory.RegisterFactory(models.DeviceInProject{}, newDeviceInProjectFactory(nil))
 	return &ProjectManagementService{}
 }
 
