@@ -46,7 +46,7 @@ func (pf *deviceMetricsFactory) Save(owner factory.Owner, obj models.Model) (mod
 	deviceMetrics.CreatedAt = time.Now()
 	pf.modelDB.Save(deviceMetrics)
 
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return deviceMetrics, nil
@@ -56,7 +56,7 @@ func (pf *deviceMetricsFactory) List(owner factory.Owner, query *models.Query) (
 	deviceMetricss := []*models.DeviceMetrics{}
 	pf.modelDB.Where("userId = ?", owner.User()).Find(deviceMetricss)
 
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 	results := []models.Model{}

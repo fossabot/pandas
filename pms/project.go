@@ -47,7 +47,7 @@ func (pf *projectFactory) Save(owner factory.Owner, model models.Model) (models.
 	project.LastUpdatedAt = time.Now()
 
 	pf.modelDB.Save(project)
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return project, nil
@@ -57,7 +57,7 @@ func (pf *projectFactory) List(owner factory.Owner, query *models.Query) ([]mode
 	values := []*models.Project{}
 
 	pf.modelDB.Where("userId = ?", owner.User()).Find(values)
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 
@@ -72,7 +72,7 @@ func (pf *projectFactory) Get(owner factory.Owner, projectId string) (models.Mod
 	project := models.Project{}
 
 	pf.modelDB.Where("userId = ? AND projectId = ?", owner.User(), projectId).Find(&project)
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return &project, nil
@@ -83,7 +83,7 @@ func (pf *projectFactory) Delete(owner factory.Owner, projectID string) error {
 		UserID: owner.User(),
 		ID:     projectID,
 	})
-	return factory.ModelError(pf.modelDB)
+	return factory.Error(pf.modelDB)
 }
 
 func (pf *projectFactory) Update(owner factory.Owner, model models.Model) error {
@@ -95,5 +95,5 @@ func (pf *projectFactory) Update(owner factory.Owner, model models.Model) error 
 		return err
 	}
 	pf.modelDB.Save(project)
-	return factory.ModelError(pf.modelDB)
+	return factory.Error(pf.modelDB)
 }

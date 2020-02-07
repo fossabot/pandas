@@ -46,7 +46,7 @@ func (pf *viewFactory) Save(owner factory.Owner, obj models.Model) (models.Model
 	view.CreatedAt = time.Now()
 	pf.modelDB.Save(view)
 
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 	// update cache
@@ -58,7 +58,7 @@ func (pf *viewFactory) List(owner factory.Owner, query *models.Query) ([]models.
 	views := []*models.Project{}
 	pf.modelDB.Where("userId = ?", owner.User()).Find(views)
 
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 	results := []models.Model{}
@@ -74,7 +74,7 @@ func (pf *viewFactory) Get(owner factory.Owner, viewID string) (models.Model, er
 		return &view, nil
 	}
 	pf.modelDB.Where("userId = ? AND projectId = ?", owner.User(), viewID).Find(&view)
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 

@@ -47,7 +47,7 @@ func (pf *rulechainFactory) Save(owner factory.Owner, obj models.Model) (models.
 	rulechain.LastUpdatedAt = time.Now()
 	pf.modelDB.Save(rulechain)
 
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return rulechain, nil
@@ -57,7 +57,7 @@ func (pf *rulechainFactory) List(owner factory.Owner, query *models.Query) ([]mo
 	rulechains := []*models.RuleChain{}
 	pf.modelDB.Where("userId = ?", owner.User()).Find(rulechains)
 
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 	results := []models.Model{}
@@ -71,7 +71,7 @@ func (pf *rulechainFactory) Get(owner factory.Owner, rulechainID string) (models
 	rulechain := models.RuleChain{}
 
 	pf.modelDB.Where("userId = ? AND chainId = ?", owner.User(), rulechainID).Find(&rulechain)
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return &rulechain, nil
@@ -82,7 +82,7 @@ func (pf *rulechainFactory) Delete(owner factory.Owner, rulechainID string) erro
 		UserID: owner.User(),
 		ID:     rulechainID,
 	})
-	return factory.ModelError(pf.modelDB)
+	return factory.Error(pf.modelDB)
 }
 
 func (pf *rulechainFactory) Update(owner factory.Owner, obj models.Model) error {
@@ -93,5 +93,5 @@ func (pf *rulechainFactory) Update(owner factory.Owner, obj models.Model) error 
 		return err
 	}
 	pf.modelDB.Save(rulechain)
-	return factory.ModelError(pf.modelDB)
+	return factory.Error(pf.modelDB)
 }

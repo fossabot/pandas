@@ -47,7 +47,7 @@ func (pf *deviceInProjectFactory) Save(owner factory.Owner, model models.Model) 
 	deviceInProject.LastUpdatedAt = time.Now()
 
 	pf.modelDB.Save(deviceInProject)
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return deviceInProject, nil
@@ -57,7 +57,7 @@ func (pf *deviceInProjectFactory) List(owner factory.Owner, query *models.Query)
 	values := []*models.Project{}
 
 	pf.modelDB.Where("userId = ?", owner.User()).Find(values)
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 
@@ -72,7 +72,7 @@ func (pf *deviceInProjectFactory) Get(owner factory.Owner, deviceInProjectId str
 	deviceInProject := models.Project{}
 
 	pf.modelDB.Where("userId = ? AND deviceInProjectId = ?", owner.User(), deviceInProjectId).Find(&deviceInProject)
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return &deviceInProject, nil
@@ -83,7 +83,7 @@ func (pf *deviceInProjectFactory) Delete(owner factory.Owner, deviceInProjectID 
 		UserID: owner.User(),
 		ID:     deviceInProjectID,
 	})
-	return factory.ModelError(pf.modelDB)
+	return factory.Error(pf.modelDB)
 }
 
 func (pf *deviceInProjectFactory) Update(owner factory.Owner, model models.Model) error {
@@ -95,5 +95,5 @@ func (pf *deviceInProjectFactory) Update(owner factory.Owner, model models.Model
 		return err
 	}
 	pf.modelDB.Save(deviceInProject)
-	return factory.ModelError(pf.modelDB)
+	return factory.Error(pf.modelDB)
 }

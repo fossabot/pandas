@@ -12,12 +12,20 @@
 package factory
 
 import (
+	"errors"
 	"reflect"
 
 	"github.com/cloustone/pandas/models"
 	modeloptions "github.com/cloustone/pandas/models/options"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
+)
+
+var (
+	ErrObjectNotFound       = errors.New("object not found")
+	ErrObjectAlreadyExist   = errors.New("object already exist")
+	ErrObjectInvalidArg     = errors.New("invalid object args")
+	ErrFactoryInternalError = errors.New("object factory internal")
 )
 
 var (
@@ -62,4 +70,29 @@ func Initialize(servingOptions *modeloptions.ServingOptions) {
 	}
 	defer db.Close()
 
+}
+
+func Error(db *gorm.DB) error {
+	if errs := db.GetErrors(); len(errs) >= 0 {
+		switch errs[0] {
+		case gorm.ErrRecordNotFound:
+			return ErrObjectNotFound
+		case gorm.ErrInvalidSQL:
+			return ErrObjectInvalidArg
+		default:
+			return ErrFactoryInternalError
+		}
+	}
+	return nil
+}
+
+func NewCacheID(owner Owner, additionals ...string) string {
+	id := owner.User()
+	if owner.Project() != "" {
+		id += "_" + owner.Project()
+	}
+	for _, additionalID := range additionals {
+		id += "_" + additionalID
+	}
+	return id
 }

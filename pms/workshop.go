@@ -47,7 +47,7 @@ func (pf *workshopFactory) Save(owner factory.Owner, model models.Model) (models
 	workshop.LastUpdatedAt = time.Now()
 
 	pf.modelDB.Save(workshop)
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return workshop, nil
@@ -57,7 +57,7 @@ func (pf *workshopFactory) List(owner factory.Owner, query *models.Query) ([]mod
 	values := []*models.Workshop{}
 
 	pf.modelDB.Where("userID = ?", owner.User()).Find(values)
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 
@@ -72,7 +72,7 @@ func (pf *workshopFactory) Get(owner factory.Owner, ID string) (models.Model, er
 	workshop := models.Workshop{}
 
 	pf.modelDB.Where("userID = ? AND ID = ?", owner.User(), ID).Find(&workshop)
-	if err := factory.ModelError(pf.modelDB); err != nil {
+	if err := factory.Error(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return &workshop, nil
@@ -83,7 +83,7 @@ func (pf *workshopFactory) Delete(owner factory.Owner, ID string) error {
 		UserID: owner.User(),
 		ID:     ID,
 	})
-	return factory.ModelError(pf.modelDB)
+	return factory.Error(pf.modelDB)
 }
 
 func (pf *workshopFactory) Update(owner factory.Owner, model models.Model) error {
@@ -95,5 +95,5 @@ func (pf *workshopFactory) Update(owner factory.Owner, model models.Model) error
 		return err
 	}
 	pf.modelDB.Save(workshop)
-	return factory.ModelError(pf.modelDB)
+	return factory.Error(pf.modelDB)
 }
