@@ -20,6 +20,7 @@ import (
 
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/factory"
+	modeloptions "github.com/cloustone/pandas/models/options"
 	"github.com/cloustone/pandas/pms/converter"
 	pb "github.com/cloustone/pandas/pms/grpc_pms_v1"
 )
@@ -28,7 +29,11 @@ import (
 type ProjectManagementService struct{}
 
 // NewProjectManagementService return service instance used in main server
-func NewProjectManagementService() *ProjectManagementService {
+func NewProjectManagementService(servingOptions *modeloptions.ServingOptions) *ProjectManagementService {
+	factory.RegisterFactory(models.Project{}, newProjectFactory(servingOptions))
+	factory.RegisterFactory(models.Workshop{}, newWorkshopFactory(servingOptions))
+	factory.RegisterFactory(models.View{}, newViewFactory(servingOptions))
+
 	return &ProjectManagementService{}
 }
 

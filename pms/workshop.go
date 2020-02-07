@@ -9,13 +9,14 @@
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 //  License for the specific language governing permissions and limitations
 //  under the License.
-package factory
+package pms
 
 import (
 	"time"
 
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/cache"
+	"github.com/cloustone/pandas/models/factory"
 	modelsoptions "github.com/cloustone/pandas/models/options"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
@@ -27,7 +28,7 @@ type workshopFactory struct {
 	servingOptions *modelsoptions.ServingOptions
 }
 
-func newWorkshopFactory(servingOptions *modelsoptions.ServingOptions) Factory {
+func newWorkshopFactory(servingOptions *modelsoptions.ServingOptions) factory.Factory {
 	modelDB, err := gorm.Open(servingOptions.StorePath, "pandas-workshops.db")
 	if err != nil {
 		logrus.Fatal(err)
@@ -40,23 +41,23 @@ func newWorkshopFactory(servingOptions *modelsoptions.ServingOptions) Factory {
 	}
 }
 
-func (pf *workshopFactory) Save(owner Owner, model models.Model) (models.Model, error) {
+func (pf *workshopFactory) Save(owner factory.Owner, model models.Model) (models.Model, error) {
 	workshop := model.(*models.Workshop)
 	workshop.CreatedAt = time.Now()
 	workshop.LastUpdatedAt = time.Now()
 
 	pf.modelDB.Save(workshop)
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := factory.ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return workshop, nil
 }
 
-func (pf *workshopFactory) List(owner Owner, query *models.Query) ([]models.Model, error) {
+func (pf *workshopFactory) List(owner factory.Owner, query *models.Query) ([]models.Model, error) {
 	values := []*models.Workshop{}
 
 	pf.modelDB.Where("userID = ?", owner.User()).Find(values)
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := factory.ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 
@@ -67,25 +68,25 @@ func (pf *workshopFactory) List(owner Owner, query *models.Query) ([]models.Mode
 	return workshops, nil
 }
 
-func (pf *workshopFactory) Get(owner Owner, ID string) (models.Model, error) {
+func (pf *workshopFactory) Get(owner factory.Owner, ID string) (models.Model, error) {
 	workshop := models.Workshop{}
 
 	pf.modelDB.Where("userID = ? AND ID = ?", owner.User(), ID).Find(&workshop)
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := factory.ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return &workshop, nil
 }
 
-func (pf *workshopFactory) Delete(owner Owner, ID string) error {
+func (pf *workshopFactory) Delete(owner factory.Owner, ID string) error {
 	pf.modelDB.Delete(&models.Project{
 		UserID: owner.User(),
 		ID:     ID,
 	})
-	return getModelError(pf.modelDB)
+	return factory.ModelError(pf.modelDB)
 }
 
-func (pf *workshopFactory) Update(owner Owner, model models.Model) error {
+func (pf *workshopFactory) Update(owner factory.Owner, model models.Model) error {
 	workshop := model.(*models.Project)
 	workshop.LastUpdatedAt = time.Now()
 
@@ -94,5 +95,5 @@ func (pf *workshopFactory) Update(owner Owner, model models.Model) error {
 		return err
 	}
 	pf.modelDB.Save(workshop)
-	return getModelError(pf.modelDB)
+	return factory.ModelError(pf.modelDB)
 }

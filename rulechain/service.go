@@ -40,6 +40,7 @@ type RuleChainService struct {
 
 // NewRuleChainService return rulechain service object
 func NewRuleChainService(servingOptions *options.ServerRunOptions) *RuleChainService {
+	//factory.RegisterFactory(models.RuleChain{}, newRuleChainFactory(servingOptions))
 	return &RuleChainService{
 		servingOptions: servingOptions,
 		controller:     newRuntimeController(),

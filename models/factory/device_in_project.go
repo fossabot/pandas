@@ -33,7 +33,7 @@ func newDeviceInProjectFactory(servingOptions *modelsoptions.ServingOptions) Fac
 		logrus.Fatal(err)
 	}
 	modelDB.AutoMigrate(&models.DeviceInProject{})
-	return &workshopFactory{
+	return &deviceInProjectFactory{
 		modelDB:        modelDB,
 		cache:          cache.NewCache(servingOptions),
 		servingOptions: servingOptions,
@@ -46,7 +46,7 @@ func (pf *deviceInProjectFactory) Save(owner Owner, model models.Model) (models.
 	deviceInProject.LastUpdatedAt = time.Now()
 
 	pf.modelDB.Save(deviceInProject)
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return deviceInProject, nil
@@ -56,7 +56,7 @@ func (pf *deviceInProjectFactory) List(owner Owner, query *models.Query) ([]mode
 	values := []*models.Project{}
 
 	pf.modelDB.Where("userId = ?", owner.User()).Find(values)
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 
@@ -71,7 +71,7 @@ func (pf *deviceInProjectFactory) Get(owner Owner, deviceInProjectId string) (mo
 	deviceInProject := models.Project{}
 
 	pf.modelDB.Where("userId = ? AND deviceInProjectId = ?", owner.User(), deviceInProjectId).Find(&deviceInProject)
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return &deviceInProject, nil
@@ -82,7 +82,7 @@ func (pf *deviceInProjectFactory) Delete(owner Owner, deviceInProjectID string) 
 		UserID: owner.User(),
 		ID:     deviceInProjectID,
 	})
-	return getModelError(pf.modelDB)
+	return ModelError(pf.modelDB)
 }
 
 func (pf *deviceInProjectFactory) Update(owner Owner, model models.Model) error {
@@ -94,5 +94,5 @@ func (pf *deviceInProjectFactory) Update(owner Owner, model models.Model) error 
 		return err
 	}
 	pf.modelDB.Save(deviceInProject)
-	return getModelError(pf.modelDB)
+	return ModelError(pf.modelDB)
 }

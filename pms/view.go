@@ -9,13 +9,14 @@
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 //  License for the specific language governing permissions and limitations
 //  under the License.
-package factory
+package pms
 
 import (
 	"time"
 
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/cache"
+	"github.com/cloustone/pandas/models/factory"
 	modelsoptions "github.com/cloustone/pandas/models/options"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
@@ -27,7 +28,7 @@ type viewFactory struct {
 	servingOptions *modelsoptions.ServingOptions
 }
 
-func newViewFactory(servingOptions *modelsoptions.ServingOptions) Factory {
+func newViewFactory(servingOptions *modelsoptions.ServingOptions) factory.Factory {
 	modelDB, err := gorm.Open(servingOptions.StorePath, "pandas-projects.db")
 	if err != nil {
 		logrus.Fatal(err)
@@ -40,24 +41,24 @@ func newViewFactory(servingOptions *modelsoptions.ServingOptions) Factory {
 	}
 }
 
-func (pf *viewFactory) Save(owner Owner, obj models.Model) (models.Model, error) {
+func (pf *viewFactory) Save(owner factory.Owner, obj models.Model) (models.Model, error) {
 	view := obj.(*models.View)
 	view.CreatedAt = time.Now()
 	pf.modelDB.Save(view)
 
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := factory.ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	// update cache
-	pf.cache.Set(newCacheID(owner, view.ID), view)
+	pf.cache.Set(factory.NewCacheID(owner, view.ID), view)
 	return view, nil
 }
 
-func (pf *viewFactory) List(owner Owner, query *models.Query) ([]models.Model, error) {
+func (pf *viewFactory) List(owner factory.Owner, query *models.Query) ([]models.Model, error) {
 	views := []*models.Project{}
 	pf.modelDB.Where("userId = ?", owner.User()).Find(views)
 
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := factory.ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	results := []models.Model{}
@@ -67,28 +68,28 @@ func (pf *viewFactory) List(owner Owner, query *models.Query) ([]models.Model, e
 	return results, nil
 }
 
-func (pf *viewFactory) Get(owner Owner, viewID string) (models.Model, error) {
+func (pf *viewFactory) Get(owner factory.Owner, viewID string) (models.Model, error) {
 	view := models.View{}
-	if err := pf.cache.Get(newCacheID(owner, viewID), &view); err == nil {
+	if err := pf.cache.Get(factory.NewCacheID(owner, viewID), &view); err == nil {
 		return &view, nil
 	}
 	pf.modelDB.Where("userId = ? AND projectId = ?", owner.User(), viewID).Find(&view)
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := factory.ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 
 	return &view, nil
 }
 
-func (pf *viewFactory) Delete(owner Owner, viewID string) error {
+func (pf *viewFactory) Delete(owner factory.Owner, viewID string) error {
 	pf.modelDB.Delete(&models.View{
 		ProjectID: owner.Project(),
 		ID:        viewID,
 	})
-	pf.cache.Delete(newCacheID(owner, viewID))
+	pf.cache.Delete(factory.NewCacheID(owner, viewID))
 	return nil
 }
 
-func (pf *viewFactory) Update(Owner, models.Model) error {
+func (pf *viewFactory) Update(factory.Owner, models.Model) error {
 	return nil
 }

@@ -9,13 +9,14 @@
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 //  License for the specific language governing permissions and limitations
 //  under the License.
-package factory
+package rulechain
 
 import (
 	"time"
 
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/cache"
+	"github.com/cloustone/pandas/models/factory"
 	modelsoptions "github.com/cloustone/pandas/models/options"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
@@ -27,7 +28,7 @@ type rulechainFactory struct {
 	servingOptions *modelsoptions.ServingOptions
 }
 
-func newRuleChainFactory(servingOptions *modelsoptions.ServingOptions) Factory {
+func newRuleChainFactory(servingOptions *modelsoptions.ServingOptions) factory.Factory {
 	modelDB, err := gorm.Open(servingOptions.StorePath, "pandas-rulechains.db")
 	if err != nil {
 		logrus.Fatal(err)
@@ -40,23 +41,23 @@ func newRuleChainFactory(servingOptions *modelsoptions.ServingOptions) Factory {
 	}
 }
 
-func (pf *rulechainFactory) Save(owner Owner, obj models.Model) (models.Model, error) {
+func (pf *rulechainFactory) Save(owner factory.Owner, obj models.Model) (models.Model, error) {
 	rulechain := obj.(*models.RuleChain)
 	rulechain.CreatedAt = time.Now()
 	rulechain.LastUpdatedAt = time.Now()
 	pf.modelDB.Save(rulechain)
 
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := factory.ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return rulechain, nil
 }
 
-func (pf *rulechainFactory) List(owner Owner, query *models.Query) ([]models.Model, error) {
+func (pf *rulechainFactory) List(owner factory.Owner, query *models.Query) ([]models.Model, error) {
 	rulechains := []*models.RuleChain{}
 	pf.modelDB.Where("userId = ?", owner.User()).Find(rulechains)
 
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := factory.ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	results := []models.Model{}
@@ -66,25 +67,25 @@ func (pf *rulechainFactory) List(owner Owner, query *models.Query) ([]models.Mod
 	return results, nil
 }
 
-func (pf *rulechainFactory) Get(owner Owner, rulechainID string) (models.Model, error) {
+func (pf *rulechainFactory) Get(owner factory.Owner, rulechainID string) (models.Model, error) {
 	rulechain := models.RuleChain{}
 
 	pf.modelDB.Where("userId = ? AND chainId = ?", owner.User(), rulechainID).Find(&rulechain)
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := factory.ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return &rulechain, nil
 }
 
-func (pf *rulechainFactory) Delete(owner Owner, rulechainID string) error {
+func (pf *rulechainFactory) Delete(owner factory.Owner, rulechainID string) error {
 	pf.modelDB.Delete(&models.RuleChain{
 		UserID: owner.User(),
 		ID:     rulechainID,
 	})
-	return getModelError(pf.modelDB)
+	return factory.ModelError(pf.modelDB)
 }
 
-func (pf *rulechainFactory) Update(owner Owner, obj models.Model) error {
+func (pf *rulechainFactory) Update(owner factory.Owner, obj models.Model) error {
 	rulechain := obj.(*models.RuleChain)
 	rulechain.LastUpdatedAt = time.Now()
 
@@ -92,5 +93,5 @@ func (pf *rulechainFactory) Update(owner Owner, obj models.Model) error {
 		return err
 	}
 	pf.modelDB.Save(rulechain)
-	return getModelError(pf.modelDB)
+	return factory.ModelError(pf.modelDB)
 }

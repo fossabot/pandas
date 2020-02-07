@@ -62,9 +62,5 @@ func Initialize(servingOptions *modeloptions.ServingOptions) {
 	}
 	defer db.Close()
 
-	RegisterFactory(models.Project{}, newProjectFactory(servingOptions))
-	RegisterFactory(models.RuleChain{}, newRuleChainFactory(servingOptions))
-	RegisterFactory(models.Workshop{}, newWorkshopFactory(servingOptions))
-	RegisterFactory(models.View{}, newViewFactory(servingOptions))
 	RegisterFactory(models.DeviceInProject{}, newDeviceInProjectFactory(servingOptions))
 }

@@ -45,7 +45,7 @@ func (pf *deviceMessageFactory) Save(owner Owner, obj models.Model) (models.Mode
 	view.CreatedAt = time.Now()
 	pf.modelDB.Save(view)
 
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return view, nil
@@ -55,7 +55,7 @@ func (pf *deviceMessageFactory) List(owner Owner, query *models.Query) ([]models
 	views := []*models.DeviceMessage{}
 	pf.modelDB.Where("userId = ?", owner.User()).Find(views)
 
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	results := []models.Model{}

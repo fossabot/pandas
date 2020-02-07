@@ -24,7 +24,7 @@ var (
 	ErrFactoryInternalError = errors.New("object factory internal")
 )
 
-func getModelError(db *gorm.DB) error {
+func ModelError(db *gorm.DB) error {
 	if errs := db.GetErrors(); len(errs) >= 0 {
 		switch errs[0] {
 		case gorm.ErrRecordNotFound:
@@ -38,7 +38,7 @@ func getModelError(db *gorm.DB) error {
 	return nil
 }
 
-func newCacheID(owner Owner, additionals ...string) string {
+func NewCacheID(owner Owner, additionals ...string) string {
 	id := owner.User()
 	if owner.Project() != "" {
 		id += "_" + owner.Project()

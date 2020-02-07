@@ -33,7 +33,7 @@ func (pf *genericalFactory) initialize(factoryServingOptions *modeloptions.Servi
 
 func (pf *genericalFactory) Save(owner Owner, model models.Model) (models.Model, error) {
 	pf.modelDB.Save(model)
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return nil, nil // TODO
@@ -42,7 +42,7 @@ func (pf *genericalFactory) Save(owner Owner, model models.Model) (models.Model,
 func (pf *genericalFactory) List(owner Owner, query *models.Query) ([]models.Model, error) {
 	values := []models.Model{}
 	pf.modelDB.Where("userId = ?", owner.User()).Find(values)
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return values, nil
@@ -52,7 +52,7 @@ func (pf *genericalFactory) Get(owner Owner, ID string) (models.Model, error) {
 	/*
 		var value interface{}
 		pf.modelDB.Where("userId = ? AND Id = ?", owner.User(), ID).Find(value)
-		if err := getModelError(pf.modelDB); err != nil {
+		if err := ModelError(pf.modelDB); err != nil {
 			return nil, err
 		}
 		return value, nil
@@ -61,7 +61,7 @@ func (pf *genericalFactory) Get(owner Owner, ID string) (models.Model, error) {
 }
 
 func (pf *genericalFactory) Delete(owner Owner, ID string) error {
-	return getModelError(pf.modelDB)
+	return ModelError(pf.modelDB)
 }
 
 func (pf *genericalFactory) Update(owner Owner, model models.Model) error {
@@ -69,5 +69,5 @@ func (pf *genericalFactory) Update(owner Owner, model models.Model) error {
 		return err
 	}
 	pf.modelDB.Save(model)
-	return getModelError(pf.modelDB)
+	return ModelError(pf.modelDB)
 }

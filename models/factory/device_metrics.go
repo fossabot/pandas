@@ -33,7 +33,7 @@ func newDeviceMetricsFactory(servingOptions *modelsoptions.ServingOptions) Facto
 		logrus.Fatal(err)
 	}
 	modelDB.AutoMigrate(&models.DeviceMetrics{})
-	return &workshopFactory{
+	return &deviceMetricsFactory{
 		modelDB:        modelDB,
 		cache:          cache.NewCache(servingOptions),
 		servingOptions: servingOptions,
@@ -45,7 +45,7 @@ func (pf *deviceMetricsFactory) Save(owner Owner, obj models.Model) (models.Mode
 	deviceMetrics.CreatedAt = time.Now()
 	pf.modelDB.Save(deviceMetrics)
 
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	return deviceMetrics, nil
@@ -55,7 +55,7 @@ func (pf *deviceMetricsFactory) List(owner Owner, query *models.Query) ([]models
 	deviceMetricss := []*models.DeviceMetrics{}
 	pf.modelDB.Where("userId = ?", owner.User()).Find(deviceMetricss)
 
-	if err := getModelError(pf.modelDB); err != nil {
+	if err := ModelError(pf.modelDB); err != nil {
 		return nil, err
 	}
 	results := []models.Model{}
