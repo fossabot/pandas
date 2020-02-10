@@ -17,20 +17,20 @@ import (
 	"github.com/spf13/pflag"
 )
 
-type ServerRunOptions struct {
+type ServingOptions struct {
 	SecureServing    *genericoptions.SecureServingOptions
 	BroadcastServing *broadcast_options.ServingOptions
 }
 
-func NewServerRunOptions() *ServerRunOptions {
-	s := ServerRunOptions{
+func NewServingOptions() *ServingOptions {
+	s := ServingOptions{
 		SecureServing:    genericoptions.NewSecureServingOptions("dmms"),
 		BroadcastServing: broadcast_options.NewServingOptions(),
 	}
 	return &s
 }
 
-func (s *ServerRunOptions) AddFlags(fs *pflag.FlagSet) {
+func (s *ServingOptions) AddFlags(fs *pflag.FlagSet) {
 	s.SecureServing.AddFlags(fs)
 	s.BroadcastServing.AddFlags(fs)
 }

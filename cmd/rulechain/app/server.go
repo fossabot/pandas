@@ -27,7 +27,7 @@ type ManagementServer struct {
 	server.GenericGrpcServer
 }
 
-func NewManagementServer(servingOptions *options.ServerRunOptions) *ManagementServer {
+func NewManagementServer(servingOptions *options.ServingOptions) *ManagementServer {
 	s := &ManagementServer{
 		RuleChainService: *rulechain.NewRuleChainService(servingOptions),
 	}
@@ -39,7 +39,7 @@ func NewManagementServer(servingOptions *options.ServerRunOptions) *ManagementSe
 
 // NewAPIServerCommand creates a *cobra.Command object with default parameters
 func NewAPIServerCommand() *cobra.Command {
-	s := options.NewServerRunOptions()
+	s := options.NewServingOptions()
 	s.AddFlags(pflag.CommandLine)
 	cmd := &cobra.Command{
 		Use:  "rulechain",
@@ -51,11 +51,11 @@ func NewAPIServerCommand() *cobra.Command {
 }
 
 // Run runs the specified APIServer.  This should never exit.
-func Run(runOptions *options.ServerRunOptions, stopCh <-chan struct{}) error {
+func Run(servingOptions *options.ServingOptions, stopCh <-chan struct{}) error {
 	// To help debugging, immediately log version
 	logrus.Infof("Version: %+v", version.Get())
 
-	NewManagementServer(runOptions).Run(runOptions.SecureServing)
+	NewManagementServer(servingOptions).Run(servingOptions.SecureServing)
 	<-stopCh
 	return nil
 }

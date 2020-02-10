@@ -34,12 +34,12 @@ var (
 
 // RuleChainService implement all rulechain interface
 type RuleChainService struct {
-	servingOptions *options.ServerRunOptions
+	servingOptions *options.ServingOptions
 	controller     *runtimeController
 }
 
 // NewRuleChainService return rulechain service object
-func NewRuleChainService(servingOptions *options.ServerRunOptions) *RuleChainService {
+func NewRuleChainService(servingOptions *options.ServingOptions) *RuleChainService {
 	//factory.RegisterFactory(models.RuleChain{}, newRuleChainFactory(servingOptions))
 	return &RuleChainService{
 		servingOptions: servingOptions,
