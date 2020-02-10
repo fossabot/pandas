@@ -22,10 +22,10 @@ import (
 
 // RuleStatus ...
 const (
-	RuleStatusCreated = "created"
-	RuleStatusStarted = "started"
-	RuleStatusStopped = "stopped"
-	RuleStatusUnknown = "unknown"
+	RULE_STATUS_CREATED = "created"
+	RULE_STATUS_STARTED = "started"
+	RULE_STATUS_STOPPED = "stopped"
+	RULE_STATUS_UNKNOWN = "unknown"
 )
 
 type DataSource struct {

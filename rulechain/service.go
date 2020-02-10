@@ -102,7 +102,7 @@ func (s *RuleChainService) DeleteRuleChain(ctx context.Context, in *pb.DeleteRul
 		return &pb.DeleteRuleChainResponse{}, grpcError(err)
 	}
 	// if rule chain's status is not allowed to be deleted, also return errors
-	if rulechain.(*models.RuleChain).Status == models.RuleStatusStarted {
+	if rulechain.(*models.RuleChain).Status == models.RULE_STATUS_STARTED {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
 
@@ -124,7 +124,7 @@ func (s *RuleChainService) UpdateRuleChain(ctx context.Context, in *pb.UpdateRul
 		return &pb.UpdateRuleChainResponse{}, grpcError(err)
 	}
 	// if rule chain's status is not allowed to be deleted, also return errors
-	if rulechain.(*models.RuleChain).Status == models.RuleStatusStarted {
+	if rulechain.(*models.RuleChain).Status == models.RULE_STATUS_STARTED {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
 	rulechainModel := converter.NewRuleChainModel(in.RuleChain)
@@ -180,8 +180,8 @@ func (s *RuleChainService) StartRuleChain(ctx context.Context, in *pb.StartRuleC
 		return &pb.StartRuleChainResponse{}, grpcError(err)
 	}
 	rulechain := rulechainModel.(*models.RuleChain)
-	if rulechain.Status != models.RuleStatusCreated &&
-		rulechain.Status != models.RuleStatusStopped {
+	if rulechain.Status != models.RULE_STATUS_CREATED &&
+		rulechain.Status != models.RULE_STATUS_STOPPED {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
 	notify(broadcast.ObjectUpdated, nameOfRuleChain,
@@ -203,7 +203,7 @@ func (s *RuleChainService) StopRuleChain(ctx context.Context, in *pb.StopRuleCha
 		return &pb.StopRuleChainResponse{}, grpcError(err)
 	}
 	rulechain := rulechainModel.(*models.RuleChain)
-	if rulechain.Status != models.RuleStatusStarted {
+	if rulechain.Status != models.RULE_STATUS_STARTED {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
 	notify(broadcast.ObjectUpdated, nameOfRuleChain,

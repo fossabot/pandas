@@ -62,9 +62,9 @@ func (r *runtimeController) Onbroadcast(b broadcast.Broadcast, notify broadcast.
 	case broadcast.ObjectCreated:
 	case broadcast.ObjectUpdated:
 		switch rulechain.Status {
-		case models.RuleStatusStarted:
+		case models.RULE_STATUS_STARTED:
 			err = r.startRuleChain(rulechain)
-		case models.RuleStatusStopped:
+		case models.RULE_STATUS_STOPPED:
 			err = r.stopRuleChain(rulechain)
 		default:
 			err = fmt.Errorf("invalid runtime status '%s'", rulechain.Status)
@@ -82,7 +82,7 @@ func (r *runtimeController) Onbroadcast(b broadcast.Broadcast, notify broadcast.
 func (r *runtimeController) loadAllRuleChains() error {
 	pf := factory.NewFactory(models.RuleChain{})
 	owner := factory.NewOwner("") // TODO
-	query := models.NewQuery().WithQuery("status", models.RuleStatusStarted)
+	query := models.NewQuery().WithQuery("status", models.RULE_STATUS_STARTED)
 	rulechainModels, err := pf.List(owner, query)
 	if err != nil {
 		logr.WithError(err)
