@@ -13,9 +13,9 @@
 package broadcast
 
 const (
-	ObjectCreated = "created"
-	ObjectUpdated = "updated"
-	ObjectDeleted = "deleted"
+	OBJECT_CREATED = "created"
+	OBJECT_UPDATED = "updated"
+	OBJECT_DELETED = "deleted"
 )
 
 type Notification struct {

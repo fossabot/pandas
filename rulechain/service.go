@@ -87,7 +87,7 @@ func (s *RuleChainService) CreateRuleChain(ctx context.Context, in *pb.CreateRul
 	rulechain := converter.NewRuleChainModel(in.RuleChain)
 	_, err := pf.Save(owner, rulechain)
 
-	return &resp, grpcError(err)
+	return &resp, xerror(err)
 }
 
 // DeleteRuleChain remove a rulechain from rulechain service
@@ -99,7 +99,7 @@ func (s *RuleChainService) DeleteRuleChain(ctx context.Context, in *pb.DeleteRul
 	// If the rule chain no exist, just return error
 	rulechain, err := pf.Get(owner, in.RuleChainID)
 	if err != nil {
-		return &pb.DeleteRuleChainResponse{}, grpcError(err)
+		return &pb.DeleteRuleChainResponse{}, xerror(err)
 	}
 	// if rule chain's status is not allowed to be deleted, also return errors
 	if rulechain.(*models.RuleChain).Status == models.RULE_STATUS_STARTED {
@@ -107,9 +107,9 @@ func (s *RuleChainService) DeleteRuleChain(ctx context.Context, in *pb.DeleteRul
 	}
 
 	if err := pf.Delete(owner, in.RuleChainID); err != nil {
-		return nil, grpcError(err)
+		return nil, xerror(err)
 	}
-	notify(broadcast.ObjectDeleted, nameOfRuleChain, rulechain)
+	notify(broadcast.OBJECT_DELETED, nameOfRuleChain, rulechain)
 	return &pb.DeleteRuleChainResponse{}, nil
 }
 
@@ -121,7 +121,7 @@ func (s *RuleChainService) UpdateRuleChain(ctx context.Context, in *pb.UpdateRul
 	// If the rule chain no exist, just return error
 	rulechain, err := pf.Get(owner, in.RuleChain.ID)
 	if err != nil {
-		return &pb.UpdateRuleChainResponse{}, grpcError(err)
+		return &pb.UpdateRuleChainResponse{}, xerror(err)
 	}
 	// if rule chain's status is not allowed to be deleted, also return errors
 	if rulechain.(*models.RuleChain).Status == models.RULE_STATUS_STARTED {
@@ -129,9 +129,9 @@ func (s *RuleChainService) UpdateRuleChain(ctx context.Context, in *pb.UpdateRul
 	}
 	rulechainModel := converter.NewRuleChainModel(in.RuleChain)
 	if err := pf.Update(owner, rulechainModel); err != nil {
-		return nil, grpcError(err)
+		return nil, xerror(err)
 	}
-	notify(broadcast.ObjectUpdated, nameOfRuleChain,
+	notify(broadcast.OBJECT_UPDATED, nameOfRuleChain,
 		&notifications.RuleChainNotification{
 			UserID:      in.RuleChain.UserID,
 			RuleChainID: rulechainModel.ID,
@@ -147,7 +147,7 @@ func (s *RuleChainService) GetRuleChain(ctx context.Context, in *pb.GetRuleChain
 	// If the rule chain no exist, just return error
 	rulechainModel, err := pf.Get(owner, in.RuleChainID)
 	if err != nil {
-		return &pb.GetRuleChainResponse{}, grpcError(err)
+		return &pb.GetRuleChainResponse{}, xerror(err)
 	}
 	return &pb.GetRuleChainResponse{
 		RuleChain: converter.NewRuleChain(rulechainModel),
@@ -162,7 +162,7 @@ func (s *RuleChainService) GetRuleChains(ctx context.Context, in *pb.GetRuleChai
 	// If the rule chain no exist, just return error
 	rulechainModels, err := pf.List(owner, models.NewQuery())
 	if err != nil {
-		return &pb.GetRuleChainsResponse{}, grpcError(err)
+		return &pb.GetRuleChainsResponse{}, xerror(err)
 	}
 	return &pb.GetRuleChainsResponse{
 		RuleChains: converter.NewRuleChains(rulechainModels),
@@ -177,14 +177,14 @@ func (s *RuleChainService) StartRuleChain(ctx context.Context, in *pb.StartRuleC
 	// If the rule chain no exist, just return error
 	rulechainModel, err := pf.Get(owner, in.RuleChainID)
 	if err != nil {
-		return &pb.StartRuleChainResponse{}, grpcError(err)
+		return &pb.StartRuleChainResponse{}, xerror(err)
 	}
 	rulechain := rulechainModel.(*models.RuleChain)
 	if rulechain.Status != models.RULE_STATUS_CREATED &&
 		rulechain.Status != models.RULE_STATUS_STOPPED {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
-	notify(broadcast.ObjectUpdated, nameOfRuleChain,
+	notify(broadcast.OBJECT_UPDATED, nameOfRuleChain,
 		&notifications.RuleChainNotification{
 			UserID:      in.UserID,
 			RuleChainID: in.RuleChainID,
@@ -200,13 +200,13 @@ func (s *RuleChainService) StopRuleChain(ctx context.Context, in *pb.StopRuleCha
 	// If the rule chain no exist, just return error
 	rulechainModel, err := pf.Get(owner, in.RuleChainID)
 	if err != nil {
-		return &pb.StopRuleChainResponse{}, grpcError(err)
+		return &pb.StopRuleChainResponse{}, xerror(err)
 	}
 	rulechain := rulechainModel.(*models.RuleChain)
 	if rulechain.Status != models.RULE_STATUS_STARTED {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
-	notify(broadcast.ObjectUpdated, nameOfRuleChain,
+	notify(broadcast.OBJECT_UPDATED, nameOfRuleChain,
 		&notifications.RuleChainNotification{
 			UserID:      in.UserID,
 			RuleChainID: in.RuleChainID,
@@ -214,8 +214,8 @@ func (s *RuleChainService) StopRuleChain(ctx context.Context, in *pb.StopRuleCha
 	return &pb.StopRuleChainResponse{}, nil
 }
 
-// grpcError return grpc error according to models errors
-func grpcError(err error) error {
+// xerror return grpc error according to models errors
+func xerror(err error) error {
 	if err == nil {
 		return nil
 	} else if errors.Is(err, factory.ErrObjectNotFound) {

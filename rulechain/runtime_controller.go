@@ -59,8 +59,8 @@ func (r *runtimeController) Onbroadcast(b broadcast.Broadcast, notify broadcast.
 	rulechain := rulechainModel.(*models.RuleChain)
 
 	switch notify.Action {
-	case broadcast.ObjectCreated:
-	case broadcast.ObjectUpdated:
+	case broadcast.OBJECT_CREATED:
+	case broadcast.OBJECT_UPDATED:
 		switch rulechain.Status {
 		case models.RULE_STATUS_STARTED:
 			err = r.startRuleChain(rulechain)
@@ -70,7 +70,7 @@ func (r *runtimeController) Onbroadcast(b broadcast.Broadcast, notify broadcast.
 			err = fmt.Errorf("invalid runtime status '%s'", rulechain.Status)
 		}
 
-	case broadcast.ObjectDeleted:
+	case broadcast.OBJECT_DELETED:
 		err = r.deleteRuleChain(rulechain)
 	default:
 		err = fmt.Errorf("invalid model action '%s'", notify.Action)
