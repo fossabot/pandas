@@ -13,7 +13,7 @@ DOCKER_NAMESPACE := cloustone
 all: build
 
 .PHONY: build
-build: apimachinery  dmms  pms rulechain lbs
+build: apimachinery  dmms  pms rulechain lbs mixer
 
 .PHONY: apimachinery 
 apimachinery: 
@@ -39,6 +39,11 @@ rulechain: cmd/rulechain
 lbs: cmd/lbs
 	@echo "building location based service (lbs)..."
 	$Q CGO_ENABLED=0 go build -o bin/lbs $(IMPORTPATH)/cmd/lbs
+
+.PHONY: mixer 
+mixer: cmd/mixer
+	@echo "building mixer server (mixer)..."
+	$Q CGO_ENABLED=0 go build -o bin/mixer $(IMPORTPATH)/cmd/mixer
 
 
 .PHONY: test
