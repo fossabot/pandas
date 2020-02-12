@@ -22,6 +22,7 @@ import (
 	broadcast_util "github.com/cloustone/pandas/pkg/broadcast/util"
 	"github.com/cloustone/pandas/rulechain/converter"
 	pb "github.com/cloustone/pandas/rulechain/grpc_rulechain_v1"
+	"github.com/cloustone/pandas/rulechain/nodes"
 	"github.com/cloustone/pandas/rulechain/options"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -211,6 +212,26 @@ func (s *RuleChainService) StopRuleChain(ctx context.Context, in *pb.StopRuleCha
 			RuleChainID: in.RuleChainID,
 		})
 	return &pb.StopRuleChainResponse{}, nil
+}
+
+// GetNodeConfigs return all nodes' configs
+func (s *RuleChainService) GetNodeConfigs(ctx context.Context, in *pb.GetNodeConfigsRequest) (*pb.GetNodeConfigsResponse, error) {
+	nodeConfigs := []*pb.NodeConfig{}
+	categoryNodes := nodes.GetCategoryNodes()
+	allNodeConfigs := nodes.GetAllNodeConfigs()
+
+	for category, nodes := range categoryNodes {
+		for _, nodeType := range nodes {
+			if nodeConfig, found := allNodeConfigs[nodeType]; found {
+				nodeConfigs = append(nodeConfigs, &pb.NodeConfig{
+					Type:     nodeType,
+					Category: category,
+					Payload:  []byte(nodeConfig),
+				})
+			}
+		}
+	}
+	return &pb.GetNodeConfigsResponse{NodeConfigs: nodeConfigs}, nil
 }
 
 // xerror return grpc error according to models errors

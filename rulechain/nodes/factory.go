@@ -77,6 +77,9 @@ func NewNode(nodeType string, id string, meta Metadata) (Node, error) {
 // GetAllNodeConfigs returan all node's static description used by user to list nodes
 func GetAllNodeConfigs() map[string]string { return allNodeConfigs }
 
+// GetCategoryNodes return specified category's all nodes
+func GetCategoryNodes() map[string][]string { return allNodeCategories }
+
 // GetNodeMeta return a node's static metadata
 func GetNodeConfigs(name string) (string, error) {
 	if c, found := allNodeConfigs[name]; found {

@@ -13,6 +13,9 @@ service RuleChainService {
     rpc GetRuleChains(GetRuleChainsRequest) returns (GetRuleChainsResponse) {}
     rpc StartRuleChain(StartRuleChainRequest) returns (StartRuleChainResponse) {}
     rpc StopRuleChain(StopRuleChainRequest) returns (StopRuleChainResponse) {}
+
+    // RuleChain Node Configs
+    rpc GetNodeConfigs(GetNodeConfigsRequest) returns (GetNodeConfigsResponse) {}
 }
 
 message RuleChain {
@@ -90,4 +93,15 @@ message StopRuleChainRequest {
     string rule_chainID = 2;
 }
 message StopRuleChainResponse {}
+
+// Node Configs
+message NodeConfig {
+    string type = 1;
+    string category = 2;
+    bytes payload = 3;
+}
+message GetNodeConfigsRequest {}
+message GetNodeConfigsResponse {
+    repeated NodeConfig node_configs = 1;
+}
 
