@@ -11,10 +11,13 @@
 //  under the License.
 package adaptors
 
+import "github.com/cloustone/pandas/models"
+
 type Adaptor interface {
 	Name() string
 	Start() error
 	GracefulShutdown() error
+	WithMessageBuilder(MessageBuilder) Adaptor
 }
 
 type AdaptorFactory interface {
@@ -27,4 +30,8 @@ type AdaptorOptions struct {
 	IsTlsEnabled bool   `json:"isTlsEnabled"`
 	CertFile     string `json:"certFile"`
 	KeyFile      string `json:"keyFile"`
+}
+
+type MessageBuilder interface {
+	ConstructMessage(payload []byte) (models.Message, error)
 }

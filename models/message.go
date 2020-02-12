@@ -12,7 +12,10 @@
 
 package models
 
-import "github.com/sirupsen/logrus"
+import (
+	"github.com/go-openapi/strfmt"
+	"github.com/sirupsen/logrus"
+)
 
 // Message ...
 type Message interface {
@@ -25,6 +28,9 @@ type Message interface {
 	SetPayload([]byte)
 	SetMetadata(Metadata)
 	SetOriginator(string)
+	Validate(formats strfmt.Registry) error
+	MarshalBinary() ([]byte, error)
+	UnmarshalBinary(b []byte) error
 }
 
 // Metadata ...
@@ -89,6 +95,10 @@ func (t *defaultMessage) SetType(messageType string)      { t.messageType = mess
 func (t *defaultMessage) SetPayload(payload []byte)       { t.payload = payload }
 func (t *defaultMessage) SetMetadata(metadata Metadata)   { t.metadata = metadata }
 func (t *defaultMessage) SetOriginator(originator string) { t.originator = originator }
+
+func (t *defaultMessage) Validate(formats strfmt.Registry) error { return nil }
+func (t *defaultMessage) MarshalBinary() ([]byte, error)         { return nil, nil }
+func (t *defaultMessage) UnmarshalBinary(b []byte) error         { return nil }
 
 // NewMetadata ...
 func NewMetadata() Metadata {
