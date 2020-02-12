@@ -23,7 +23,6 @@ import (
 	pb "github.com/cloustone/pandas/dmms/grpc_dmms_v1"
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/factory"
-	"github.com/cloustone/pandas/models/notifications"
 	"github.com/cloustone/pandas/pkg/broadcast"
 	broadcast_util "github.com/cloustone/pandas/pkg/broadcast/util"
 	"github.com/sirupsen/logrus"
@@ -32,7 +31,7 @@ import (
 var (
 	nameOfDevice             = reflect.TypeOf(models.Device{}).Name()
 	nameOfDeviceModel        = reflect.TypeOf(models.DeviceModel{}).Name()
-	nameOfDeviceNotification = reflect.TypeOf(notifications.DeviceNotification{}).Name()
+	nameOfDeviceNotification = reflect.TypeOf(DeviceNotification{}).Name()
 )
 
 // DeviceManager manage all device and device models which include model definition and
@@ -60,7 +59,7 @@ func (s *DeviceManagementService) Onbroadcast(b broadcast.Broadcast, notify broa
 	// DMMS receive DeviceNotifications from rulechain service when a device status or behaivour is changed
 	// For example. device is connected, or device message is received
 	case nameOfDeviceNotification:
-		notification := notifications.DeviceNotification{}
+		notification := DeviceNotification{}
 		notification.UnmarshalBinary(notify.Param)
 		s.handleDeviceNotifications(&notification)
 	}
@@ -68,15 +67,15 @@ func (s *DeviceManagementService) Onbroadcast(b broadcast.Broadcast, notify broa
 
 // handleDeviceNotifications handle device's notificaitons, such as device is added, removed,
 // and device message is recived.
-func (s *DeviceManagementService) handleDeviceNotifications(n *notifications.DeviceNotification) {
+func (s *DeviceManagementService) handleDeviceNotifications(n *DeviceNotification) {
 	deviceUpdater := NewDeviceUpdater()
 	deviceUpdater.UpdateDeviceMetrics(n)
 
 	switch n.Type {
-	case notifications.KDeviceConnected, notifications.KDeviceDisconnected:
+	case KDeviceConnected, KDeviceDisconnected:
 		go deviceUpdater.UpdateDeviceStatus(n)
 		break
-	case notifications.KDeviceMessageReceived:
+	case KDeviceMessageReceived:
 		go deviceUpdater.UpdateDeviceValues(n)
 	}
 }

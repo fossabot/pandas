@@ -18,7 +18,6 @@ import (
 
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/factory"
-	"github.com/cloustone/pandas/models/notifications"
 	"github.com/cloustone/pandas/pkg/broadcast"
 	broadcast_util "github.com/cloustone/pandas/pkg/broadcast/util"
 	"github.com/cloustone/pandas/rulechain/converter"
@@ -132,7 +131,7 @@ func (s *RuleChainService) UpdateRuleChain(ctx context.Context, in *pb.UpdateRul
 		return nil, xerror(err)
 	}
 	notify(broadcast.OBJECT_UPDATED, nameOfRuleChain,
-		&notifications.RuleChainNotification{
+		&RuleChainNotification{
 			UserID:      in.RuleChain.UserID,
 			RuleChainID: rulechainModel.ID,
 		})
@@ -185,7 +184,7 @@ func (s *RuleChainService) StartRuleChain(ctx context.Context, in *pb.StartRuleC
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
 	notify(broadcast.OBJECT_UPDATED, nameOfRuleChain,
-		&notifications.RuleChainNotification{
+		&RuleChainNotification{
 			UserID:      in.UserID,
 			RuleChainID: in.RuleChainID,
 		})
@@ -207,7 +206,7 @@ func (s *RuleChainService) StopRuleChain(ctx context.Context, in *pb.StopRuleCha
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
 	notify(broadcast.OBJECT_UPDATED, nameOfRuleChain,
-		&notifications.RuleChainNotification{
+		&RuleChainNotification{
 			UserID:      in.UserID,
 			RuleChainID: in.RuleChainID,
 		})

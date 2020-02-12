@@ -19,7 +19,6 @@ import (
 	"github.com/cloustone/pandas/mixer/grpc_mixer_v1"
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/factory"
-	"github.com/cloustone/pandas/models/notifications"
 	"github.com/cloustone/pandas/pkg/broadcast"
 	broadcast_util "github.com/cloustone/pandas/pkg/broadcast/util"
 
@@ -44,7 +43,7 @@ func newRuntimeController() *runtimeController {
 
 // OnBroadcase will be notified when rulechain model object is changed
 func (r *runtimeController) Onbroadcast(b broadcast.Broadcast, notify broadcast.Notification) {
-	rulechainNotify := notifications.RuleChainNotification{}
+	rulechainNotify := RuleChainNotification{}
 	if err := rulechainNotify.UnmarshalBinary(notify.Param); err != nil {
 		logr.Errorf("unmarshal rulechain notifications '%s' failed", notify.ObjectPath)
 		return

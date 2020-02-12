@@ -18,7 +18,6 @@ import (
 
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/factory"
-	"github.com/cloustone/pandas/models/notifications"
 	"github.com/sirupsen/logrus"
 )
 
@@ -29,7 +28,7 @@ func NewDeviceUpdater() *DeviceUpdater {
 }
 
 // UpdateDeviceValues will update device real values using message received and device model
-func (*DeviceUpdater) UpdateDeviceValues(n *notifications.DeviceNotification) {
+func (*DeviceUpdater) UpdateDeviceValues(n *DeviceNotification) {
 	// Unmarshal device message and match with device model
 	msg := models.DeviceMessage{}
 	if err := msg.UnmarshalBinary(n.Payload); err != nil {
@@ -94,7 +93,7 @@ func updateDeviceValueWithMessage(dataModel *models.DataModel, msg *models.Devic
 }
 
 // UpdateDeviceStatus update device status
-func (u *DeviceUpdater) UpdateDeviceStatus(n *notifications.DeviceNotification) {
+func (u *DeviceUpdater) UpdateDeviceStatus(n *DeviceNotification) {
 	// The device should be authenticated to be as valid device
 	pf := factory.NewFactory(models.Device{})
 	owner := factory.NewOwner(n.UserID)
@@ -106,10 +105,10 @@ func (u *DeviceUpdater) UpdateDeviceStatus(n *notifications.DeviceNotification) 
 	}
 	device := deviceModel.(*models.Device)
 	switch n.Type {
-	case notifications.KDeviceConnected:
+	case KDeviceConnected:
 		device.Status = models.KDeviceStatusConnected
 		break
-	case notifications.KDeviceDisconnected:
+	case KDeviceDisconnected:
 		device.Status = models.KDeviceStatusDisconnected
 		break
 	default:
@@ -120,7 +119,7 @@ func (u *DeviceUpdater) UpdateDeviceStatus(n *notifications.DeviceNotification) 
 }
 
 // UpdateDeviceMetrics update device metrics
-func (u *DeviceUpdater) UpdateDeviceMetrics(n *notifications.DeviceNotification) {
+func (u *DeviceUpdater) UpdateDeviceMetrics(n *DeviceNotification) {
 	var deviceMetrics *models.DeviceMetrics
 
 	pf := factory.NewFactory(models.DeviceMetrics{})
@@ -138,19 +137,19 @@ func (u *DeviceUpdater) UpdateDeviceMetrics(n *notifications.DeviceNotification)
 		deviceMetrics = deviceMetricsModel.(*models.DeviceMetrics)
 	}
 	switch n.Type {
-	case notifications.KDeviceConnected:
+	case KDeviceConnected:
 		deviceMetrics.LastUpdatedAt = time.Now()
 		deviceMetrics.ConnectCount += 1
 		deviceMetrics.LastConnectedAt = time.Now()
 		break
 
-	case notifications.KDeviceDisconnected:
+	case KDeviceDisconnected:
 		deviceMetrics.LastUpdatedAt = time.Now()
 		deviceMetrics.DisconnectCount += 1
 		deviceMetrics.LastDisconnectedAt = time.Now()
 		break
 
-	case notifications.KDeviceMessageReceived:
+	case KDeviceMessageReceived:
 		deviceMetrics.LastUpdatedAt = time.Now()
 		deviceMetrics.MessageCount += 1
 		deviceMetrics.LastMessageReceivedAt = time.Now()
