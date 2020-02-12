@@ -12,9 +12,9 @@
 package app
 
 import (
-	"github.com/cloustone/pandas/cmd/dmms/app/options"
-	"github.com/cloustone/pandas/dmms"
-	"github.com/cloustone/pandas/dmms/grpc_dmms_v1"
+	"github.com/cloustone/pandas/cmd/mixer/app/options"
+	"github.com/cloustone/pandas/mixer"
+	"github.com/cloustone/pandas/mixer/grpc_mixer_v1"
 	"github.com/cloustone/pandas/models/factory"
 	_ "github.com/cloustone/pandas/pkg/readers/grpc"
 	"github.com/cloustone/pandas/pkg/server"
@@ -24,17 +24,18 @@ import (
 	"github.com/spf13/pflag"
 )
 
-type DeviceManagementServer struct {
-	dmms.DeviceManagementService
+type ManagementServer struct {
+	mixer.MixerService
 	server.GenericGrpcServer
 }
 
-func NewDeviceManagementServer(runOptions *options.ServerRunOptions) *DeviceManagementServer {
-	s := &DeviceManagementServer{}
+func NewManagementServer(runOptions *options.ServerRunOptions) *ManagementServer {
+	s := &ManagementServer{}
 	s.RegisterService = func() {
-		grpc_dmms_v1.RegisterDMMSServer(s.Server, s)
+		grpc_mixer_v1.RegisterMixerServer(s.Server, s)
 	}
 	return s
+
 }
 
 // NewAPIServerCommand creates a *cobra.Command object with default parameters
@@ -42,7 +43,7 @@ func NewAPIServerCommand() *cobra.Command {
 	s := options.NewServerRunOptions()
 	s.AddFlags(pflag.CommandLine)
 	cmd := &cobra.Command{
-		Use:  "dmms",
+		Use:  "mixer",
 		Long: ``,
 		Run: func(cmd *cobra.Command, args []string) {
 		},
@@ -58,9 +59,7 @@ func Run(runOptions *options.ServerRunOptions, stopCh <-chan struct{}) error {
 	// Initialize object factory
 	factory.Initialize(runOptions.ModelServing)
 
-	service := NewDeviceManagementServer(runOptions)
-	service.Initialize(runOptions.DeviceServing)
-	service.Run(runOptions.SecureServing)
+	NewManagementServer(runOptions).Run(runOptions.SecureServing)
 	<-stopCh
 	return nil
 }

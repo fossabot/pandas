@@ -1,0 +1,15 @@
+syntax = "proto3";
+// import "google/protobuf/timestamp.proto";
+
+package grpc.mixer.v1;
+
+service Mixer {
+    rpc CreateAgent(CreateAgentRequest) returns (CreateAgentResponse) {}
+    rpc DeleteAgent(DeleteAgentRequest) returns (DeleteAgentResponse) {}
+}
+
+message CreateAgentRequest {}
+message CreateAgentResponse {}
+
+message DeleteAgentRequest {}
+message DeleteAgentResponse {}

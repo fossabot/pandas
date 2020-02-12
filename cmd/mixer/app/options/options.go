@@ -12,7 +12,6 @@
 package options
 
 import (
-	"github.com/cloustone/pandas/dmms"
 	modeloptions "github.com/cloustone/pandas/models/options"
 	genericoptions "github.com/cloustone/pandas/pkg/server/options"
 	"github.com/spf13/pflag"
@@ -21,14 +20,12 @@ import (
 type ServerRunOptions struct {
 	SecureServing *genericoptions.SecureServingOptions
 	ModelServing  *modeloptions.ServingOptions
-	DeviceServing *dmms.ServingOptions
 }
 
 func NewServerRunOptions() *ServerRunOptions {
 	s := ServerRunOptions{
 		SecureServing: genericoptions.NewSecureServingOptions("dmms"),
 		ModelServing:  modeloptions.NewServingOptions(),
-		DeviceServing: dmms.NewServingOptions(),
 	}
 	return &s
 }
