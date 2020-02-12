@@ -34,7 +34,7 @@ var (
 // RuleChainService implement all rulechain interface
 type RuleChainService struct {
 	servingOptions *options.ServingOptions
-	controller     *runtimeController
+	controller     *instanceManager
 }
 
 // NewRuleChainService return rulechain service object
@@ -42,7 +42,7 @@ func NewRuleChainService(servingOptions *options.ServingOptions) *RuleChainServi
 	//factory.RegisterFactory(models.RuleChain{}, newRuleChainFactory(servingOptions))
 	return &RuleChainService{
 		servingOptions: servingOptions,
-		controller:     newRuntimeController(),
+		controller:     newInstanceManager(),
 	}
 }
 
@@ -57,7 +57,7 @@ func (s *RuleChainService) CheckRuleChain(ctx context.Context, in *pb.CheckRuleC
 		Reasons: []string{},
 	}
 
-	_, errs := newRuleChain(in.RuleChain.Payload)
+	_, errs := newRuleChainInstance(in.RuleChain.Payload)
 	if len(errs) > 0 {
 		for _, err := range errs {
 			resp.Reasons = append(resp.Reasons, err.Error())
@@ -73,7 +73,7 @@ func (s *RuleChainService) CreateRuleChain(ctx context.Context, in *pb.CreateRul
 	resp := pb.CreateRuleChainResponse{
 		Reasons: []string{},
 	}
-	_, errs := newRuleChain(in.RuleChain.Payload)
+	_, errs := newRuleChainInstance(in.RuleChain.Payload)
 	if len(errs) > 0 {
 		for _, err := range errs {
 			resp.Reasons = append(resp.Reasons, err.Error())

@@ -25,24 +25,24 @@ import (
 	logr "github.com/sirupsen/logrus"
 )
 
-// runtimeController manage all rulechain's runtime
-type runtimeController struct {
+// instanceManager manage all rulechain's runtime
+type instanceManager struct {
 	mutex      sync.RWMutex
-	rulechains map[string]*ruleChain
+	rulechains map[string]*ruleChainInstance
 }
 
-// newRuntimeController create controller instance used in rule chain service
-func newRuntimeController() *runtimeController {
-	controller := &runtimeController{
+// newInstanceManager create controller instance used in rule chain service
+func newInstanceManager() *instanceManager {
+	controller := &instanceManager{
 		mutex:      sync.RWMutex{},
-		rulechains: make(map[string]*ruleChain),
+		rulechains: make(map[string]*ruleChainInstance),
 	}
 	broadcast_util.RegisterObserver(controller, nameOfRuleChain)
 	return controller
 }
 
 // OnBroadcase will be notified when rulechain model object is changed
-func (r *runtimeController) Onbroadcast(b broadcast.Broadcast, notify broadcast.Notification) {
+func (r *instanceManager) Onbroadcast(b broadcast.Broadcast, notify broadcast.Notification) {
 	rulechainNotify := RuleChainNotification{}
 	if err := rulechainNotify.UnmarshalBinary(notify.Param); err != nil {
 		logr.Errorf("unmarshal rulechain notifications '%s' failed", notify.ObjectPath)
@@ -79,7 +79,7 @@ func (r *runtimeController) Onbroadcast(b broadcast.Broadcast, notify broadcast.
 }
 
 // loadAllRuleChains load runtimes in models and deploy them according to rulechain's status
-func (r *runtimeController) loadAllRuleChains() error {
+func (r *instanceManager) loadAllRuleChains() error {
 	pf := factory.NewFactory(models.RuleChain{})
 	owner := factory.NewOwner("") // TODO
 	query := models.NewQuery().WithQuery("status", models.RULE_STATUS_STARTED)
@@ -98,7 +98,7 @@ func (r *runtimeController) loadAllRuleChains() error {
 }
 
 // startRuleChain start the rule chain and receiving incoming data
-func (r *runtimeController) startRuleChain(rulechainModel *models.RuleChain) error {
+func (r *instanceManager) startRuleChain(rulechainModel *models.RuleChain) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 
@@ -107,7 +107,7 @@ func (r *runtimeController) startRuleChain(rulechainModel *models.RuleChain) err
 		return nil
 	}
 	// create the internal runtime rulechain
-	rulechain, errs := newRuleChain(rulechainModel.Payload)
+	rulechain, errs := newRuleChainInstance(rulechainModel.Payload)
 	if len(errs) > 0 {
 		return errs[0]
 	}
@@ -129,7 +129,7 @@ func (r *runtimeController) startRuleChain(rulechainModel *models.RuleChain) err
 }
 
 // stopRuleChain stop the rule chain
-func (r *runtimeController) stopRuleChain(rulechainModel *models.RuleChain) error {
+func (r *instanceManager) stopRuleChain(rulechainModel *models.RuleChain) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 
@@ -142,6 +142,6 @@ func (r *runtimeController) stopRuleChain(rulechainModel *models.RuleChain) erro
 }
 
 // deleteRuleChain remove rule chain
-func (c *runtimeController) deleteRuleChain(rulechain *models.RuleChain) error {
+func (c *instanceManager) deleteRuleChain(rulechain *models.RuleChain) error {
 	return nil
 }

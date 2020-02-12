@@ -20,10 +20,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// ruleChain manage all nodes in this chain, validate and apply data
-// Only one input node exist in chain as precondition, and with many output nodes
-// Relations within nodes is maintained by link object
-type ruleChain struct {
+// ruleChainInstance is rulechain's runtime instance that manage all nodes in this chain,
+// validate and apply datanly one input node exist in chain as precondition,
+// and with many output nodes, Relations within nodes is maintained by link object
+type ruleChainInstance struct {
 	name            string
 	firstRuleNodeId string
 	root            bool
@@ -32,7 +32,7 @@ type ruleChain struct {
 	nodes           map[string]nodes.Node
 }
 
-func newRuleChain(data []byte) (*ruleChain, []error) {
+func newRuleChainInstance(data []byte) (*ruleChainInstance, []error) {
 	errors := []error{}
 
 	manifest, err := manifest.New(data)
@@ -41,14 +41,14 @@ func newRuleChain(data []byte) (*ruleChain, []error) {
 		logrus.WithError(err).Errorf("invalidi manifest file")
 		return nil, errors
 	}
-	return NewWithManifest(manifest)
+	return newInstanceWithManifest(manifest)
 }
 
-// NewWithManifest create rule chain by user's manifest file
-func NewWithManifest(m *manifest.Manifest) (*ruleChain, []error) {
+// newWithManifest create rule chain by user's manifest file
+func newInstanceWithManifest(m *manifest.Manifest) (*ruleChainInstance, []error) {
 	errs := []error{}
 
-	r := &ruleChain{
+	r := &ruleChainInstance{
 		name:            m.RuleChain.Name,
 		firstRuleNodeId: m.RuleChain.FirstRuleNodeId,
 		root:            m.RuleChain.Root,
@@ -104,9 +104,9 @@ func NewWithManifest(m *manifest.Manifest) (*ruleChain, []error) {
 	return r, errs
 }
 
-func (r *ruleChain) Name() string { return r.name }
+func (r *ruleChainInstance) Name() string { return r.name }
 
-func (r *ruleChain) OnDataAvailable(payload []byte, param interface{}) {
+func (r *ruleChainInstance) OnDataAvailable(payload []byte, param interface{}) {
 	/*
 		msg, err := r.plugin.ConstructMessage(payload)
 		if err != nil {
