@@ -16,7 +16,6 @@ import (
 	"github.com/cloustone/pandas/mixer"
 	"github.com/cloustone/pandas/mixer/grpc_mixer_v1"
 	"github.com/cloustone/pandas/models/factory"
-	_ "github.com/cloustone/pandas/pkg/readers/grpc"
 	"github.com/cloustone/pandas/pkg/server"
 	"github.com/gogo/protobuf/version"
 	"github.com/sirupsen/logrus"

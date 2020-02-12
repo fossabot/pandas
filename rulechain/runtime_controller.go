@@ -12,15 +12,16 @@
 package rulechain
 
 import (
+	"context"
 	"fmt"
 	"sync"
 
+	"github.com/cloustone/pandas/mixer/grpc_mixer_v1"
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/factory"
 	"github.com/cloustone/pandas/models/notifications"
 	"github.com/cloustone/pandas/pkg/broadcast"
 	broadcast_util "github.com/cloustone/pandas/pkg/broadcast/util"
-	"github.com/cloustone/pandas/pkg/readers"
 
 	logr "github.com/sirupsen/logrus"
 )
@@ -111,15 +112,20 @@ func (r *runtimeController) startRuleChain(rulechainModel *models.RuleChain) err
 	if len(errs) > 0 {
 		return errs[0]
 	}
-	// create reader for the rule chain
-	reader, err := readers.NewReader("", nil) // TODO
+	// create adaptor for the rule chain
+	client, err := grpc_mixer_v1.NewClient()
 	if err != nil {
-		logr.WithError(err)
 		return err
 	}
-	reader.RegisterObserver(rulechain)
+	defer client.Close()
+
+	req := &grpc_mixer_v1.CreateAdaptorRequest{}
+	_, err = client.Mixer().CreateAdaptor(context.TODO(), req)
+	if err != nil {
+		return err
+	}
+
 	r.rulechains[rulechainModel.ID] = rulechain
-	go reader.Start()
 	return nil
 }
 
@@ -128,13 +134,11 @@ func (r *runtimeController) stopRuleChain(rulechainModel *models.RuleChain) erro
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 
-	rulechain, found := r.rulechains[rulechainModel.ID]
-	if !found {
+	if _, found := r.rulechains[rulechainModel.ID]; !found {
 		logr.Debugf("rule chain '%s' is not found", rulechainModel.ID)
 		return fmt.Errorf("rule chain '%s' no exist", rulechainModel.ID)
 	}
 	delete(r.rulechains, rulechainModel.ID)
-	rulechain.reader.GracefulShutdown()
 	return nil
 }
 

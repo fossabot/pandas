@@ -4,12 +4,12 @@ syntax = "proto3";
 package grpc.mixer.v1;
 
 service Mixer {
-    rpc CreateAgent(CreateAgentRequest) returns (CreateAgentResponse) {}
-    rpc DeleteAgent(DeleteAgentRequest) returns (DeleteAgentResponse) {}
+    rpc CreateAdaptor(CreateAdaptorRequest) returns (CreateAdaptorResponse) {}
+    rpc DeleteAdaptor(DeleteAdaptorRequest) returns (DeleteAdaptorResponse) {}
 }
 
-message CreateAgentRequest {}
-message CreateAgentResponse {}
+message CreateAdaptorRequest {}
+message CreateAdaptorResponse {}
 
-message DeleteAgentRequest {}
-message DeleteAgentResponse {}
+message DeleteAdaptorRequest {}
+message DeleteAdaptorResponse {}

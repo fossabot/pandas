@@ -24,9 +24,9 @@ func NewMixerManagementService() *MixerService {
 	return &MixerService{}
 }
 
-func (s *MixerService) CreateAgent(ctx context.Context, in *pb.CreateAgentRequest) (*pb.CreateAgentResponse, error) {
+func (s *MixerService) CreateAdaptor(ctx context.Context, in *pb.CreateAdaptorRequest) (*pb.CreateAdaptorResponse, error) {
 	return nil, nil
 }
-func (s *MixerService) DeleteAgent(ctx context.Context, in *pb.DeleteAgentRequest) (*pb.DeleteAgentResponse, error) {
+func (s *MixerService) DeleteAdaptor(ctx context.Context, in *pb.DeleteAdaptorRequest) (*pb.DeleteAdaptorResponse, error) {
 	return nil, nil
 }

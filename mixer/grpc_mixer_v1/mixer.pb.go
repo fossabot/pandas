@@ -23,131 +23,131 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
-type CreateAgentRequest struct {
+type CreateAdaptorRequest struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CreateAgentRequest) Reset()         { *m = CreateAgentRequest{} }
-func (m *CreateAgentRequest) String() string { return proto.CompactTextString(m) }
-func (*CreateAgentRequest) ProtoMessage()    {}
-func (*CreateAgentRequest) Descriptor() ([]byte, []int) {
+func (m *CreateAdaptorRequest) Reset()         { *m = CreateAdaptorRequest{} }
+func (m *CreateAdaptorRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateAdaptorRequest) ProtoMessage()    {}
+func (*CreateAdaptorRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_mixer_5023ce95a51d2f27, []int{0}
 }
-func (m *CreateAgentRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_CreateAgentRequest.Unmarshal(m, b)
+func (m *CreateAdaptorRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateAdaptorRequest.Unmarshal(m, b)
 }
-func (m *CreateAgentRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_CreateAgentRequest.Marshal(b, m, deterministic)
+func (m *CreateAdaptorRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateAdaptorRequest.Marshal(b, m, deterministic)
 }
-func (dst *CreateAgentRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CreateAgentRequest.Merge(dst, src)
+func (dst *CreateAdaptorRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateAdaptorRequest.Merge(dst, src)
 }
-func (m *CreateAgentRequest) XXX_Size() int {
-	return xxx_messageInfo_CreateAgentRequest.Size(m)
+func (m *CreateAdaptorRequest) XXX_Size() int {
+	return xxx_messageInfo_CreateAdaptorRequest.Size(m)
 }
-func (m *CreateAgentRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_CreateAgentRequest.DiscardUnknown(m)
+func (m *CreateAdaptorRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateAdaptorRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_CreateAgentRequest proto.InternalMessageInfo
+var xxx_messageInfo_CreateAdaptorRequest proto.InternalMessageInfo
 
-type CreateAgentResponse struct {
+type CreateAdaptorResponse struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CreateAgentResponse) Reset()         { *m = CreateAgentResponse{} }
-func (m *CreateAgentResponse) String() string { return proto.CompactTextString(m) }
-func (*CreateAgentResponse) ProtoMessage()    {}
-func (*CreateAgentResponse) Descriptor() ([]byte, []int) {
+func (m *CreateAdaptorResponse) Reset()         { *m = CreateAdaptorResponse{} }
+func (m *CreateAdaptorResponse) String() string { return proto.CompactTextString(m) }
+func (*CreateAdaptorResponse) ProtoMessage()    {}
+func (*CreateAdaptorResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_mixer_5023ce95a51d2f27, []int{1}
 }
-func (m *CreateAgentResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_CreateAgentResponse.Unmarshal(m, b)
+func (m *CreateAdaptorResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateAdaptorResponse.Unmarshal(m, b)
 }
-func (m *CreateAgentResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_CreateAgentResponse.Marshal(b, m, deterministic)
+func (m *CreateAdaptorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateAdaptorResponse.Marshal(b, m, deterministic)
 }
-func (dst *CreateAgentResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CreateAgentResponse.Merge(dst, src)
+func (dst *CreateAdaptorResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateAdaptorResponse.Merge(dst, src)
 }
-func (m *CreateAgentResponse) XXX_Size() int {
-	return xxx_messageInfo_CreateAgentResponse.Size(m)
+func (m *CreateAdaptorResponse) XXX_Size() int {
+	return xxx_messageInfo_CreateAdaptorResponse.Size(m)
 }
-func (m *CreateAgentResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_CreateAgentResponse.DiscardUnknown(m)
+func (m *CreateAdaptorResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateAdaptorResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_CreateAgentResponse proto.InternalMessageInfo
+var xxx_messageInfo_CreateAdaptorResponse proto.InternalMessageInfo
 
-type DeleteAgentRequest struct {
+type DeleteAdaptorRequest struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DeleteAgentRequest) Reset()         { *m = DeleteAgentRequest{} }
-func (m *DeleteAgentRequest) String() string { return proto.CompactTextString(m) }
-func (*DeleteAgentRequest) ProtoMessage()    {}
-func (*DeleteAgentRequest) Descriptor() ([]byte, []int) {
+func (m *DeleteAdaptorRequest) Reset()         { *m = DeleteAdaptorRequest{} }
+func (m *DeleteAdaptorRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteAdaptorRequest) ProtoMessage()    {}
+func (*DeleteAdaptorRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_mixer_5023ce95a51d2f27, []int{2}
 }
-func (m *DeleteAgentRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_DeleteAgentRequest.Unmarshal(m, b)
+func (m *DeleteAdaptorRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteAdaptorRequest.Unmarshal(m, b)
 }
-func (m *DeleteAgentRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_DeleteAgentRequest.Marshal(b, m, deterministic)
+func (m *DeleteAdaptorRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteAdaptorRequest.Marshal(b, m, deterministic)
 }
-func (dst *DeleteAgentRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_DeleteAgentRequest.Merge(dst, src)
+func (dst *DeleteAdaptorRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteAdaptorRequest.Merge(dst, src)
 }
-func (m *DeleteAgentRequest) XXX_Size() int {
-	return xxx_messageInfo_DeleteAgentRequest.Size(m)
+func (m *DeleteAdaptorRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteAdaptorRequest.Size(m)
 }
-func (m *DeleteAgentRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_DeleteAgentRequest.DiscardUnknown(m)
+func (m *DeleteAdaptorRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteAdaptorRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_DeleteAgentRequest proto.InternalMessageInfo
+var xxx_messageInfo_DeleteAdaptorRequest proto.InternalMessageInfo
 
-type DeleteAgentResponse struct {
+type DeleteAdaptorResponse struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DeleteAgentResponse) Reset()         { *m = DeleteAgentResponse{} }
-func (m *DeleteAgentResponse) String() string { return proto.CompactTextString(m) }
-func (*DeleteAgentResponse) ProtoMessage()    {}
-func (*DeleteAgentResponse) Descriptor() ([]byte, []int) {
+func (m *DeleteAdaptorResponse) Reset()         { *m = DeleteAdaptorResponse{} }
+func (m *DeleteAdaptorResponse) String() string { return proto.CompactTextString(m) }
+func (*DeleteAdaptorResponse) ProtoMessage()    {}
+func (*DeleteAdaptorResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_mixer_5023ce95a51d2f27, []int{3}
 }
-func (m *DeleteAgentResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_DeleteAgentResponse.Unmarshal(m, b)
+func (m *DeleteAdaptorResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteAdaptorResponse.Unmarshal(m, b)
 }
-func (m *DeleteAgentResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_DeleteAgentResponse.Marshal(b, m, deterministic)
+func (m *DeleteAdaptorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteAdaptorResponse.Marshal(b, m, deterministic)
 }
-func (dst *DeleteAgentResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_DeleteAgentResponse.Merge(dst, src)
+func (dst *DeleteAdaptorResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteAdaptorResponse.Merge(dst, src)
 }
-func (m *DeleteAgentResponse) XXX_Size() int {
-	return xxx_messageInfo_DeleteAgentResponse.Size(m)
+func (m *DeleteAdaptorResponse) XXX_Size() int {
+	return xxx_messageInfo_DeleteAdaptorResponse.Size(m)
 }
-func (m *DeleteAgentResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_DeleteAgentResponse.DiscardUnknown(m)
+func (m *DeleteAdaptorResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteAdaptorResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_DeleteAgentResponse proto.InternalMessageInfo
+var xxx_messageInfo_DeleteAdaptorResponse proto.InternalMessageInfo
 
 func init() {
-	proto.RegisterType((*CreateAgentRequest)(nil), "grpc.mixer.v1.CreateAgentRequest")
-	proto.RegisterType((*CreateAgentResponse)(nil), "grpc.mixer.v1.CreateAgentResponse")
-	proto.RegisterType((*DeleteAgentRequest)(nil), "grpc.mixer.v1.DeleteAgentRequest")
-	proto.RegisterType((*DeleteAgentResponse)(nil), "grpc.mixer.v1.DeleteAgentResponse")
+	proto.RegisterType((*CreateAdaptorRequest)(nil), "grpc.mixer.v1.CreateAdaptorRequest")
+	proto.RegisterType((*CreateAdaptorResponse)(nil), "grpc.mixer.v1.CreateAdaptorResponse")
+	proto.RegisterType((*DeleteAdaptorRequest)(nil), "grpc.mixer.v1.DeleteAdaptorRequest")
+	proto.RegisterType((*DeleteAdaptorResponse)(nil), "grpc.mixer.v1.DeleteAdaptorResponse")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -162,8 +162,8 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MixerClient interface {
-	CreateAgent(ctx context.Context, in *CreateAgentRequest, opts ...grpc.CallOption) (*CreateAgentResponse, error)
-	DeleteAgent(ctx context.Context, in *DeleteAgentRequest, opts ...grpc.CallOption) (*DeleteAgentResponse, error)
+	CreateAdaptor(ctx context.Context, in *CreateAdaptorRequest, opts ...grpc.CallOption) (*CreateAdaptorResponse, error)
+	DeleteAdaptor(ctx context.Context, in *DeleteAdaptorRequest, opts ...grpc.CallOption) (*DeleteAdaptorResponse, error)
 }
 
 type mixerClient struct {
@@ -174,18 +174,18 @@ func NewMixerClient(cc *grpc.ClientConn) MixerClient {
 	return &mixerClient{cc}
 }
 
-func (c *mixerClient) CreateAgent(ctx context.Context, in *CreateAgentRequest, opts ...grpc.CallOption) (*CreateAgentResponse, error) {
-	out := new(CreateAgentResponse)
-	err := c.cc.Invoke(ctx, "/grpc.mixer.v1.Mixer/CreateAgent", in, out, opts...)
+func (c *mixerClient) CreateAdaptor(ctx context.Context, in *CreateAdaptorRequest, opts ...grpc.CallOption) (*CreateAdaptorResponse, error) {
+	out := new(CreateAdaptorResponse)
+	err := c.cc.Invoke(ctx, "/grpc.mixer.v1.Mixer/CreateAdaptor", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mixerClient) DeleteAgent(ctx context.Context, in *DeleteAgentRequest, opts ...grpc.CallOption) (*DeleteAgentResponse, error) {
-	out := new(DeleteAgentResponse)
-	err := c.cc.Invoke(ctx, "/grpc.mixer.v1.Mixer/DeleteAgent", in, out, opts...)
+func (c *mixerClient) DeleteAdaptor(ctx context.Context, in *DeleteAdaptorRequest, opts ...grpc.CallOption) (*DeleteAdaptorResponse, error) {
+	out := new(DeleteAdaptorResponse)
+	err := c.cc.Invoke(ctx, "/grpc.mixer.v1.Mixer/DeleteAdaptor", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -194,46 +194,46 @@ func (c *mixerClient) DeleteAgent(ctx context.Context, in *DeleteAgentRequest, o
 
 // MixerServer is the server API for Mixer service.
 type MixerServer interface {
-	CreateAgent(context.Context, *CreateAgentRequest) (*CreateAgentResponse, error)
-	DeleteAgent(context.Context, *DeleteAgentRequest) (*DeleteAgentResponse, error)
+	CreateAdaptor(context.Context, *CreateAdaptorRequest) (*CreateAdaptorResponse, error)
+	DeleteAdaptor(context.Context, *DeleteAdaptorRequest) (*DeleteAdaptorResponse, error)
 }
 
 func RegisterMixerServer(s *grpc.Server, srv MixerServer) {
 	s.RegisterService(&_Mixer_serviceDesc, srv)
 }
 
-func _Mixer_CreateAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateAgentRequest)
+func _Mixer_CreateAdaptor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAdaptorRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MixerServer).CreateAgent(ctx, in)
+		return srv.(MixerServer).CreateAdaptor(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.mixer.v1.Mixer/CreateAgent",
+		FullMethod: "/grpc.mixer.v1.Mixer/CreateAdaptor",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MixerServer).CreateAgent(ctx, req.(*CreateAgentRequest))
+		return srv.(MixerServer).CreateAdaptor(ctx, req.(*CreateAdaptorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Mixer_DeleteAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteAgentRequest)
+func _Mixer_DeleteAdaptor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAdaptorRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MixerServer).DeleteAgent(ctx, in)
+		return srv.(MixerServer).DeleteAdaptor(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.mixer.v1.Mixer/DeleteAgent",
+		FullMethod: "/grpc.mixer.v1.Mixer/DeleteAdaptor",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MixerServer).DeleteAgent(ctx, req.(*DeleteAgentRequest))
+		return srv.(MixerServer).DeleteAdaptor(ctx, req.(*DeleteAdaptorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -243,12 +243,12 @@ var _Mixer_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MixerServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateAgent",
-			Handler:    _Mixer_CreateAgent_Handler,
+			MethodName: "CreateAdaptor",
+			Handler:    _Mixer_CreateAdaptor_Handler,
 		},
 		{
-			MethodName: "DeleteAgent",
-			Handler:    _Mixer_DeleteAgent_Handler,
+			MethodName: "DeleteAdaptor",
+			Handler:    _Mixer_DeleteAdaptor_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
