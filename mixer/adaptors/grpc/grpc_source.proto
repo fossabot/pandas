@@ -1,0 +1,18 @@
+syntax = "proto3";
+// import "google/protobuf/timestamp.proto";
+
+package grpc;
+
+service Adaptor{
+    rpc PostMessage(PostMessageRequest) returns (PostMessageResponse){}
+}
+
+message PostMessageRequest {
+    string user_id = 1;
+    string source_id = 2;
+    string request_id = 3;
+    bytes payload = 4;
+}
+
+message PostMessageResponse{}
+
