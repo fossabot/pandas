@@ -5,11 +5,19 @@ package grpc.mixer.v1;
 
 service Mixer {
     rpc CreateAdaptor(CreateAdaptorRequest) returns (CreateAdaptorResponse) {}
+    rpc JoinWithAdaptor(JoinWithAdaptorRequest) returns (JoinWithAdaptorResponse) {}
     rpc DeleteAdaptor(DeleteAdaptorRequest) returns (DeleteAdaptorResponse) {}
 }
 
 message CreateAdaptorRequest {}
 message CreateAdaptorResponse {}
+
+message JoinWithAdaptorRequest {
+    string ClientID = 1;
+}
+message JoinWithAdaptorResponse {
+    string AdaptorID = 1;
+}
 
 message DeleteAdaptorRequest {}
 message DeleteAdaptorResponse {}

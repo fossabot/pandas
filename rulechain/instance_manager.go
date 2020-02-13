@@ -29,6 +29,7 @@ import (
 type instanceManager struct {
 	mutex      sync.RWMutex
 	rulechains map[string]*ruleChainInstance
+	adaptors   map[string][]string
 }
 
 // newInstanceManager create controller instance used in rule chain service
@@ -36,6 +37,7 @@ func newInstanceManager() *instanceManager {
 	controller := &instanceManager{
 		mutex:      sync.RWMutex{},
 		rulechains: make(map[string]*ruleChainInstance),
+		adaptors:   make(map[string][]string),
 	}
 	broadcast_util.RegisterObserver(controller, models.OBJECT_PATH_RULECHAIN)
 	broadcast_util.RegisterObserver(controller, models.OBJECT_PATH_MESSAGES)
@@ -99,12 +101,26 @@ func (r *instanceManager) handleMessages(notify broadcast.Notification) {
 		logr.WithError(err)
 		return
 	}
-	// TODO: The relations between specified rulechain and message must be known
-	// For debug purpose now, just iterate all rulechain and handle incoming
-	// message
-	for _, rulechain := range r.rulechains {
+	rulechains := r.getAdaptorRuleChains(msg.GetOriginator())
+	if len(rulechains) == 0 {
+		logr.Errorf("no rulechains for adaptor '%s'", msg.GetOriginator())
+		return
+	}
+	for _, rulechain := range rulechains {
 		rulechain.onMessageAvailable(msg)
 	}
+}
+
+// getAdaptorRuleChains return all rule chains that handle incomming data from
+// specified adaptors
+func (r *instanceManager) getAdaptorRuleChains(adaptorID string) []*ruleChainInstance {
+	rulechains := []*ruleChainInstance{}
+	r.mutex.Lock()
+	defer r.mutex.Unlock()
+	for _, rulechainID := range r.adaptors[adaptorID] {
+		rulechains = append(rulechains, r.rulechains[rulechainID])
+	}
+	return rulechains
 }
 
 // loadAllRuleChains load runtimes in models and deploy them according to rulechain's status
@@ -147,14 +163,23 @@ func (r *instanceManager) startRuleChain(rulechainModel *models.RuleChain) error
 	}
 	defer client.Close()
 
-	req := &grpc_mixer_v1.CreateAdaptorRequest{}
-	_, err = client.Mixer().CreateAdaptor(context.TODO(), req)
+	req := &grpc_mixer_v1.JoinWithAdaptorRequest{ClientID: rulechainModel.ID}
+	resp, err := client.Mixer().JoinWithAdaptor(context.TODO(), req)
 	if err != nil {
 		return err
 	}
-
-	r.rulechains[rulechainModel.ID] = rulechain
+	r.addInstanceInternal(rulechainModel.ID, rulechain, resp.AdaptorID)
 	return nil
+}
+
+// addInstanceInternal add a new rulechain instance internally with
+// specified adaptor id
+func (r *instanceManager) addInstanceInternal(rulechainID string, instance *ruleChainInstance, adaptorID string) {
+	if _, found := r.adaptors[adaptorID]; !found {
+		r.adaptors[adaptorID] = []string{}
+	}
+	r.adaptors[adaptorID] = append(r.adaptors[adaptorID], rulechainID)
+	r.rulechains[rulechainID] = instance
 }
 
 // stopRuleChain stop the rule chain

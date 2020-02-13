@@ -27,6 +27,11 @@ func NewMixerManagementService() *MixerService {
 func (s *MixerService) CreateAdaptor(ctx context.Context, in *pb.CreateAdaptorRequest) (*pb.CreateAdaptorResponse, error) {
 	return nil, nil
 }
+
+func (s *MixerService) JoinWithAdaptor(ctx context.Context, in *pb.JoinWithAdaptorRequest) (*pb.JoinWithAdaptorResponse, error) {
+	return nil, nil
+}
+
 func (s *MixerService) DeleteAdaptor(ctx context.Context, in *pb.DeleteAdaptorRequest) (*pb.DeleteAdaptorResponse, error) {
 	return nil, nil
 }
