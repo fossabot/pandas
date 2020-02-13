@@ -40,6 +40,10 @@ type Metadata interface {
 	SetKeyValue(key string, val interface{})
 }
 
+const (
+	OBJECT_PATH_MESSAGES = "/pandas/messages"
+)
+
 // Predefined metadata key
 const (
 	MetadataDeviceType = "deviceType"

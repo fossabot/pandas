@@ -28,6 +28,10 @@ const (
 	RULE_STATUS_UNKNOWN = "unknown"
 )
 
+const (
+	OBJECT_PATH_RULECHAIN = "/pandas/rulechains"
+)
+
 type DataSource struct {
 	Name       string `json:"name"`
 	ConnectURL string `json:"connectURL"`

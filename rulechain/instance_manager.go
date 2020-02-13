@@ -37,12 +37,26 @@ func newInstanceManager() *instanceManager {
 		mutex:      sync.RWMutex{},
 		rulechains: make(map[string]*ruleChainInstance),
 	}
-	broadcast_util.RegisterObserver(controller, nameOfRuleChain)
+	broadcast_util.RegisterObserver(controller, models.OBJECT_PATH_RULECHAIN)
+	broadcast_util.RegisterObserver(controller, models.OBJECT_PATH_MESSAGES)
 	return controller
 }
 
 // OnBroadcase will be notified when rulechain model object is changed
 func (r *instanceManager) Onbroadcast(b broadcast.Broadcast, notify broadcast.Notification) {
+	switch notify.ObjectPath {
+	case models.OBJECT_PATH_RULECHAIN:
+		r.handleRuleChainNotification(notify)
+
+	case models.OBJECT_PATH_MESSAGES:
+		r.handleMessages(notify)
+	default:
+		logr.Errorf("illegal notification received(%s)", notify.ObjectPath)
+	}
+}
+
+// handleRuleChainNotification hanel rule chain's sychronization
+func (r *instanceManager) handleRuleChainNotification(notify broadcast.Notification) {
 	rulechainNotify := RuleChainNotification{}
 	if err := rulechainNotify.UnmarshalBinary(notify.Param); err != nil {
 		logr.Errorf("unmarshal rulechain notifications '%s' failed", notify.ObjectPath)
@@ -76,6 +90,21 @@ func (r *instanceManager) Onbroadcast(b broadcast.Broadcast, notify broadcast.No
 		err = fmt.Errorf("invalid model action '%s'", notify.Action)
 	}
 	logr.WithError(err)
+}
+
+// handleMessage handle incoming data received from mixer
+func (r *instanceManager) handleMessages(notify broadcast.Notification) {
+	msg := models.NewMessage()
+	if err := msg.UnmarshalBinary(notify.Param); err != nil {
+		logr.WithError(err)
+		return
+	}
+	// TODO: The relations between specified rulechain and message must be known
+	// For debug purpose now, just iterate all rulechain and handle incoming
+	// message
+	for _, rulechain := range r.rulechains {
+		rulechain.onMessageAvailable(msg)
+	}
 }
 
 // loadAllRuleChains load runtimes in models and deploy them according to rulechain's status

@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/rulechain/manifest"
 	"github.com/cloustone/pandas/rulechain/nodes"
 	"github.com/sirupsen/logrus"
@@ -106,17 +107,10 @@ func newInstanceWithManifest(m *manifest.Manifest) (*ruleChainInstance, []error)
 
 func (r *ruleChainInstance) Name() string { return r.name }
 
-func (r *ruleChainInstance) OnDataAvailable(payload []byte, param interface{}) {
-	/*
-		msg, err := r.plugin.ConstructMessage(payload)
-		if err != nil {
-			logrus.WithError(err)
-			return
-		}
-		if node, found := r.nodes[r.firstRuleNodeId]; found {
-			go node.Handle(msg)
-			return
-		}
-	*/
+func (r *ruleChainInstance) onMessageAvailable(msg models.Message) {
+	if node, found := r.nodes[r.firstRuleNodeId]; found {
+		go node.Handle(msg)
+		return
+	}
 	logrus.Errorf("node chain '%s' has no valid node", r.Name())
 }
