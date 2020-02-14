@@ -13,25 +13,60 @@ package mixer
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/cloustone/pandas/mixer/adaptors"
 	pb "github.com/cloustone/pandas/mixer/grpc_mixer_v1"
 )
 
 type MixerService struct {
+	adaptorPool *adaptorPool
 }
 
 func NewMixerManagementService() *MixerService {
-	return &MixerService{}
+	return &MixerService{
+		adaptorPool: newAdaptorPool(),
+	}
+}
+
+func buildAdaptorInfo(c *pb.AdaptorConfigInfo) *adaptors.AdaptorOptions {
+	return &adaptors.AdaptorOptions{
+		Name:         c.Name,
+		Protocol:     c.Protocol,
+		IsProvider:   c.IsProvider,
+		ServicePort:  c.ServicePort,
+		ConnectURL:   c.ConnectURL,
+		IsTLSEnabled: c.IsTLSEnabled,
+		KeyFile:      c.KeyFile,
+		CertFile:     c.CertFile,
+	}
 }
 
 func (s *MixerService) CreateAdaptor(ctx context.Context, in *pb.CreateAdaptorRequest) (*pb.CreateAdaptorResponse, error) {
-	return nil, nil
-}
+	adaptorOptions := buildAdaptorInfo(in.AdaptorConfigInfo)
+	adaptor := s.adaptorPool.getAdaptorWithOptions(adaptorOptions)
+	if adaptor != nil {
+		s.adaptorPool.incAdaptorRef(adaptor.Name())
+		return &pb.CreateAdaptorResponse{AdaptorID: adaptor.Name()}, nil
+	}
+	// If no existed adaptor found, create a new adaptor and save it into pool
+	adaptor, err := NewAdaptor(adaptorOptions)
+	if err != nil {
+		return nil, fmt.Errorf("internal error")
+	}
+	s.adaptorPool.addAdaptor(adaptor)
+	return &pb.CreateAdaptorResponse{AdaptorID: adaptor.Name()}, nil
 
-func (s *MixerService) JoinWithAdaptor(ctx context.Context, in *pb.JoinWithAdaptorRequest) (*pb.JoinWithAdaptorResponse, error) {
-	return nil, nil
 }
 
 func (s *MixerService) DeleteAdaptor(ctx context.Context, in *pb.DeleteAdaptorRequest) (*pb.DeleteAdaptorResponse, error) {
-	return nil, nil
+	adaptor := s.adaptorPool.getAdaptor(in.AdaptorID)
+	if adaptor != nil {
+		ref := s.adaptorPool.decAdaptorRef(adaptor.Name())
+		if ref <= 0 {
+			s.adaptorPool.removeAdaptor(adaptor.Name())
+			adaptor.GracefulShutdown()
+		}
+	}
+	return &pb.DeleteAdaptorResponse{}, nil
 }

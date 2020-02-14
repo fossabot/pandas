@@ -13,7 +13,6 @@ package grpc
 
 import (
 	"context"
-	"log"
 	"net"
 
 	"github.com/cloustone/pandas/mixer/adaptors"
@@ -21,7 +20,6 @@ import (
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/status"
@@ -48,13 +46,15 @@ func newGrpcAdaptor(servingOptions *adaptors.AdaptorOptions) (adaptors.Adaptor, 
 	childRoutines, childCtx := errgroup.WithContext(rootCtx)
 
 	var opts []grpc.ServerOption
-	if servingOptions.IsTlsEnabled {
-		creds, err := credentials.NewServerTLSFromFile(servingOptions.CertFile, servingOptions.KeyFile)
-		if err != nil {
-			log.Fatalf("failed to generate credentials %v", err)
+	/*
+		if servingOptions.IsTlsEnabled {
+			creds, err := credentials.NewServerTLSFromFile(servingOptions.CertFile, servingOptions.KeyFile)
+			if err != nil {
+				log.Fatalf("failed to generate credentials %v", err)
+			}
+			opts = []grpc.ServerOption{grpc.Creds(creds)}
 		}
-		opts = []grpc.ServerOption{grpc.Creds(creds)}
-	}
+	*/
 
 	return &grpcAdaptor{
 		context:        childCtx,
@@ -64,17 +64,20 @@ func newGrpcAdaptor(servingOptions *adaptors.AdaptorOptions) (adaptors.Adaptor, 
 		servingOptions: servingOptions,
 	}, nil
 }
+func (r *grpcAdaptor) Options() *adaptors.AdaptorOptions {
+	return nil
+}
 
 func (r *grpcAdaptor) Start() error {
 	grpc_health_v1.RegisterHealthServer(r.grpcServer, health.NewServer())
 	RegisterAdaptorServer(r.grpcServer, r)
 
 	r.childRoutines.Go(func() error {
-		listen, err := net.Listen("tcp", r.servingOptions.Port)
+		listen, err := net.Listen("tcp", r.servingOptions.ServicePort)
 		if err != nil {
 			logr.Fatal(err)
 		}
-		logr.Infof("rpc service is listening on '%s'...", r.servingOptions.Port)
+		logr.Infof("rpc service is listening on '%s'...", r.servingOptions.ServicePort)
 		if err := r.grpcServer.Serve(listen); err != nil {
 			logr.Fatal(err)
 		}

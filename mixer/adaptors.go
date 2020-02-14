@@ -44,13 +44,13 @@ func DumpAllAdaptors() {
 }
 
 // NewAdaptor create a new data source with source configuration
-func NewAdaptor(name string, servingOptions *adaptors.AdaptorOptions) (adaptors.Adaptor, error) {
+func NewAdaptor(adaptorOptions *adaptors.AdaptorOptions) (adaptors.Adaptor, error) {
 	for name, factory := range allAdaptorFactories {
-		if name == name && factory != nil {
-			return factory.Create(servingOptions)
+		if name == adaptorOptions.Name && factory != nil {
+			return factory.Create(adaptorOptions)
 		}
 	}
-	return nil, fmt.Errorf("unknown reader '%s'", name)
+	return nil, fmt.Errorf("unknown adaptor '%s'", adaptorOptions.Name)
 }
 
 func init() {

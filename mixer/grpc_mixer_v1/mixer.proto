@@ -3,21 +3,30 @@ syntax = "proto3";
 
 package grpc.mixer.v1;
 
+message AdaptorConfigInfo {
+    string Name = 1;
+    string Protocol = 2;
+    bool IsProvider = 3;
+    string ServicePort = 4;
+    string ConnectURL = 5;
+    bool  IsTLSEnabled = 6;
+    bytes KeyFile = 7;
+    bytes CertFile = 8;
+}
+
 service Mixer {
     rpc CreateAdaptor(CreateAdaptorRequest) returns (CreateAdaptorResponse) {}
-    rpc JoinWithAdaptor(JoinWithAdaptorRequest) returns (JoinWithAdaptorResponse) {}
     rpc DeleteAdaptor(DeleteAdaptorRequest) returns (DeleteAdaptorResponse) {}
 }
 
-message CreateAdaptorRequest {}
-message CreateAdaptorResponse {}
-
-message JoinWithAdaptorRequest {
-    string ClientID = 1;
+message CreateAdaptorRequest {
+    AdaptorConfigInfo AdaptorConfigInfo = 1;
 }
-message JoinWithAdaptorResponse {
+message CreateAdaptorResponse {
     string AdaptorID = 1;
 }
 
-message DeleteAdaptorRequest {}
+message DeleteAdaptorRequest {
+    string AdaptorID = 1;
+}
 message DeleteAdaptorResponse {}

@@ -23,17 +23,112 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
-type CreateAdaptorRequest struct {
+type AdaptorConfigInfo struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=Name" json:"Name,omitempty", bson:"Name,omitempty"`
+	Protocol             string   `protobuf:"bytes,2,opt,name=Protocol" json:"Protocol,omitempty", bson:"Protocol,omitempty"`
+	IsProvider           bool     `protobuf:"varint,3,opt,name=IsProvider" json:"IsProvider,omitempty", bson:"IsProvider,omitempty"`
+	ServicePort          string   `protobuf:"bytes,4,opt,name=ServicePort" json:"ServicePort,omitempty", bson:"ServicePort,omitempty"`
+	ConnectURL           string   `protobuf:"bytes,5,opt,name=ConnectURL" json:"ConnectURL,omitempty", bson:"ConnectURL,omitempty"`
+	IsTLSEnabled         bool     `protobuf:"varint,6,opt,name=IsTLSEnabled" json:"IsTLSEnabled,omitempty", bson:"IsTLSEnabled,omitempty"`
+	KeyFile              []byte   `protobuf:"bytes,7,opt,name=KeyFile,proto3" json:"KeyFile,omitempty", bson:"KeyFile,omitempty"`
+	CertFile             []byte   `protobuf:"bytes,8,opt,name=CertFile,proto3" json:"CertFile,omitempty", bson:"CertFile,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *AdaptorConfigInfo) Reset()         { *m = AdaptorConfigInfo{} }
+func (m *AdaptorConfigInfo) String() string { return proto.CompactTextString(m) }
+func (*AdaptorConfigInfo) ProtoMessage()    {}
+func (*AdaptorConfigInfo) Descriptor() ([]byte, []int) {
+	return fileDescriptor_mixer_b0fe2569a69c8882, []int{0}
+}
+func (m *AdaptorConfigInfo) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AdaptorConfigInfo.Unmarshal(m, b)
+}
+func (m *AdaptorConfigInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AdaptorConfigInfo.Marshal(b, m, deterministic)
+}
+func (dst *AdaptorConfigInfo) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AdaptorConfigInfo.Merge(dst, src)
+}
+func (m *AdaptorConfigInfo) XXX_Size() int {
+	return xxx_messageInfo_AdaptorConfigInfo.Size(m)
+}
+func (m *AdaptorConfigInfo) XXX_DiscardUnknown() {
+	xxx_messageInfo_AdaptorConfigInfo.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AdaptorConfigInfo proto.InternalMessageInfo
+
+func (m *AdaptorConfigInfo) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *AdaptorConfigInfo) GetProtocol() string {
+	if m != nil {
+		return m.Protocol
+	}
+	return ""
+}
+
+func (m *AdaptorConfigInfo) GetIsProvider() bool {
+	if m != nil {
+		return m.IsProvider
+	}
+	return false
+}
+
+func (m *AdaptorConfigInfo) GetServicePort() string {
+	if m != nil {
+		return m.ServicePort
+	}
+	return ""
+}
+
+func (m *AdaptorConfigInfo) GetConnectURL() string {
+	if m != nil {
+		return m.ConnectURL
+	}
+	return ""
+}
+
+func (m *AdaptorConfigInfo) GetIsTLSEnabled() bool {
+	if m != nil {
+		return m.IsTLSEnabled
+	}
+	return false
+}
+
+func (m *AdaptorConfigInfo) GetKeyFile() []byte {
+	if m != nil {
+		return m.KeyFile
+	}
+	return nil
+}
+
+func (m *AdaptorConfigInfo) GetCertFile() []byte {
+	if m != nil {
+		return m.CertFile
+	}
+	return nil
+}
+
+type CreateAdaptorRequest struct {
+	AdaptorConfigInfo    *AdaptorConfigInfo `protobuf:"bytes,1,opt,name=AdaptorConfigInfo" json:"AdaptorConfigInfo,omitempty", bson:"AdaptorConfigInfo,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
 }
 
 func (m *CreateAdaptorRequest) Reset()         { *m = CreateAdaptorRequest{} }
 func (m *CreateAdaptorRequest) String() string { return proto.CompactTextString(m) }
 func (*CreateAdaptorRequest) ProtoMessage()    {}
 func (*CreateAdaptorRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_mixer_665f4b898ba5ea51, []int{0}
+	return fileDescriptor_mixer_b0fe2569a69c8882, []int{1}
 }
 func (m *CreateAdaptorRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_CreateAdaptorRequest.Unmarshal(m, b)
@@ -53,7 +148,15 @@ func (m *CreateAdaptorRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_CreateAdaptorRequest proto.InternalMessageInfo
 
+func (m *CreateAdaptorRequest) GetAdaptorConfigInfo() *AdaptorConfigInfo {
+	if m != nil {
+		return m.AdaptorConfigInfo
+	}
+	return nil
+}
+
 type CreateAdaptorResponse struct {
+	AdaptorID            string   `protobuf:"bytes,1,opt,name=AdaptorID" json:"AdaptorID,omitempty", bson:"AdaptorID,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -63,7 +166,7 @@ func (m *CreateAdaptorResponse) Reset()         { *m = CreateAdaptorResponse{} }
 func (m *CreateAdaptorResponse) String() string { return proto.CompactTextString(m) }
 func (*CreateAdaptorResponse) ProtoMessage()    {}
 func (*CreateAdaptorResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_mixer_665f4b898ba5ea51, []int{1}
+	return fileDescriptor_mixer_b0fe2569a69c8882, []int{2}
 }
 func (m *CreateAdaptorResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_CreateAdaptorResponse.Unmarshal(m, b)
@@ -83,76 +186,7 @@ func (m *CreateAdaptorResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_CreateAdaptorResponse proto.InternalMessageInfo
 
-type JoinWithAdaptorRequest struct {
-	ClientID             string   `protobuf:"bytes,1,opt,name=ClientID,proto3" json:"ClientID,omitempty" bson:"ClientID,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *JoinWithAdaptorRequest) Reset()         { *m = JoinWithAdaptorRequest{} }
-func (m *JoinWithAdaptorRequest) String() string { return proto.CompactTextString(m) }
-func (*JoinWithAdaptorRequest) ProtoMessage()    {}
-func (*JoinWithAdaptorRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_mixer_665f4b898ba5ea51, []int{2}
-}
-func (m *JoinWithAdaptorRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_JoinWithAdaptorRequest.Unmarshal(m, b)
-}
-func (m *JoinWithAdaptorRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_JoinWithAdaptorRequest.Marshal(b, m, deterministic)
-}
-func (dst *JoinWithAdaptorRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_JoinWithAdaptorRequest.Merge(dst, src)
-}
-func (m *JoinWithAdaptorRequest) XXX_Size() int {
-	return xxx_messageInfo_JoinWithAdaptorRequest.Size(m)
-}
-func (m *JoinWithAdaptorRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_JoinWithAdaptorRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_JoinWithAdaptorRequest proto.InternalMessageInfo
-
-func (m *JoinWithAdaptorRequest) GetClientID() string {
-	if m != nil {
-		return m.ClientID
-	}
-	return ""
-}
-
-type JoinWithAdaptorResponse struct {
-	AdaptorID            string   `protobuf:"bytes,1,opt,name=AdaptorID,proto3" json:"AdaptorID,omitempty" bson:"AdaptorID,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *JoinWithAdaptorResponse) Reset()         { *m = JoinWithAdaptorResponse{} }
-func (m *JoinWithAdaptorResponse) String() string { return proto.CompactTextString(m) }
-func (*JoinWithAdaptorResponse) ProtoMessage()    {}
-func (*JoinWithAdaptorResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_mixer_665f4b898ba5ea51, []int{3}
-}
-func (m *JoinWithAdaptorResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_JoinWithAdaptorResponse.Unmarshal(m, b)
-}
-func (m *JoinWithAdaptorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_JoinWithAdaptorResponse.Marshal(b, m, deterministic)
-}
-func (dst *JoinWithAdaptorResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_JoinWithAdaptorResponse.Merge(dst, src)
-}
-func (m *JoinWithAdaptorResponse) XXX_Size() int {
-	return xxx_messageInfo_JoinWithAdaptorResponse.Size(m)
-}
-func (m *JoinWithAdaptorResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_JoinWithAdaptorResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_JoinWithAdaptorResponse proto.InternalMessageInfo
-
-func (m *JoinWithAdaptorResponse) GetAdaptorID() string {
+func (m *CreateAdaptorResponse) GetAdaptorID() string {
 	if m != nil {
 		return m.AdaptorID
 	}
@@ -160,6 +194,7 @@ func (m *JoinWithAdaptorResponse) GetAdaptorID() string {
 }
 
 type DeleteAdaptorRequest struct {
+	AdaptorID            string   `protobuf:"bytes,1,opt,name=AdaptorID" json:"AdaptorID,omitempty", bson:"AdaptorID,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -169,7 +204,7 @@ func (m *DeleteAdaptorRequest) Reset()         { *m = DeleteAdaptorRequest{} }
 func (m *DeleteAdaptorRequest) String() string { return proto.CompactTextString(m) }
 func (*DeleteAdaptorRequest) ProtoMessage()    {}
 func (*DeleteAdaptorRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_mixer_665f4b898ba5ea51, []int{4}
+	return fileDescriptor_mixer_b0fe2569a69c8882, []int{3}
 }
 func (m *DeleteAdaptorRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_DeleteAdaptorRequest.Unmarshal(m, b)
@@ -189,6 +224,13 @@ func (m *DeleteAdaptorRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_DeleteAdaptorRequest proto.InternalMessageInfo
 
+func (m *DeleteAdaptorRequest) GetAdaptorID() string {
+	if m != nil {
+		return m.AdaptorID
+	}
+	return ""
+}
+
 type DeleteAdaptorResponse struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -199,7 +241,7 @@ func (m *DeleteAdaptorResponse) Reset()         { *m = DeleteAdaptorResponse{} }
 func (m *DeleteAdaptorResponse) String() string { return proto.CompactTextString(m) }
 func (*DeleteAdaptorResponse) ProtoMessage()    {}
 func (*DeleteAdaptorResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_mixer_665f4b898ba5ea51, []int{5}
+	return fileDescriptor_mixer_b0fe2569a69c8882, []int{4}
 }
 func (m *DeleteAdaptorResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_DeleteAdaptorResponse.Unmarshal(m, b)
@@ -220,10 +262,9 @@ func (m *DeleteAdaptorResponse) XXX_DiscardUnknown() {
 var xxx_messageInfo_DeleteAdaptorResponse proto.InternalMessageInfo
 
 func init() {
+	proto.RegisterType((*AdaptorConfigInfo)(nil), "grpc.mixer.v1.AdaptorConfigInfo")
 	proto.RegisterType((*CreateAdaptorRequest)(nil), "grpc.mixer.v1.CreateAdaptorRequest")
 	proto.RegisterType((*CreateAdaptorResponse)(nil), "grpc.mixer.v1.CreateAdaptorResponse")
-	proto.RegisterType((*JoinWithAdaptorRequest)(nil), "grpc.mixer.v1.JoinWithAdaptorRequest")
-	proto.RegisterType((*JoinWithAdaptorResponse)(nil), "grpc.mixer.v1.JoinWithAdaptorResponse")
 	proto.RegisterType((*DeleteAdaptorRequest)(nil), "grpc.mixer.v1.DeleteAdaptorRequest")
 	proto.RegisterType((*DeleteAdaptorResponse)(nil), "grpc.mixer.v1.DeleteAdaptorResponse")
 }
@@ -241,7 +282,6 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MixerClient interface {
 	CreateAdaptor(ctx context.Context, in *CreateAdaptorRequest, opts ...grpc.CallOption) (*CreateAdaptorResponse, error)
-	JoinWithAdaptor(ctx context.Context, in *JoinWithAdaptorRequest, opts ...grpc.CallOption) (*JoinWithAdaptorResponse, error)
 	DeleteAdaptor(ctx context.Context, in *DeleteAdaptorRequest, opts ...grpc.CallOption) (*DeleteAdaptorResponse, error)
 }
 
@@ -262,15 +302,6 @@ func (c *mixerClient) CreateAdaptor(ctx context.Context, in *CreateAdaptorReques
 	return out, nil
 }
 
-func (c *mixerClient) JoinWithAdaptor(ctx context.Context, in *JoinWithAdaptorRequest, opts ...grpc.CallOption) (*JoinWithAdaptorResponse, error) {
-	out := new(JoinWithAdaptorResponse)
-	err := c.cc.Invoke(ctx, "/grpc.mixer.v1.Mixer/JoinWithAdaptor", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *mixerClient) DeleteAdaptor(ctx context.Context, in *DeleteAdaptorRequest, opts ...grpc.CallOption) (*DeleteAdaptorResponse, error) {
 	out := new(DeleteAdaptorResponse)
 	err := c.cc.Invoke(ctx, "/grpc.mixer.v1.Mixer/DeleteAdaptor", in, out, opts...)
@@ -283,7 +314,6 @@ func (c *mixerClient) DeleteAdaptor(ctx context.Context, in *DeleteAdaptorReques
 // MixerServer is the server API for Mixer service.
 type MixerServer interface {
 	CreateAdaptor(context.Context, *CreateAdaptorRequest) (*CreateAdaptorResponse, error)
-	JoinWithAdaptor(context.Context, *JoinWithAdaptorRequest) (*JoinWithAdaptorResponse, error)
 	DeleteAdaptor(context.Context, *DeleteAdaptorRequest) (*DeleteAdaptorResponse, error)
 }
 
@@ -305,24 +335,6 @@ func _Mixer_CreateAdaptor_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MixerServer).CreateAdaptor(ctx, req.(*CreateAdaptorRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Mixer_JoinWithAdaptor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(JoinWithAdaptorRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MixerServer).JoinWithAdaptor(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/grpc.mixer.v1.Mixer/JoinWithAdaptor",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MixerServer).JoinWithAdaptor(ctx, req.(*JoinWithAdaptorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -354,10 +366,6 @@ var _Mixer_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Mixer_CreateAdaptor_Handler,
 		},
 		{
-			MethodName: "JoinWithAdaptor",
-			Handler:    _Mixer_JoinWithAdaptor_Handler,
-		},
-		{
 			MethodName: "DeleteAdaptor",
 			Handler:    _Mixer_DeleteAdaptor_Handler,
 		},
@@ -366,22 +374,30 @@ var _Mixer_serviceDesc = grpc.ServiceDesc{
 	Metadata: "mixer.proto",
 }
 
-func init() { proto.RegisterFile("mixer.proto", fileDescriptor_mixer_665f4b898ba5ea51) }
+func init() { proto.RegisterFile("mixer.proto", fileDescriptor_mixer_b0fe2569a69c8882) }
 
-var fileDescriptor_mixer_665f4b898ba5ea51 = []byte{
-	// 223 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0xce, 0xcd, 0xac, 0x48,
-	0x2d, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x4d, 0x2f, 0x2a, 0x48, 0xd6, 0x83, 0x88,
-	0x94, 0x19, 0x2a, 0x89, 0x71, 0x89, 0x38, 0x17, 0xa5, 0x26, 0x96, 0xa4, 0x3a, 0xa6, 0x24, 0x16,
-	0x94, 0xe4, 0x17, 0x05, 0xa5, 0x16, 0x96, 0xa6, 0x16, 0x97, 0x28, 0x89, 0x73, 0x89, 0xa2, 0x89,
-	0x17, 0x17, 0xe4, 0xe7, 0x15, 0xa7, 0x2a, 0x99, 0x70, 0x89, 0x79, 0xe5, 0x67, 0xe6, 0x85, 0x67,
-	0x96, 0x64, 0xa0, 0x6a, 0x11, 0x92, 0xe2, 0xe2, 0x70, 0xce, 0xc9, 0x4c, 0xcd, 0x2b, 0xf1, 0x74,
-	0x91, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x82, 0xf3, 0x95, 0xcc, 0xb9, 0xc4, 0x31, 0x74, 0x41,
-	0x0c, 0x14, 0x92, 0xe1, 0xe2, 0x84, 0x0a, 0xc1, 0xf5, 0x21, 0x04, 0x40, 0xee, 0x73, 0x49, 0xcd,
-	0x49, 0xc5, 0xe6, 0x3e, 0x34, 0x71, 0x88, 0x71, 0x46, 0xcb, 0x99, 0xb8, 0x58, 0x7d, 0x41, 0xbe,
-	0x13, 0x8a, 0xe1, 0xe2, 0x45, 0xf1, 0x82, 0x90, 0xb2, 0x1e, 0x8a, 0xdf, 0xf5, 0xb0, 0x79, 0x5c,
-	0x4a, 0x05, 0xbf, 0x22, 0x68, 0x28, 0x30, 0x08, 0x25, 0x71, 0xf1, 0xa3, 0xf9, 0x48, 0x48, 0x15,
-	0x4d, 0x2b, 0xf6, 0x70, 0x92, 0x52, 0x23, 0xa4, 0x0c, 0x6e, 0x47, 0x0c, 0x17, 0x2f, 0x8a, 0x27,
-	0x31, 0x7c, 0x80, 0x2d, 0x68, 0x30, 0x7c, 0x80, 0x35, 0x9c, 0x94, 0x18, 0x92, 0xd8, 0xc0, 0x09,
-	0xc2, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff, 0x33, 0x7b, 0x77, 0x5e, 0x1f, 0x02, 0x00, 0x00,
+var fileDescriptor_mixer_b0fe2569a69c8882 = []byte{
+	// 340 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x92, 0x4f, 0x4f, 0xf2, 0x40,
+	0x10, 0xc6, 0xe9, 0xfb, 0xf2, 0x77, 0x80, 0x83, 0x13, 0x88, 0x1b, 0x62, 0x4c, 0xb3, 0x7a, 0xe0,
+	0xd4, 0x44, 0xd4, 0x0f, 0x60, 0x8a, 0x26, 0x8d, 0x48, 0x48, 0xd1, 0x9b, 0x97, 0x52, 0x06, 0xd2,
+	0xa4, 0x74, 0xeb, 0x76, 0x25, 0xfa, 0xf9, 0xfc, 0x60, 0x9a, 0x2e, 0x88, 0x94, 0x36, 0xdc, 0x3a,
+	0xbf, 0x9d, 0x79, 0xe6, 0x99, 0x27, 0x85, 0xe6, 0x2a, 0xf8, 0x20, 0x69, 0xc5, 0x52, 0x28, 0x81,
+	0xed, 0xa5, 0x8c, 0x7d, 0x6b, 0x43, 0xd6, 0x57, 0xfc, 0xdb, 0x80, 0x93, 0xbb, 0xb9, 0x17, 0x2b,
+	0x21, 0x6d, 0x11, 0x2d, 0x82, 0xa5, 0x13, 0x2d, 0x04, 0x22, 0x94, 0xc7, 0xde, 0x8a, 0x98, 0x61,
+	0x1a, 0xfd, 0x86, 0xab, 0xbf, 0xb1, 0x07, 0xf5, 0x49, 0xaa, 0xe0, 0x8b, 0x90, 0xfd, 0xd3, 0x7c,
+	0x57, 0xe3, 0x39, 0x80, 0x93, 0x4c, 0xa4, 0x58, 0x07, 0x73, 0x92, 0xec, 0xbf, 0x69, 0xf4, 0xeb,
+	0xee, 0x1e, 0x41, 0x13, 0x9a, 0x53, 0x92, 0xeb, 0xc0, 0xa7, 0x89, 0x90, 0x8a, 0x95, 0xf5, 0xf8,
+	0x3e, 0x4a, 0x15, 0x6c, 0x11, 0x45, 0xe4, 0xab, 0x17, 0x77, 0xc4, 0x2a, 0xba, 0x61, 0x8f, 0x20,
+	0x87, 0x96, 0x93, 0x3c, 0x8f, 0xa6, 0xf7, 0x91, 0x37, 0x0b, 0x69, 0xce, 0xaa, 0x7a, 0x47, 0x86,
+	0x21, 0x83, 0xda, 0x23, 0x7d, 0x3e, 0x04, 0x21, 0xb1, 0x9a, 0x69, 0xf4, 0x5b, 0xee, 0x6f, 0x99,
+	0x7a, 0xb7, 0x49, 0x2a, 0xfd, 0x54, 0xd7, 0x4f, 0xbb, 0x9a, 0x2f, 0xa0, 0x63, 0x4b, 0xf2, 0x14,
+	0x6d, 0x63, 0x70, 0xe9, 0xed, 0x9d, 0x12, 0x85, 0xe3, 0x82, 0x60, 0x74, 0x20, 0xcd, 0x81, 0x69,
+	0x65, 0x42, 0xb4, 0x72, 0x7d, 0x6e, 0x7e, 0x94, 0xdf, 0x42, 0xf7, 0x60, 0x4f, 0x12, 0x8b, 0x28,
+	0x21, 0x3c, 0x83, 0xc6, 0x16, 0x39, 0xc3, 0x6d, 0xe2, 0x7f, 0x80, 0xdf, 0x40, 0x67, 0x48, 0x21,
+	0xe5, 0xec, 0x1d, 0x9f, 0x3a, 0x85, 0xee, 0xc1, 0xd4, 0x66, 0xd9, 0xe0, 0xcb, 0x80, 0xca, 0x53,
+	0xea, 0x1b, 0x5f, 0xa1, 0x9d, 0xf1, 0x83, 0x17, 0x07, 0x57, 0x15, 0xa5, 0xd2, 0xbb, 0x3c, 0xde,
+	0xb4, 0xd9, 0xc2, 0x4b, 0xa9, 0x7a, 0xc6, 0x40, 0x4e, 0xbd, 0xe8, 0xa8, 0x9c, 0x7a, 0xe1, 0x0d,
+	0xbc, 0x34, 0xab, 0xea, 0x7f, 0xf9, 0xfa, 0x27, 0x00, 0x00, 0xff, 0xff, 0xaa, 0x20, 0x06, 0xfc,
+	0xda, 0x02, 0x00, 0x00,
 }

@@ -15,6 +15,7 @@ import "github.com/cloustone/pandas/models"
 
 type Adaptor interface {
 	Name() string
+	Options() *AdaptorOptions
 	Start() error
 	GracefulShutdown() error
 	WithMessageBuilder(MessageBuilder) Adaptor
@@ -25,11 +26,14 @@ type AdaptorFactory interface {
 }
 
 type AdaptorOptions struct {
+	Name         string `json:"name"`
 	Protocol     string `json:"protocol"`
-	Port         string `json:"port"`
-	IsTlsEnabled bool   `json:"isTlsEnabled"`
-	CertFile     string `json:"certFile"`
-	KeyFile      string `json:"keyFile"`
+	IsProvider   bool   `json:"isProvider"`
+	ServicePort  string `json:"servicePort"`
+	IsTLSEnabled bool   `json:"isTlsEnabled"`
+	ConnectURL   string `json:"connectURL"`
+	CertFile     []byte `json:"certFile"`
+	KeyFile      []byte `json:"keyFile"`
 }
 
 type MessageBuilder interface {

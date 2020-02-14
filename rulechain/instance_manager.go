@@ -163,8 +163,8 @@ func (r *instanceManager) startRuleChain(rulechainModel *models.RuleChain) error
 	}
 	defer client.Close()
 
-	req := &grpc_mixer_v1.JoinWithAdaptorRequest{ClientID: rulechainModel.ID}
-	resp, err := client.Mixer().JoinWithAdaptor(context.TODO(), req)
+	req := &grpc_mixer_v1.CreateAdaptorRequest{} // TODO: build adaptorOptions here
+	resp, err := client.Mixer().CreateAdaptor(context.TODO(), req)
 	if err != nil {
 		return err
 	}
