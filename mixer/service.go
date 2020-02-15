@@ -32,8 +32,9 @@ func NewMixerManagementService() *MixerService {
 }
 
 // buildAdaptorOptions
-func buildAdaptorOptions(c *pb.AdaptorOptions) *adaptors.AdaptorOptions {
+func buildAdaptorOptions(userID string, c *pb.AdaptorOptions) *adaptors.AdaptorOptions {
 	return &adaptors.AdaptorOptions{
+		UserID:       userID,
 		Name:         c.Name,
 		Protocol:     c.Protocol,
 		IsProvider:   c.IsProvider,
@@ -47,7 +48,7 @@ func buildAdaptorOptions(c *pb.AdaptorOptions) *adaptors.AdaptorOptions {
 
 // CreateAdaptor create a new adaptor, and will reuse it if same reader already exist
 func (s *MixerService) CreateAdaptor(ctx context.Context, in *pb.CreateAdaptorRequest) (*pb.CreateAdaptorResponse, error) {
-	adaptorOptions := buildAdaptorOptions(in.AdaptorOptions)
+	adaptorOptions := buildAdaptorOptions(in.UserID, in.AdaptorOptions)
 	adaptor := s.adaptorPool.getAdaptorWithOptions(adaptorOptions)
 	if adaptor != nil {
 		s.adaptorPool.incAdaptorRef(adaptor.Name())
@@ -58,20 +59,31 @@ func (s *MixerService) CreateAdaptor(ctx context.Context, in *pb.CreateAdaptorRe
 	if err != nil {
 		return nil, fmt.Errorf("internal error")
 	}
-	s.adaptorPool.addAdaptor(adaptor)
+	s.adaptorPool.addAdaptor(in.UserID, adaptor)
 	return &pb.CreateAdaptorResponse{AdaptorID: adaptor.Name()}, nil
 
 }
 
 // DeleteAdaptor decrease reference of adaptor, and remove the adaptor if reference count is zero
 func (s *MixerService) DeleteAdaptor(ctx context.Context, in *pb.DeleteAdaptorRequest) (*pb.DeleteAdaptorResponse, error) {
-	adaptor := s.adaptorPool.getAdaptor(in.AdaptorID)
+	adaptor := s.adaptorPool.getAdaptor(in.UserID, in.AdaptorID)
 	if adaptor != nil {
 		ref := s.adaptorPool.decAdaptorRef(adaptor.Name())
 		if ref <= 0 {
-			s.adaptorPool.removeAdaptor(adaptor.Name())
+			s.adaptorPool.removeAdaptor(in.UserID, adaptor.Name())
 			adaptor.GracefulShutdown()
 		}
 	}
 	return &pb.DeleteAdaptorResponse{}, nil
+}
+
+// GetAdaptorFactories return all available adaptor facotory's name
+func (s *MixerService) GetAdaptorFactories(ctx context.Context, in *pb.GetAdaptorFactoriesRequest) (*pb.GetAdaptorFactoriesResponse, error) {
+	factoryNames := GetFactories()
+	return &pb.GetAdaptorFactoriesResponse{AdaptorFactoryNames: factoryNames}, nil
+}
+
+// GetAdaptors return user's all adaptors
+func (s *MixerService) GetAdaptors(ctx context.Context, in *pb.GetAdaptorsRequest) (*pb.GetAdaptorsResponse, error) {
+	return nil, nil
 }

@@ -19,26 +19,32 @@ import (
 
 // adaptorPool manage all adaptors created by client's request
 type adaptorPool struct {
-	mutex       sync.RWMutex
-	adaptors    []adaptors.Adaptor
-	adaptorRefs map[string]int
+	mutex        sync.RWMutex
+	adaptors     []adaptors.Adaptor
+	adaptorRefs  map[string]int
+	userAdaptors map[string][]string
 }
 
 // newAdaptorPool return a adaptor pool
 func newAdaptorPool() *adaptorPool {
 	return &adaptorPool{
-		mutex:       sync.RWMutex{},
-		adaptors:    []adaptors.Adaptor{},
-		adaptorRefs: make(map[string]int),
+		mutex:        sync.RWMutex{},
+		adaptors:     []adaptors.Adaptor{},
+		adaptorRefs:  make(map[string]int),
+		userAdaptors: make(map[string][]string),
 	}
 }
 
 // addAdaptor add a newly created adaptor into pool
-func (p *adaptorPool) addAdaptor(adaptor adaptors.Adaptor) {
+func (p *adaptorPool) addAdaptor(userID string, adaptor adaptors.Adaptor) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 	p.adaptors = append(p.adaptors, adaptor)
 	p.adaptorRefs[adaptor.Name()] = 1
+	if _, found := p.userAdaptors[userID]; !found {
+		p.userAdaptors[userID] = []string{}
+	}
+	p.userAdaptors[userID] = append(p.userAdaptors[userID], adaptor.Name())
 }
 
 // isAdaptorExist return wether a adaptors already exist
@@ -60,20 +66,27 @@ func (p *adaptorPool) getAdaptorWithOptions(adaptorOptions *adaptors.AdaptorOpti
 }
 
 // getAdaptor return specified adaptor
-func (p *adaptorPool) getAdaptor(adaptorID string) adaptors.Adaptor {
+func (p *adaptorPool) getAdaptor(userID string, adaptorID string) adaptors.Adaptor {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
-	for _, adaptor := range p.adaptors {
-		if adaptorID == adaptor.Name() {
-			return adaptor
+	if _, found := p.userAdaptors[userID]; found {
+		for _, adaptor := range p.adaptors {
+			if adaptorID == adaptor.Name() {
+				return adaptor
+			}
 		}
 	}
 	return nil
 }
 
+// getAdaptors return user's all adaptors
+func (p *adaptorPool) getAdaptors(userID string) []adaptors.Adaptor {
+	return nil
+}
+
 // removeAdaptor remove a adaptor from pool
-func (p *adaptorPool) removeAdaptor(adaptorID string) {
+func (p *adaptorPool) removeAdaptor(userID string, adaptorID string) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 	for index, adaptor := range p.adaptors {

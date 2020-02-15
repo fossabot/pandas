@@ -27,8 +27,8 @@ func RegisterAdaptor(name string, factory adaptors.AdaptorFactory) {
 	allAdaptorFactories[name] = factory
 }
 
-// GetAllAdaptors return all adaptor's name
-func GetAllAdaptors() []string {
+// GetFactories return all adaptor factories name
+func GetFactories() []string {
 	names := []string{}
 	for key, _ := range allAdaptorFactories {
 		names = append(names, key)

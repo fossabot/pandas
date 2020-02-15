@@ -17,16 +17,33 @@ message AdaptorOptions {
 service Mixer {
     rpc CreateAdaptor(CreateAdaptorRequest) returns (CreateAdaptorResponse) {}
     rpc DeleteAdaptor(DeleteAdaptorRequest) returns (DeleteAdaptorResponse) {}
+    rpc GetAdaptorFactories(GetAdaptorFactoriesRequest) returns (GetAdaptorFactoriesResponse) {}
+    rpc GetAdaptors(GetAdaptorsRequest) returns (GetAdaptorsResponse) {}
 }
 
 message CreateAdaptorRequest {
-    AdaptorOptions AdaptorOptions = 1;
+    string UserID = 1;
+    AdaptorOptions AdaptorOptions = 2;
 }
 message CreateAdaptorResponse {
     string AdaptorID = 1;
 }
 
 message DeleteAdaptorRequest {
-    string AdaptorID = 1;
+    string UserID = 1;
+    string AdaptorID = 2;
 }
 message DeleteAdaptorResponse {}
+
+
+message GetAdaptorFactoriesRequest {}
+message GetAdaptorFactoriesResponse {
+    repeated string AdaptorFactoryNames = 1;
+}
+
+message GetAdaptorsRequest {
+    string UserID = 1;
+}
+message GetAdaptorsResponse {
+    repeated AdaptorOptions AdaptorOptions = 1;
+}
