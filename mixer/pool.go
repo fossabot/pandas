@@ -38,7 +38,7 @@ func (p *adaptorPool) addAdaptor(adaptor adaptors.Adaptor) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 	p.adaptors = append(p.adaptors, adaptor)
-	p.adaptorRefs[adaptor.Name()]++
+	p.adaptorRefs[adaptor.Name()] = 1
 }
 
 // isAdaptorExist return wether a adaptors already exist

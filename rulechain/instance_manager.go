@@ -142,6 +142,20 @@ func (r *instanceManager) loadAllRuleChains() error {
 	return nil
 }
 
+// buildAdaptorOptions
+func buildAdaptorOptions(c *models.DataSource) *grpc_mixer_v1.AdaptorOptions {
+	return &grpc_mixer_v1.AdaptorOptions{
+		Name:         c.Name,
+		Protocol:     c.Protocol,
+		IsProvider:   c.IsProvider,
+		ServicePort:  c.ServicePort,
+		ConnectURL:   c.ConnectURL,
+		IsTLSEnabled: c.IsTLSEnabled,
+		KeyFile:      c.KeyFile,
+		CertFile:     c.CertFile,
+	}
+}
+
 // startRuleChain start the rule chain and receiving incoming data
 func (r *instanceManager) startRuleChain(rulechainModel *models.RuleChain) error {
 	r.mutex.Lock()
@@ -163,7 +177,9 @@ func (r *instanceManager) startRuleChain(rulechainModel *models.RuleChain) error
 	}
 	defer client.Close()
 
-	req := &grpc_mixer_v1.CreateAdaptorRequest{} // TODO: build adaptorOptions here
+	req := &grpc_mixer_v1.CreateAdaptorRequest{
+		AdaptorOptions: buildAdaptorOptions(&rulechainModel.DataSource),
+	}
 	resp, err := client.Mixer().CreateAdaptor(context.TODO(), req)
 	if err != nil {
 		return err

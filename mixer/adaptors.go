@@ -19,15 +19,15 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// allAdaptorFactories hold all embeded data source factory
+// allAdaptorFactories hold all embeded adaptors factory
 var allAdaptorFactories map[string]adaptors.AdaptorFactory = make(map[string]adaptors.AdaptorFactory)
 
-// RegisterAdaptor register data source in datas or plugins
+// RegisterAdaptor register new adaptor facotory
 func RegisterAdaptor(name string, factory adaptors.AdaptorFactory) {
 	allAdaptorFactories[name] = factory
 }
 
-// GetAllAdaptors returan all data source names
+// GetAllAdaptors return all adaptor's name
 func GetAllAdaptors() []string {
 	names := []string{}
 	for key, _ := range allAdaptorFactories {
@@ -36,14 +36,14 @@ func GetAllAdaptors() []string {
 	return names
 }
 
-// DumpAllAdaptors dump all data sources
+// DumpAllAdaptors dump all adaptors
 func DumpAllAdaptors() {
 	for name, _ := range allAdaptorFactories {
 		logrus.Infof("data source '%s' is registered", name)
 	}
 }
 
-// NewAdaptor create a new data source with source configuration
+// NewAdaptor create a new adaptor with specified options
 func NewAdaptor(adaptorOptions *adaptors.AdaptorOptions) (adaptors.Adaptor, error) {
 	for name, factory := range allAdaptorFactories {
 		if name == adaptorOptions.Name && factory != nil {

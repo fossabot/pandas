@@ -3,7 +3,7 @@ syntax = "proto3";
 
 package grpc.mixer.v1;
 
-message AdaptorConfigInfo {
+message AdaptorOptions {
     string Name = 1;
     string Protocol = 2;
     bool IsProvider = 3;
@@ -20,7 +20,7 @@ service Mixer {
 }
 
 message CreateAdaptorRequest {
-    AdaptorConfigInfo AdaptorConfigInfo = 1;
+    AdaptorOptions AdaptorOptions = 1;
 }
 message CreateAdaptorResponse {
     string AdaptorID = 1;

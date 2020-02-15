@@ -33,11 +33,14 @@ const (
 )
 
 type DataSource struct {
-	Name       string `json:"name"`
-	ConnectURL string `json:"connectURL"`
-	Endpoint   string `json:"endpoint"`
-	Username   string `json:"username"`
-	Pwd        string `json:"pwd"`
+	Name         string `json:"name"`
+	Protocol     string `json:"protocol"`
+	IsProvider   bool   `json:"isProvider"`
+	ServicePort  string `json:"servicePort"`
+	IsTLSEnabled bool   `json:"isTlsEnabled"`
+	ConnectURL   string `json:"connectURL"`
+	CertFile     []byte `json:"certFile"`
+	KeyFile      []byte `json:"keyFile"`
 }
 
 // RuleChain RuleChain

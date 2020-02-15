@@ -19,17 +19,20 @@ import (
 	pb "github.com/cloustone/pandas/mixer/grpc_mixer_v1"
 )
 
+// MixerService manage all data source adaptors
 type MixerService struct {
 	adaptorPool *adaptorPool
 }
 
+// NewMixerManagmentService return service instance
 func NewMixerManagementService() *MixerService {
 	return &MixerService{
 		adaptorPool: newAdaptorPool(),
 	}
 }
 
-func buildAdaptorInfo(c *pb.AdaptorConfigInfo) *adaptors.AdaptorOptions {
+// buildAdaptorOptions
+func buildAdaptorOptions(c *pb.AdaptorOptions) *adaptors.AdaptorOptions {
 	return &adaptors.AdaptorOptions{
 		Name:         c.Name,
 		Protocol:     c.Protocol,
@@ -42,8 +45,9 @@ func buildAdaptorInfo(c *pb.AdaptorConfigInfo) *adaptors.AdaptorOptions {
 	}
 }
 
+// CreateAdaptor create a new adaptor, and will reuse it if same reader already exist
 func (s *MixerService) CreateAdaptor(ctx context.Context, in *pb.CreateAdaptorRequest) (*pb.CreateAdaptorResponse, error) {
-	adaptorOptions := buildAdaptorInfo(in.AdaptorConfigInfo)
+	adaptorOptions := buildAdaptorOptions(in.AdaptorOptions)
 	adaptor := s.adaptorPool.getAdaptorWithOptions(adaptorOptions)
 	if adaptor != nil {
 		s.adaptorPool.incAdaptorRef(adaptor.Name())
@@ -59,6 +63,7 @@ func (s *MixerService) CreateAdaptor(ctx context.Context, in *pb.CreateAdaptorRe
 
 }
 
+// DeleteAdaptor decrease reference of adaptor, and remove the adaptor if reference count is zero
 func (s *MixerService) DeleteAdaptor(ctx context.Context, in *pb.DeleteAdaptorRequest) (*pb.DeleteAdaptorResponse, error) {
 	adaptor := s.adaptorPool.getAdaptor(in.AdaptorID)
 	if adaptor != nil {
