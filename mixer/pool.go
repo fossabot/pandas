@@ -19,32 +19,27 @@ import (
 
 // adaptorPool manage all adaptors created by client's request
 type adaptorPool struct {
-	mutex        sync.RWMutex
-	adaptors     []adaptors.Adaptor
-	adaptorRefs  map[string]int
-	userAdaptors map[string][]string
+	mutex    sync.RWMutex                // mutex lock
+	adaptors map[string]adaptors.Adaptor // all adaptors
+	refs     map[string]int              // each adaptor's reference count
 }
 
 // newAdaptorPool return a adaptor pool
 func newAdaptorPool() *adaptorPool {
 	return &adaptorPool{
-		mutex:        sync.RWMutex{},
-		adaptors:     []adaptors.Adaptor{},
-		adaptorRefs:  make(map[string]int),
-		userAdaptors: make(map[string][]string),
+		mutex:    sync.RWMutex{},
+		adaptors: make(map[string]adaptors.Adaptor),
+		refs:     make(map[string]int),
 	}
 }
 
 // addAdaptor add a newly created adaptor into pool
-func (p *adaptorPool) addAdaptor(userID string, adaptor adaptors.Adaptor) {
+func (p *adaptorPool) addAdaptor(adaptor adaptors.Adaptor) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
-	p.adaptors = append(p.adaptors, adaptor)
-	p.adaptorRefs[adaptor.Name()] = 1
-	if _, found := p.userAdaptors[userID]; !found {
-		p.userAdaptors[userID] = []string{}
-	}
-	p.userAdaptors[userID] = append(p.userAdaptors[userID], adaptor.Name())
+
+	p.adaptors[adaptor.Name()] = adaptor
+	p.refs[adaptor.Name()] = 1
 }
 
 // isAdaptorExist return wether a adaptors already exist
@@ -66,48 +61,53 @@ func (p *adaptorPool) getAdaptorWithOptions(adaptorOptions *adaptors.AdaptorOpti
 }
 
 // getAdaptor return specified adaptor
-func (p *adaptorPool) getAdaptor(userID string, adaptorID string) adaptors.Adaptor {
+func (p *adaptorPool) getAdaptor(adaptorID string) adaptors.Adaptor {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
-	if _, found := p.userAdaptors[userID]; found {
-		for _, adaptor := range p.adaptors {
-			if adaptorID == adaptor.Name() {
-				return adaptor
-			}
-		}
+	if adaptor, found := p.adaptors[adaptorID]; found {
+		return adaptor
 	}
 	return nil
 }
 
-// getAdaptors return user's all adaptors
-func (p *adaptorPool) getAdaptors(userID string) []adaptors.Adaptor {
-	return nil
+// getAdaptors return domains's all adaptors
+func (p *adaptorPool) getAdaptors(domain string) []adaptors.Adaptor {
+	adaptors := []adaptors.Adaptor{}
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+
+	for _, adaptor := range p.adaptors {
+		if adaptor.Options().Domain == domain {
+			adaptors = append(adaptors, adaptor)
+		}
+	}
+	return adaptors
 }
 
 // removeAdaptor remove a adaptor from pool
-func (p *adaptorPool) removeAdaptor(userID string, adaptorID string) {
+func (p *adaptorPool) removeAdaptor(adaptor adaptors.Adaptor) {
+	adaptorID := adaptor.Name()
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
-	for index, adaptor := range p.adaptors {
-		if adaptorID == adaptor.Name() {
-			p.adaptors = append(p.adaptors[:index], p.adaptors[index:]...)
-			break
-		}
+
+	if _, found := p.adaptors[adaptorID]; found {
+		delete(p.adaptors, adaptorID)
 	}
 }
 
 // incAdaptorRef increase ref count for specifed adaptor
-func (p *adaptorPool) incAdaptorRef(adaptorID string) {
+func (p *adaptorPool) incAdaptorRef(adaptor adaptors.Adaptor) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
-	p.adaptorRefs[adaptorID]++
+	p.refs[adaptor.Name()]++
 }
 
 // decAdaptorRef decrease ref count for specifed adaptor
-func (p *adaptorPool) decAdaptorRef(adaptorID string) int {
+func (p *adaptorPool) decAdaptorRef(adaptor adaptors.Adaptor) int {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
-	p.adaptorRefs[adaptorID]--
-	return p.adaptorRefs[adaptorID]
+
+	p.refs[adaptor.Name()]--
+	return p.refs[adaptor.Name()]
 }

@@ -26,7 +26,7 @@ type AdaptorFactory interface {
 }
 
 type AdaptorOptions struct {
-	UserID       string `json:"userID"`
+	Domain       string `json:"domain"`
 	Name         string `json:"name"`
 	Protocol     string `json:"protocol"`
 	IsProvider   bool   `json:"isProvider"`

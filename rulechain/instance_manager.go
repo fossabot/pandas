@@ -12,11 +12,11 @@
 package rulechain
 
 import (
-	"context"
 	"fmt"
 	"sync"
 
-	"github.com/cloustone/pandas/mixer/grpc_mixer_v1"
+	"github.com/cloustone/pandas/mixer"
+	"github.com/cloustone/pandas/mixer/adaptors"
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/factory"
 	"github.com/cloustone/pandas/pkg/broadcast"
@@ -143,8 +143,8 @@ func (r *instanceManager) loadAllRuleChains() error {
 }
 
 // buildAdaptorOptions
-func buildAdaptorOptions(c *models.DataSource) *grpc_mixer_v1.AdaptorOptions {
-	return &grpc_mixer_v1.AdaptorOptions{
+func buildAdaptorOptions(c *models.DataSource) *adaptors.AdaptorOptions {
+	return &adaptors.AdaptorOptions{
 		Name:         c.Name,
 		Protocol:     c.Protocol,
 		IsProvider:   c.IsProvider,
@@ -170,21 +170,10 @@ func (r *instanceManager) startRuleChain(rulechainModel *models.RuleChain) error
 	if len(errs) > 0 {
 		return errs[0]
 	}
-	// create adaptor for the rule chain
-	client, err := grpc_mixer_v1.NewClient()
-	if err != nil {
-		return err
-	}
-	defer client.Close()
 
-	req := &grpc_mixer_v1.CreateAdaptorRequest{
-		AdaptorOptions: buildAdaptorOptions(&rulechainModel.DataSource),
-	}
-	resp, err := client.Mixer().CreateAdaptor(context.TODO(), req)
-	if err != nil {
-		return err
-	}
-	r.addInstanceInternal(rulechainModel.ID, rulechain, resp.AdaptorID)
+	adaptorOptions := buildAdaptorOptions(&rulechainModel.DataSource)
+	mixer.AsyncCreateAdaptor(adaptorOptions)
+	r.addInstanceInternal(rulechainModel.ID, rulechain, adaptorOptions.Name)
 	return nil
 }
 

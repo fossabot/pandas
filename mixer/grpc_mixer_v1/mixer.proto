@@ -4,14 +4,15 @@ syntax = "proto3";
 package grpc.mixer.v1;
 
 message AdaptorOptions {
-    string Name = 1;
+    string Domain = 1;
     string Protocol = 2;
-    bool IsProvider = 3;
-    string ServicePort = 4;
-    string ConnectURL = 5;
-    bool  IsTLSEnabled = 6;
-    bytes KeyFile = 7;
-    bytes CertFile = 8;
+    string Name = 3;
+    bool IsProvider = 4;
+    string ServicePort = 5;
+    string ConnectURL = 6;
+    bool  IsTLSEnabled = 7;
+    bytes KeyFile = 8;
+    bytes CertFile = 9;
 }
 
 service Mixer {
@@ -22,16 +23,15 @@ service Mixer {
 }
 
 message CreateAdaptorRequest {
-    string UserID = 1;
-    AdaptorOptions AdaptorOptions = 2;
+    AdaptorOptions AdaptorOptions = 1;
 }
 message CreateAdaptorResponse {
     string AdaptorID = 1;
 }
 
 message DeleteAdaptorRequest {
-    string UserID = 1;
-    string AdaptorID = 2;
+    string Domain = 1;
+    string Protocol = 2;
 }
 message DeleteAdaptorResponse {}
 
@@ -42,7 +42,7 @@ message GetAdaptorFactoriesResponse {
 }
 
 message GetAdaptorsRequest {
-    string UserID = 1;
+    string Domain = 1;
 }
 message GetAdaptorsResponse {
     repeated AdaptorOptions AdaptorOptions = 1;
