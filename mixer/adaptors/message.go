@@ -9,28 +9,31 @@
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 //  License for the specific language governing permissions and limitations
 //  under the License.
-
-package mixer
+package adaptors
 
 import (
-	"github.com/cloustone/pandas/mixer/adaptors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
-// Notification
-type Notification struct {
-	AdaptorOptions *adaptors.AdaptorOptions `json:"adaptorOptions"`
-	Payload        []byte                   `json:"payload"`
+// Message
+type Message struct {
+	Domain   string `json:"domain"`
+	Protocol string `json:"protocol"`
+	Payload  []byte `json:"payload"`
+}
+
+func NewMessage() *Message {
+	return &Message{Payload: []byte{}}
 }
 
 // Validate validates this deployment
-func (m *Notification) Validate(formats strfmt.Registry) error {
+func (m *Message) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *Notification) MarshalBinary() ([]byte, error) {
+func (m *Message) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -38,8 +41,8 @@ func (m *Notification) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Notification) UnmarshalBinary(b []byte) error {
-	var res Notification
+func (m *Message) UnmarshalBinary(b []byte) error {
+	var res Message
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

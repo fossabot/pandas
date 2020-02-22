@@ -19,22 +19,20 @@ import (
 
 const (
 	MIXER_NOTIFICATION_PATH = "mixer/adaptors"
+	MIXER_MESSAGE_PATH      = "mixer/messages"
 )
 
 // AsyncCreatorAdaptor notify mixer that a adaptor should be created
 func AsyncCreateAdaptor(adaptorOptions *adaptors.AdaptorOptions) {
 	broadcast_util.Notify(MIXER_NOTIFICATION_PATH, broadcast.OBJECT_CREATED,
-		&Notification{
-			Domain:         adaptorOptions.Domain,
-			Protocol:       adaptorOptions.Protocol,
-			AdaptorOptions: adaptorOptions,
-		})
+		&Notification{AdaptorOptions: adaptorOptions},
+	)
 }
 
 // AsyncDeleteAdaptor notify mixer that a adaptor should be deleted
-func AsyncDeleteAdaptor(domain string, protocol string) {
+func AsyncDeleteAdaptor(adaptorOptions *adaptors.AdaptorOptions) {
 	broadcast_util.Notify(MIXER_NOTIFICATION_PATH,
 		broadcast.OBJECT_DELETED,
-		&Notification{Domain: domain, Protocol: protocol},
+		&Notification{AdaptorOptions: adaptorOptions},
 	)
 }

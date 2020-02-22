@@ -107,7 +107,10 @@ func (s *MixerService) DeleteAdaptor(ctx context.Context, in *pb.DeleteAdaptorRe
 	adaptor := s.adaptorPool.getAdaptor(adaptorID)
 	if adaptor != nil {
 		// Notify mixer nodes that a adaptor is deleted
-		AsyncDeleteAdaptor(in.Domain, in.Protocol)
+		AsyncDeleteAdaptor(&adaptors.AdaptorOptions{
+			Domain:   in.Domain,
+			Protocol: in.Protocol,
+		})
 		return &pb.DeleteAdaptorResponse{}, fmt.Errorf("adaptor(%s, %s) no exist", in.Domain, in.Protocol)
 	}
 

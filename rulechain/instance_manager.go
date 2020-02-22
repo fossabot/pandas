@@ -40,7 +40,7 @@ func newInstanceManager() *instanceManager {
 		adaptors:   make(map[string][]string),
 	}
 	broadcast_util.RegisterObserver(controller, models.OBJECT_PATH_RULECHAIN)
-	broadcast_util.RegisterObserver(controller, models.OBJECT_PATH_MESSAGES)
+	broadcast_util.RegisterObserver(controller, mixer.MIXER_MESSAGE_PATH)
 	return controller
 }
 
@@ -50,7 +50,7 @@ func (r *instanceManager) Onbroadcast(b broadcast.Broadcast, notify broadcast.No
 	case models.OBJECT_PATH_RULECHAIN:
 		r.handleRuleChainNotification(notify)
 
-	case models.OBJECT_PATH_MESSAGES:
+	case mixer.MIXER_MESSAGE_PATH:
 		r.handleMessages(notify)
 	default:
 		logr.Errorf("illegal notification received(%s)", notify.ObjectPath)
@@ -96,19 +96,21 @@ func (r *instanceManager) handleRuleChainNotification(notify broadcast.Notificat
 
 // handleMessage handle incoming data received from mixer
 func (r *instanceManager) handleMessages(notify broadcast.Notification) {
-	msg := models.NewMessage()
-	if err := msg.UnmarshalBinary(notify.Param); err != nil {
-		logr.WithError(err)
-		return
-	}
-	rulechains := r.getAdaptorRuleChains(msg.GetOriginator())
-	if len(rulechains) == 0 {
-		logr.Errorf("no rulechains for adaptor '%s'", msg.GetOriginator())
-		return
-	}
-	for _, rulechain := range rulechains {
-		rulechain.onMessageAvailable(msg)
-	}
+	/*
+		msg := mixer.NewMessage()
+		if err := msg.UnmarshalBinary(notify.Param); err != nil {
+			logr.WithError(err)
+			return
+		}
+		rulechains := r.getAdaptorRuleChains(msg.GetOriginator())
+		if len(rulechains) == 0 {
+			logr.Errorf("no rulechains for adaptor '%s'", msg.GetOriginator())
+			return
+		}
+		for _, rulechain := range rulechains {
+			rulechain.onMessageAvailable(msg)
+		}
+	*/
 }
 
 // getAdaptorRuleChains return all rule chains that handle incomming data from

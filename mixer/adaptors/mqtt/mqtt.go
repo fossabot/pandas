@@ -19,6 +19,9 @@ import (
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
+
+	"github.com/cloustone/pandas/pkg/broadcast"
+	broadcast_util "github.com/cloustone/pandas/pkg/broadcast/util"
 )
 
 type AdaptorFactory struct{}
@@ -51,21 +54,27 @@ func newMqttAdaptor(adaptorOptions *adaptors.AdaptorOptions) (adaptors.Adaptor, 
 	rootCtx, shutdownFn := context.WithCancel(context.Background())
 	childRoutines, childCtx := errgroup.WithContext(rootCtx)
 
-	s := &mqttAdaptor{
+	return &mqttAdaptor{
 		context:        childCtx,
 		shutdownFn:     shutdownFn,
 		childRoutines:  childRoutines,
 		adaptorOptions: adaptorOptions,
 		mqttClient:     c,
-	}
-
-	return s, nil
+	}, nil
 }
 
 func (r *mqttAdaptor) Options() *adaptors.AdaptorOptions { return r.adaptorOptions }
 
+const MIXER_MESSAGE_PATH = "mixer/messages"
+
 func (r *mqttAdaptor) handleReceivedMessage(client mqtt.Client, message mqtt.Message) {
-	// payload := message.Payload()
+	payload := message.Payload()
+	broadcast_util.Notify(MIXER_MESSAGE_PATH, broadcast.OBJECT_CREATED,
+		&adaptors.Message{
+			Domain:   r.adaptorOptions.Domain,
+			Protocol: r.adaptorOptions.Protocol,
+			Payload:  payload,
+		})
 }
 
 func (r *mqttAdaptor) Start() error {
@@ -88,5 +97,3 @@ func (r *mqttAdaptor) GracefulShutdown() error {
 	r.mqttClient.Disconnect(250)
 	return nil
 }
-
-func (r *mqttAdaptor) WithMessageBuilder(adaptors.MessageBuilder) {}

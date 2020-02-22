@@ -111,4 +111,3 @@ func (r *grpcAdaptor) PostMessage(ctx context.Context, in *PostMessageRequest) (
 	// broadcast message received from endpoint
 	return &PostMessageResponse{}, nil
 }
-func (r *grpcAdaptor) WithMessageBuilder(adaptors.MessageBuilder) {}

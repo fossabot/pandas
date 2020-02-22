@@ -13,15 +13,12 @@ package adaptors
 
 import (
 	"fmt"
-
-	"github.com/cloustone/pandas/models"
 )
 
 type Adaptor interface {
 	Options() *AdaptorOptions
 	Start() error
 	GracefulShutdown() error
-	WithMessageBuilder(MessageBuilder)
 }
 
 type AdaptorFactory interface {
@@ -41,10 +38,6 @@ type AdaptorOptions struct {
 	Username     string   `json:"username"`
 	Password     string   `json:"password"`
 	Endpoints    []string `json:"endpoints"`
-}
-
-type MessageBuilder interface {
-	ConstructMessage(payload []byte) (models.Message, error)
 }
 
 func NewAdaptorOptions() *AdaptorOptions {
