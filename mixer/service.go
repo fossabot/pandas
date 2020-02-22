@@ -47,6 +47,7 @@ func buildAdaptorOptions(c *pb.AdaptorOptions) *adaptors.AdaptorOptions {
 		IsTLSEnabled: c.IsTLSEnabled,
 		KeyFile:      c.KeyFile,
 		CertFile:     c.CertFile,
+		Endpoints:    c.Endpoints,
 	}
 }
 
@@ -74,7 +75,15 @@ func (s *MixerService) Onbroadcast(b broadcast.Broadcast, notify broadcast.Notif
 		}
 		s.adaptorPool.addAdaptor(adaptor)
 
-	case broadcast.OBJECT_UPDATED:
+	case broadcast.OBJECT_DELETED:
+		adaptor := s.adaptorPool.getAdaptor(adaptorOptions.Name)
+		if adaptor != nil {
+			ref := s.adaptorPool.decAdaptorRef(adaptor)
+			if ref <= 0 {
+				s.adaptorPool.removeAdaptor(adaptor)
+				go adaptor.GracefulShutdown()
+			}
+		}
 	}
 }
 
@@ -86,13 +95,9 @@ func (s *MixerService) CreateAdaptor(ctx context.Context, in *pb.CreateAdaptorRe
 		s.adaptorPool.incAdaptorRef(adaptor)
 		return &pb.CreateAdaptorResponse{AdaptorID: adaptor.Name()}, nil
 	}
-	// If no existed adaptor found, create a new adaptor and save it into pool
-	adaptor, err := NewAdaptor(adaptorOptions)
-	if err != nil {
-		return nil, fmt.Errorf("internal error")
-	}
-	s.adaptorPool.addAdaptor(adaptor)
-	return &pb.CreateAdaptorResponse{AdaptorID: adaptor.Name()}, nil
+	// Notify mixer nodes that a adaptor is created
+	AsyncCreateAdaptor(adaptorOptions)
+	return &pb.CreateAdaptorResponse{}, nil
 
 }
 
@@ -101,12 +106,11 @@ func (s *MixerService) DeleteAdaptor(ctx context.Context, in *pb.DeleteAdaptorRe
 	adaptorID := BuildAdaptorID(in.Domain, in.Protocol)
 	adaptor := s.adaptorPool.getAdaptor(adaptorID)
 	if adaptor != nil {
-		ref := s.adaptorPool.decAdaptorRef(adaptor)
-		if ref <= 0 {
-			s.adaptorPool.removeAdaptor(adaptor)
-			adaptor.GracefulShutdown()
-		}
+		// Notify mixer nodes that a adaptor is deleted
+		AsyncDeleteAdaptor(in.Domain, in.Protocol)
+		return &pb.DeleteAdaptorResponse{}, fmt.Errorf("adaptor(%s, %s) no exist", in.Domain, in.Protocol)
 	}
+
 	return &pb.DeleteAdaptorResponse{}, nil
 }
 

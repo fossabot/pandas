@@ -13,6 +13,7 @@ message AdaptorOptions {
     bool  IsTLSEnabled = 7;
     bytes KeyFile = 8;
     bytes CertFile = 9;
+    repeated string Endpoints = 10;
 }
 
 service Mixer {

@@ -26,17 +26,26 @@ type AdaptorFactory interface {
 }
 
 type AdaptorOptions struct {
-	Domain       string `json:"domain"`
-	Name         string `json:"name"`
-	Protocol     string `json:"protocol"`
-	IsProvider   bool   `json:"isProvider"`
-	ServicePort  string `json:"servicePort"`
-	IsTLSEnabled bool   `json:"isTlsEnabled"`
-	ConnectURL   string `json:"connectURL"`
-	CertFile     []byte `json:"certFile"`
-	KeyFile      []byte `json:"keyFile"`
+	Domain       string   `json:"domain"`
+	Protocol     string   `json:"protocol"`
+	Name         string   `json:"name"`
+	IsProvider   bool     `json:"isProvider"`
+	ServicePort  string   `json:"servicePort"`
+	IsTLSEnabled bool     `json:"isTlsEnabled"`
+	ConnectURL   string   `json:"connectURL"`
+	CertFile     []byte   `json:"certFile"`
+	KeyFile      []byte   `json:"keyFile"`
+	Endpoints    []string `json:"endpoints"`
 }
 
 type MessageBuilder interface {
 	ConstructMessage(payload []byte) (models.Message, error)
+}
+
+func NewAdaptorOptions() *AdaptorOptions {
+	return &AdaptorOptions{
+		IsProvider:   false,
+		IsTLSEnabled: false,
+		Endpoints:    []string{},
+	}
 }
