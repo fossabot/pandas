@@ -16,6 +16,7 @@ import (
 
 	"github.com/cloustone/pandas/mixer/adaptors"
 	"github.com/cloustone/pandas/mixer/adaptors/grpc"
+	"github.com/cloustone/pandas/mixer/adaptors/mqtt"
 	"github.com/sirupsen/logrus"
 )
 
@@ -55,4 +56,5 @@ func NewAdaptor(adaptorOptions *adaptors.AdaptorOptions) (adaptors.Adaptor, erro
 
 func init() {
 	RegisterAdaptor("grpc", grpc.AdaptorFactory{})
+	RegisterAdaptor("mqtt", mqtt.AdaptorFactory{})
 }

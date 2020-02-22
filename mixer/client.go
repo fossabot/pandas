@@ -12,8 +12,6 @@
 package mixer
 
 import (
-	"fmt"
-
 	"github.com/cloustone/pandas/mixer/adaptors"
 	"github.com/cloustone/pandas/pkg/broadcast"
 	broadcast_util "github.com/cloustone/pandas/pkg/broadcast/util"
@@ -22,12 +20,6 @@ import (
 const (
 	MIXER_NOTIFICATION_PATH = "mixer/adaptors"
 )
-
-// BuildAdaptorID create adaptor id with domain and protocol
-// One domain has only one adaptor for a protocol
-func BuildAdaptorID(domain string, protocol string) string {
-	return fmt.Sprintf("mixer-%s-%s", domain, protocol)
-}
 
 // AsyncCreatorAdaptor notify mixer that a adaptor should be created
 func AsyncCreateAdaptor(adaptorOptions *adaptors.AdaptorOptions) {

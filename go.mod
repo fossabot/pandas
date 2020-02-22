@@ -10,6 +10,7 @@ require (
 	github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 // indirect
 	github.com/didip/tollbooth v4.0.2+incompatible
 	github.com/dre1080/recover v0.0.0-20150930082637-1c296bbb3227
+	github.com/eclipse/paho.mqtt.golang v1.2.0
 	github.com/elazarl/go-bindata-assetfs v1.0.0
 	github.com/facebookgo/stack v0.0.0-20160209184415-751773369052 // indirect
 	github.com/fatih/color v1.7.0 // indirect

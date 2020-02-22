@@ -38,8 +38,8 @@ func (p *adaptorPool) addAdaptor(adaptor adaptors.Adaptor) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
-	p.adaptors[adaptor.Name()] = adaptor
-	p.refs[adaptor.Name()] = 1
+	p.adaptors[adaptor.Options().Name] = adaptor
+	p.refs[adaptor.Options().Name] = 1
 }
 
 // isAdaptorExist return wether a adaptors already exist
@@ -87,7 +87,7 @@ func (p *adaptorPool) getAdaptors(domain string) []adaptors.Adaptor {
 
 // removeAdaptor remove a adaptor from pool
 func (p *adaptorPool) removeAdaptor(adaptor adaptors.Adaptor) {
-	adaptorID := adaptor.Name()
+	adaptorID := adaptor.Options().Name
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
@@ -100,7 +100,7 @@ func (p *adaptorPool) removeAdaptor(adaptor adaptors.Adaptor) {
 func (p *adaptorPool) incAdaptorRef(adaptor adaptors.Adaptor) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
-	p.refs[adaptor.Name()]++
+	p.refs[adaptor.Options().Name]++
 }
 
 // decAdaptorRef decrease ref count for specifed adaptor
@@ -108,6 +108,6 @@ func (p *adaptorPool) decAdaptorRef(adaptor adaptors.Adaptor) int {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
-	p.refs[adaptor.Name()]--
-	return p.refs[adaptor.Name()]
+	p.refs[adaptor.Options().Name]--
+	return p.refs[adaptor.Options().Name]
 }

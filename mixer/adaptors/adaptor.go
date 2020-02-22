@@ -11,14 +11,17 @@
 //  under the License.
 package adaptors
 
-import "github.com/cloustone/pandas/models"
+import (
+	"fmt"
+
+	"github.com/cloustone/pandas/models"
+)
 
 type Adaptor interface {
-	Name() string
 	Options() *AdaptorOptions
 	Start() error
 	GracefulShutdown() error
-	WithMessageBuilder(MessageBuilder) Adaptor
+	WithMessageBuilder(MessageBuilder)
 }
 
 type AdaptorFactory interface {
@@ -35,6 +38,8 @@ type AdaptorOptions struct {
 	ConnectURL   string   `json:"connectURL"`
 	CertFile     []byte   `json:"certFile"`
 	KeyFile      []byte   `json:"keyFile"`
+	Username     string   `json:"username"`
+	Password     string   `json:"password"`
 	Endpoints    []string `json:"endpoints"`
 }
 
@@ -48,4 +53,10 @@ func NewAdaptorOptions() *AdaptorOptions {
 		IsTLSEnabled: false,
 		Endpoints:    []string{},
 	}
+}
+
+// BuildAdaptorID create adaptor id with domain and protocol
+// One domain has only one adaptor for a protocol
+func BuildAdaptorID(domain string, protocol string) string {
+	return fmt.Sprintf("mixer-%s-%s", domain, protocol)
 }

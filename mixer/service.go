@@ -93,7 +93,7 @@ func (s *MixerService) CreateAdaptor(ctx context.Context, in *pb.CreateAdaptorRe
 	adaptor := s.adaptorPool.getAdaptorWithOptions(adaptorOptions)
 	if adaptor != nil {
 		s.adaptorPool.incAdaptorRef(adaptor)
-		return &pb.CreateAdaptorResponse{AdaptorID: adaptor.Name()}, nil
+		return &pb.CreateAdaptorResponse{AdaptorID: adaptor.Options().Name}, nil
 	}
 	// Notify mixer nodes that a adaptor is created
 	AsyncCreateAdaptor(adaptorOptions)
@@ -103,7 +103,7 @@ func (s *MixerService) CreateAdaptor(ctx context.Context, in *pb.CreateAdaptorRe
 
 // DeleteAdaptor decrease reference of adaptor, and remove the adaptor if reference count is zero
 func (s *MixerService) DeleteAdaptor(ctx context.Context, in *pb.DeleteAdaptorRequest) (*pb.DeleteAdaptorResponse, error) {
-	adaptorID := BuildAdaptorID(in.Domain, in.Protocol)
+	adaptorID := adaptors.BuildAdaptorID(in.Domain, in.Protocol)
 	adaptor := s.adaptorPool.getAdaptor(adaptorID)
 	if adaptor != nil {
 		// Notify mixer nodes that a adaptor is deleted
