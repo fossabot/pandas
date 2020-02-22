@@ -15,12 +15,10 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/cloustone/pandas/mixer"
-	"github.com/cloustone/pandas/mixer/adaptors"
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/factory"
 	"github.com/cloustone/pandas/pkg/broadcast"
-	broadcast_util "github.com/cloustone/pandas/pkg/broadcast/util"
+	"github.com/cloustone/pandas/rulechain/adaptors"
 
 	logr "github.com/sirupsen/logrus"
 )
@@ -39,22 +37,7 @@ func newInstanceManager() *instanceManager {
 		rulechains: make(map[string]*ruleChainInstance),
 		adaptors:   make(map[string][]string),
 	}
-	broadcast_util.RegisterObserver(controller, models.OBJECT_PATH_RULECHAIN)
-	broadcast_util.RegisterObserver(controller, mixer.MIXER_MESSAGE_PATH)
 	return controller
-}
-
-// OnBroadcase will be notified when rulechain model object is changed
-func (r *instanceManager) Onbroadcast(b broadcast.Broadcast, notify broadcast.Notification) {
-	switch notify.ObjectPath {
-	case models.OBJECT_PATH_RULECHAIN:
-		r.handleRuleChainNotification(notify)
-
-	case mixer.MIXER_MESSAGE_PATH:
-		r.handleMessages(notify)
-	default:
-		logr.Errorf("illegal notification received(%s)", notify.ObjectPath)
-	}
 }
 
 // handleRuleChainNotification hanel rule chain's sychronization
@@ -174,7 +157,6 @@ func (r *instanceManager) startRuleChain(rulechainModel *models.RuleChain) error
 	}
 
 	adaptorOptions := buildAdaptorOptions(&rulechainModel.DataSource)
-	mixer.AsyncCreateAdaptor(adaptorOptions)
 	r.addInstanceInternal(rulechainModel.ID, rulechain, adaptorOptions.Name)
 	return nil
 }

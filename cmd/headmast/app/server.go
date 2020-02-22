@@ -12,11 +12,8 @@
 package app
 
 import (
-	"github.com/cloustone/pandas/cmd/mixer/app/options"
-	"github.com/cloustone/pandas/mixer"
-	"github.com/cloustone/pandas/mixer/grpc_mixer_v1"
-	"github.com/cloustone/pandas/models/factory"
-	"github.com/cloustone/pandas/pkg/server"
+	"github.com/cloustone/pandas/cmd/headmast/app/options"
+	"github.com/cloustone/pandas/headmast"
 	"github.com/gogo/protobuf/version"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -24,15 +21,11 @@ import (
 )
 
 type ManagementServer struct {
-	mixer.MixerService
-	server.GenericGrpcServer
+	headmast.HeadmastService
 }
 
 func NewManagementServer(runOptions *options.ServerRunOptions) *ManagementServer {
 	s := &ManagementServer{}
-	s.RegisterService = func() {
-		grpc_mixer_v1.RegisterMixerServer(s.Server, s)
-	}
 	return s
 
 }
@@ -55,10 +48,7 @@ func Run(runOptions *options.ServerRunOptions, stopCh <-chan struct{}) error {
 	// To help debugging, immediately log version
 	logrus.Infof("Version: %+v", version.Get())
 
-	// Initialize object factory
-	factory.Initialize(runOptions.ModelServing)
-
-	NewManagementServer(runOptions).Run(runOptions.SecureServing)
+	NewManagementServer(runOptions).Run()
 	<-stopCh
 	return nil
 }

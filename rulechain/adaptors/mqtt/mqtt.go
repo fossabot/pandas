@@ -15,7 +15,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cloustone/pandas/mixer/adaptors"
+	"github.com/cloustone/pandas/rulechain/adaptors"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"

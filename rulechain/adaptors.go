@@ -9,14 +9,14 @@
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 //  License for the specific language governing permissions and limitations
 //  under the License.
-package mixer
+package rulechain
 
 import (
 	"fmt"
 
-	"github.com/cloustone/pandas/mixer/adaptors"
-	"github.com/cloustone/pandas/mixer/adaptors/grpc"
-	"github.com/cloustone/pandas/mixer/adaptors/mqtt"
+	"github.com/cloustone/pandas/rulechain/adaptors"
+	"github.com/cloustone/pandas/rulechain/adaptors/grpc"
+	"github.com/cloustone/pandas/rulechain/adaptors/mqtt"
 	"github.com/sirupsen/logrus"
 )
 

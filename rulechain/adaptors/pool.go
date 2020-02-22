@@ -9,32 +9,30 @@
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 //  License for the specific language governing permissions and limitations
 //  under the License.
-package mixer
+package adaptors
 
 import (
 	"sync"
-
-	"github.com/cloustone/pandas/mixer/adaptors"
 )
 
 // adaptorPool manage all adaptors created by client's request
 type adaptorPool struct {
-	mutex    sync.RWMutex                // mutex lock
-	adaptors map[string]adaptors.Adaptor // all adaptors
-	refs     map[string]int              // each adaptor's reference count
+	mutex    sync.RWMutex       // mutex lock
+	adaptors map[string]Adaptor // all adaptors
+	refs     map[string]int     // each adaptor's reference count
 }
 
 // newAdaptorPool return a adaptor pool
 func newAdaptorPool() *adaptorPool {
 	return &adaptorPool{
 		mutex:    sync.RWMutex{},
-		adaptors: make(map[string]adaptors.Adaptor),
+		adaptors: make(map[string]Adaptor),
 		refs:     make(map[string]int),
 	}
 }
 
 // addAdaptor add a newly created adaptor into pool
-func (p *adaptorPool) addAdaptor(adaptor adaptors.Adaptor) {
+func (p *adaptorPool) addAdaptor(adaptor Adaptor) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
@@ -43,7 +41,7 @@ func (p *adaptorPool) addAdaptor(adaptor adaptors.Adaptor) {
 }
 
 // isAdaptorExist return wether a adaptors already exist
-func (p *adaptorPool) getAdaptorWithOptions(adaptorOptions *adaptors.AdaptorOptions) adaptors.Adaptor {
+func (p *adaptorPool) getAdaptorWithOptions(adaptorOptions *AdaptorOptions) Adaptor {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
@@ -61,7 +59,7 @@ func (p *adaptorPool) getAdaptorWithOptions(adaptorOptions *adaptors.AdaptorOpti
 }
 
 // getAdaptor return specified adaptor
-func (p *adaptorPool) getAdaptor(adaptorID string) adaptors.Adaptor {
+func (p *adaptorPool) getAdaptor(adaptorID string) Adaptor {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
@@ -72,8 +70,8 @@ func (p *adaptorPool) getAdaptor(adaptorID string) adaptors.Adaptor {
 }
 
 // getAdaptors return domains's all adaptors
-func (p *adaptorPool) getAdaptors(domain string) []adaptors.Adaptor {
-	adaptors := []adaptors.Adaptor{}
+func (p *adaptorPool) getAdaptors(domain string) []Adaptor {
+	adaptors := []Adaptor{}
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
@@ -86,7 +84,7 @@ func (p *adaptorPool) getAdaptors(domain string) []adaptors.Adaptor {
 }
 
 // removeAdaptor remove a adaptor from pool
-func (p *adaptorPool) removeAdaptor(adaptor adaptors.Adaptor) {
+func (p *adaptorPool) removeAdaptor(adaptor Adaptor) {
 	adaptorID := adaptor.Options().Name
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
@@ -97,14 +95,14 @@ func (p *adaptorPool) removeAdaptor(adaptor adaptors.Adaptor) {
 }
 
 // incAdaptorRef increase ref count for specifed adaptor
-func (p *adaptorPool) incAdaptorRef(adaptor adaptors.Adaptor) {
+func (p *adaptorPool) incAdaptorRef(adaptor Adaptor) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 	p.refs[adaptor.Options().Name]++
 }
 
 // decAdaptorRef decrease ref count for specifed adaptor
-func (p *adaptorPool) decAdaptorRef(adaptor adaptors.Adaptor) int {
+func (p *adaptorPool) decAdaptorRef(adaptor Adaptor) int {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 

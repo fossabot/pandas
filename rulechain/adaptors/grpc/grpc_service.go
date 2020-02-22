@@ -15,7 +15,7 @@ import (
 	"context"
 	"net"
 
-	"github.com/cloustone/pandas/mixer/adaptors"
+	"github.com/cloustone/pandas/rulechain/adaptors"
 	logr "github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"

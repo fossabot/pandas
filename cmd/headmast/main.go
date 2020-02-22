@@ -17,8 +17,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/cloustone/pandas/cmd/mixer/app"
-	"github.com/cloustone/pandas/cmd/mixer/app/options"
+	"github.com/cloustone/pandas/cmd/headmast/app"
+	"github.com/cloustone/pandas/cmd/headmast/app/options"
 	"github.com/cloustone/pandas/pkg/util/flag"
 	"github.com/cloustone/pandas/pkg/util/logs"
 	"github.com/cloustone/pandas/pkg/util/wait"

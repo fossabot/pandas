@@ -20,12 +20,15 @@ import (
 type ServingOptions struct {
 	SecureServing    *genericoptions.SecureServingOptions
 	BroadcastServing *broadcast_options.ServingOptions
+	DeployMode       string
+	EtcdConnectURL   string
 }
 
 func NewServingOptions() *ServingOptions {
 	s := ServingOptions{
 		SecureServing:    genericoptions.NewSecureServingOptions("dmms"),
 		BroadcastServing: broadcast_options.NewServingOptions(),
+		DeployMode:       "local",
 	}
 	return &s
 }
@@ -33,4 +36,10 @@ func NewServingOptions() *ServingOptions {
 func (s *ServingOptions) AddFlags(fs *pflag.FlagSet) {
 	s.SecureServing.AddFlags(fs)
 	s.BroadcastServing.AddFlags(fs)
+	fs.StringVar(&s.DeployMode, "deploy-mode", s.DeployMode, "If empty, use local deploy mode")
+	fs.StringVar(&s.EtcdConnectURL, "etcd-connect-url", s.EtcdConnectURL, "If non empty, deployed as rulechain cluster")
+}
+
+func (s *ServingOptions) IsNoneLocalMode() bool {
+	return s.DeployMode == "etcd" && s.EtcdConnectURL != ""
 }
