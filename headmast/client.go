@@ -30,7 +30,12 @@ type ClientOptions struct {
 
 // Client is endpoint for headmast
 type Client struct {
-	options ClientOptions
+	options *ClientOptions
+}
+
+// NewClient create a client endpoint
+func NewClient(opts *ClientOptions) *Client {
+	return &Client{options: opts}
 }
 
 // CreateNewJob create a new job in headmast

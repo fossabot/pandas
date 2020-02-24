@@ -9,24 +9,26 @@
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 //  License for the specific language governing permissions and limitations
 //  under the License.
-package options
+package headmast
 
 import (
-	"github.com/cloustone/pandas/headmast"
+	genericoptions "github.com/cloustone/pandas/pkg/server/options"
 	"github.com/spf13/pflag"
 )
 
-type ServerRunOptions struct {
-	HeadmastServingOptions *headmast.ServingOptions
+type ServingOptions struct {
+	SecureServing *genericoptions.SecureServingOptions
+	EtcdEndpoints string
 }
 
-func NewServerRunOptions() *ServerRunOptions {
-	s := ServerRunOptions{
-		HeadmastServingOptions: headmast.NewServingOptions(),
+func NewServingOptions() *ServingOptions {
+	s := ServingOptions{
+		SecureServing: genericoptions.NewSecureServingOptions("headmast"),
 	}
 	return &s
 }
 
-func (s *ServerRunOptions) AddFlags(fs *pflag.FlagSet) {
-	s.HeadmastServingOptions.AddFlags(fs)
+func (s *ServingOptions) AddFlags(fs *pflag.FlagSet) {
+	s.SecureServing.AddFlags(fs)
+	fs.StringVar(&s.EtcdEndpoints, "etcd-endpoints", "", "etcd endpoints")
 }

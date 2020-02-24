@@ -12,21 +12,28 @@
 
 package headmast
 
+import "encoding/json"
+
 const (
 	JOB_STATUS_CREATED = "created"
 	JOB_STATUS_KILLED  = "killed"
 )
 
 type Job struct {
+	ID      string `json:"id"`
 	Domain  string `json:"domain"`  // job's domain
 	Payload []byte `json:"payload"` // job's payload
 	Status  string `json:"status"`  // job's  status
 }
 
-func NewJob(domain string, payload []byte) *Job {
-	return &Job{
-		Domain:  domain,
-		Payload: payload,
-		Status:  JOB_STATUS_CREATED,
-	}
+func NewJob() *Job {
+	return &Job{Payload: []byte{}}
+}
+
+func (job *Job) MarshalBinary() ([]byte, error) {
+	return json.Marshal(job)
+}
+
+func (job *Job) UnmarshalBinary(buf []byte) error {
+	return json.Unmarshal(buf, job)
 }

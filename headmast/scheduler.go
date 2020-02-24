@@ -9,24 +9,11 @@
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 //  License for the specific language governing permissions and limitations
 //  under the License.
-package options
 
-import (
-	"github.com/cloustone/pandas/headmast"
-	"github.com/spf13/pflag"
-)
+package headmast
 
-type ServerRunOptions struct {
-	HeadmastServingOptions *headmast.ServingOptions
-}
-
-func NewServerRunOptions() *ServerRunOptions {
-	s := ServerRunOptions{
-		HeadmastServingOptions: headmast.NewServingOptions(),
-	}
-	return &s
-}
-
-func (s *ServerRunOptions) AddFlags(fs *pflag.FlagSet) {
-	s.HeadmastServingOptions.AddFlags(fs)
+// Scheduler monitors jobs path on etcd and jobs to workers
+// Scheduler also manager all nodes info, if none node exist, the worker's job
+// will be assign to other works
+type Scheduler interface {
 }

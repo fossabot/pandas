@@ -25,7 +25,9 @@ type ManagementServer struct {
 }
 
 func NewManagementServer(runOptions *options.ServerRunOptions) *ManagementServer {
-	s := &ManagementServer{}
+	s := &ManagementServer{
+		HeadmastService: *headmast.NewHeadmastService(runOptions.HeadmastServingOptions),
+	}
 	return s
 
 }

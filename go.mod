@@ -8,6 +8,7 @@ require (
 	github.com/carbocation/handlers v0.0.0-20140528190747-c939c6d9ef31 // indirect
 	github.com/carbocation/interpose v0.0.0-20161206215253-723534742ba3
 	github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 // indirect
+	github.com/coreos/etcd v3.3.10+incompatible
 	github.com/didip/tollbooth v4.0.2+incompatible
 	github.com/dre1080/recover v0.0.0-20150930082637-1c296bbb3227
 	github.com/eclipse/paho.mqtt.golang v1.2.0

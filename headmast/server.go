@@ -14,11 +14,18 @@ package headmast
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/go-macaron/binding"
 	"golang.org/x/sync/errgroup"
 	macaron "gopkg.in/macaron.v1"
+)
+
+const (
+	dialTimeout    = 5 * time.Second
+	requestTimeout = 10 * time.Second
 )
 
 type HeadmastService struct {
@@ -27,32 +34,33 @@ type HeadmastService struct {
 	childRoutines *errgroup.Group
 	macaron       *macaron.Macaron
 	httpsrv       *http.Server
+	jobManager    JobManager
 }
 
-func NewHeadmastService() *HeadmastService {
+func NewHeadmastService(servingOptions *ServingOptions) *HeadmastService {
 	rootCtx, shutdownFn := context.WithCancel(context.Background())
 	childRoutines, childCtx := errgroup.WithContext(rootCtx)
+	s := &HeadmastService{
+		context:       childCtx,
+		shutdownFn:    shutdownFn,
+		childRoutines: childRoutines,
+		jobManager:    NewJobManager(servingOptions),
+	}
 
 	r := macaron.New()
 	r.SetAutoHead(true)
 	r.Use(macaron.Renderer())
+	r.Post("/api/v1/jobs/", binding.Bind(Job{}), s.createJob)
+	r.Delete("/api/v1/jobs/:jobid", s.deleteJob)
+	r.Get("/api/v1/jobs/:jobid", s.getJob)
+	r.Get("/api/v1/jobs?domain=:domain", s.getJobs)
+	r.Get("/api/v1/watch?path=:path", s.watchJobPath)
+	r.Post("/api/v1/jobs/:jobid/:action", s.controlJob)
 
-	r.Post("/api/v1/jobs/", binding.Bind(Job{}), addNewJob)
-	r.Delete("/api/v1/jobs/:jobid", removeJob)
-	r.Get("/api/v1/jobs/:jobid", getJob)
-	r.Get("/api/v1/jobs?domain=:domain", getJobs)
-	r.Get("/api/v1/watch?path=:path", watchJobPath)
-	r.Post("/api/v1/jobs/:jobid/:action", controlJob)
-
-	addr := "localhost:80"
-	httpsrv := &http.Server{Addr: addr, Handler: r}
-	return &HeadmastService{
-		context:       childCtx,
-		shutdownFn:    shutdownFn,
-		childRoutines: childRoutines,
-		macaron:       r,
-		httpsrv:       httpsrv,
-	}
+	addr := fmt.Sprintf(":%s", servingOptions.SecureServing.BindPort)
+	s.httpsrv = &http.Server{Addr: addr, Handler: r}
+	s.macaron = r
+	return s
 }
 
 func (s *HeadmastService) Run() error {
@@ -62,9 +70,15 @@ func (s *HeadmastService) Run() error {
 	return nil
 }
 
-func addNewJob(ctx *macaron.Context, job Job) { ctx.JSON(200, nil) }
-func removeJob(ctx *macaron.Context)          {}
-func getJob(ctx *macaron.Context)             {}
-func getJobs(ctx *macaron.Context)            {}
-func watchJobPath(ctx *macaron.Context)       {}
-func controlJob(ctx *macaron.Context)         {}
+// createJob add a new job to etcd
+// The new job will be uploaded to /jobs/
+func (s *HeadmastService) createJob(ctx *macaron.Context, job Job) {
+	s.jobManager.AddJob(&job)
+	ctx.JSON(200, nil)
+}
+
+func (s *HeadmastService) deleteJob(ctx *macaron.Context)    {}
+func (s *HeadmastService) getJob(ctx *macaron.Context)       {}
+func (s *HeadmastService) getJobs(ctx *macaron.Context)      {}
+func (s *HeadmastService) watchJobPath(ctx *macaron.Context) {}
+func (s *HeadmastService) controlJob(ctx *macaron.Context)   {}
