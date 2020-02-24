@@ -35,16 +35,26 @@ type HeadmastService struct {
 	macaron       *macaron.Macaron
 	httpsrv       *http.Server
 	jobManager    JobManager
+	workerManager WorkerManager
+	jobScheduler  JobScheduler
 }
 
+// NewHeadmastService manage http rest api server to handle client's request
+// JobManager and JobScheduler is backend for job's control
 func NewHeadmastService(servingOptions *ServingOptions) *HeadmastService {
+	jobManager := NewJobManager(servingOptions)
+	workerManager := NewWorkerManager(servingOptions)
+	jobScheduler := NewJobScheduler(servingOptions, jobManager, workerManager)
+
 	rootCtx, shutdownFn := context.WithCancel(context.Background())
 	childRoutines, childCtx := errgroup.WithContext(rootCtx)
 	s := &HeadmastService{
 		context:       childCtx,
 		shutdownFn:    shutdownFn,
 		childRoutines: childRoutines,
-		jobManager:    NewJobManager(servingOptions),
+		jobManager:    jobManager,
+		workerManager: workerManager,
+		jobScheduler:  jobScheduler,
 	}
 
 	r := macaron.New()

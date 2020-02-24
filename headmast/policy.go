@@ -9,12 +9,8 @@
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 //  License for the specific language governing permissions and limitations
 //  under the License.
-
 package headmast
 
-type JobScheduler interface {
-}
-
-func NewJobScheduler(servingOptions *ServingOptions, jobManager JobManager, workerManager WorkerManager) JobScheduler {
-	return nil
+type SchedulePolicy interface {
+	Schedule(jobs []*Job, workers []*Worker)
 }
