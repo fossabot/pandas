@@ -12,9 +12,87 @@
 
 package headmast
 
+// ScheduleContext encapsulate informations for job sechduling
+type ScheduleContext struct {
+	LastScheduledWorkerIndex int
+}
+
+// NewScheduleContex create default schedule context
+func NewScheduleContext() *ScheduleContext {
+	return &ScheduleContext{
+		LastScheduledWorkerIndex: 0,
+	}
+}
+
+// JobScheduler schedule job based on available workers
 type JobScheduler interface {
 }
 
+// NewJobSchduler return instance of job scheduler that based on schedule
+// policy created from serving options
 func NewJobScheduler(servingOptions *ServingOptions, jobManager JobManager, workerManager WorkerManager) JobScheduler {
-	return nil
+	return newJobScheduler(servingOptions, jobManager, workerManager)
+}
+
+// jobScheduler is default implementations of job scheduler
+type jobScheduler struct {
+	servingOptions *ServingOptions
+	context        *ScheduleContext
+	jobManager     JobManager
+	workerManager  WorkerManager
+	schedulePolicy SchedulePolicy
+}
+
+// newJobScheduler return default job scheduler instance
+func newJobScheduler(servingOptions *ServingOptions, jobManager JobManager, workerManager WorkerManager) JobScheduler {
+	s := &jobScheduler{
+		servingOptions: servingOptions,
+		context:        NewScheduleContext(),
+		jobManager:     jobManager,
+		workerManager:  workerManager,
+		schedulePolicy: NewSchedulePolicy(servingOptions),
+	}
+	workerManager.RegisterObserver(s.onWorkerChanges)
+	jobManager.RegisterObserver(s.onJobChanges)
+	return s
+}
+
+// onWorkerChanges is called when worker nodes are added or removed
+func (s *jobScheduler) onWorkerChanges(w *Worker, reason string) {
+	switch reason {
+	case HEADMAST_CHANGES_ADDED:
+		// when worker is added, we should reblance all jobs based on all
+		// workers and scheduler policy
+		workers := s.workerManager.GetWorkers()
+		affectedWorkers := s.schedulePolicy.DetermainWithWorkerChanged(s.context, w, workers, true)
+		s.workerManager.UpdateWorkers(affectedWorkers)
+
+	case HEADMAST_CHANGES_DELETED:
+		// when worker is deleted, get jobs of the deleted workers and reassign
+		// them to other workers
+		workers := s.workerManager.GetWorkers()
+		affectedWorkers := s.schedulePolicy.DetermainWithWorkerChanged(s.context, w, workers, false)
+		s.workerManager.UpdateWorkers(affectedWorkers)
+	default:
+	}
+}
+
+// onJobChanges is called when job is added or removed
+func (s *jobScheduler) onJobChanges(job *Job, reason string) {
+	switch reason {
+	case HEADMAST_CHANGES_ADDED:
+		// The job is already placed on '/headmast/jobs' by client request,
+		// the scheduler should place the job on specific worker path based on
+		// schedule policy
+		workers := s.workerManager.GetWorkers()
+		affectedWorkers := s.schedulePolicy.DetermainWithJobChanged(s.context, job, workers, true)
+		s.workerManager.UpdateWorkers(affectedWorkers)
+
+	case HEADMAST_CHANGES_DELETED:
+		workers := s.workerManager.GetWorkers()
+		affectedWorkers := s.schedulePolicy.DetermainWithJobChanged(s.context, job, workers, false)
+		s.workerManager.UpdateWorkers(affectedWorkers)
+	default:
+	}
+
 }

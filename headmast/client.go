@@ -72,6 +72,11 @@ func (c *Client) DeleteJob(jobID string) error {
 	}
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
+	if err != nil {
+		logrus.WithError(err)
+		return err
+	}
+
 	defer resp.Body.Close()
 
 	_, err = ioutil.ReadAll(resp.Body)
@@ -92,6 +97,10 @@ func (c *Client) GetJob(jobID string) (*Job, error) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
+	if err != nil {
+		logrus.WithError(err)
+		return nil, err
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -118,6 +127,9 @@ func (c *Client) GetJobsWithDomain(domain string) ([]*Job, error) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -144,6 +156,9 @@ func (c *Client) GetJobs() ([]*Job, error) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -172,6 +187,10 @@ func (c *Client) WatchJobPath(jobPath string, handler WatchPathHandler) error {
 	}
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
+	if err != nil {
+		logrus.WithError(err)
+		return err
+	}
 	defer resp.Body.Close()
 
 	errCh := make(chan error)

@@ -25,13 +25,17 @@ const (
 	HEADMAST_KILLER_PATH  = "/headmast/killers"
 )
 
+type JobObserver func(job *Job, reason string)
+
 // JobManager is light weight scheduler  service based on  etcd backend
 type JobManager interface {
 	AddJob(job *Job) error
 	RemoveJob(jobID string) error
 	KillJob(jobID string) error
 	GetJob(jobID string) (*Job, error)
+	GetJobs() []*Job
 	UpdateJob(job *Job) error
+	RegisterObserver(JobObserver)
 }
 
 // NewJobManager return manager instance
@@ -42,6 +46,7 @@ func NewJobManager(servingOptions *ServingOptions) JobManager {
 // jobManager is default manager implementation
 type jobManager struct {
 	servingOptions *ServingOptions
+	observer       JobObserver
 }
 
 func newJobManager(servingOptions *ServingOptions) JobManager {
@@ -62,6 +67,11 @@ func (manager *jobManager) newEtcdClient() *clientv3.Client {
 		logrus.Fatalf(err.Error())
 	}
 	return client
+}
+
+// RegisterObserver register a observer for jobs changes
+func (manager *jobManager) RegisterObserver(s JobObserver) {
+	manager.observer = s
 }
 
 // AddJob post a new job on etcd
@@ -138,5 +148,10 @@ func (manager *jobManager) UpdateJob(job *Job) error {
 		return err
 	}
 	cancel()
+	return nil
+}
+
+// GetJobs return all jobs on etcd's /headmast/jobs
+func (manager *jobManager) GetJobs() []*Job {
 	return nil
 }

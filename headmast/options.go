@@ -17,15 +17,15 @@ import (
 )
 
 type ServingOptions struct {
-	SecureServing   *genericoptions.SecureServingOptions
-	EtcdEndpoints   string
-	SchedulerPolicy string
+	SecureServing  *genericoptions.SecureServingOptions
+	EtcdEndpoints  string
+	SchedulePolicy string
 }
 
 func NewServingOptions() *ServingOptions {
 	s := ServingOptions{
-		SecureServing:   genericoptions.NewSecureServingOptions("headmast"),
-		SchedulerPolicy: "roundbin",
+		SecureServing:  genericoptions.NewSecureServingOptions("headmast"),
+		SchedulePolicy: "roundbin",
 	}
 	return &s
 }
@@ -33,5 +33,5 @@ func NewServingOptions() *ServingOptions {
 func (s *ServingOptions) AddFlags(fs *pflag.FlagSet) {
 	s.SecureServing.AddFlags(fs)
 	fs.StringVar(&s.EtcdEndpoints, "etcd-endpoints", "", "etcd endpoints")
-	fs.StringVar(&s.SchedulerPolicy, "sechduler-policy", s.SchedulerPolicy, "scheduler policy")
+	fs.StringVar(&s.SchedulePolicy, "sechduler-policy", s.SchedulePolicy, "schedule policy")
 }

@@ -31,14 +31,19 @@ type Worker struct {
 func (w Worker) WorkingPath() string { return fmt.Sprintf("/headmast/workers/%s", w.ID) }
 func (w Worker) KillerPath() string  { return fmt.Sprintf("/headmast/workers/%s/killers", w.ID) }
 
-type WorkersObserver func(*Worker)
+const (
+	HEADMAST_CHANGES_ADDED   = "added"
+	HEADMAST_CHANGES_DELETED = "deleted"
+)
+
+type WorkersObserver func(worker *Worker, reason string)
 
 // WorkerManager monitors worker path on etcd and jobs to workers
 // WorkerManager also manager all nodes info, if none node exist, the worker's job
 // will be assign to other works
 type WorkerManager interface {
 	GetWorker(wid string) *Worker
-	UpdateWorker(*Worker)
+	UpdateWorkers([]*Worker)
 	GetWorkers() []*Worker
 	RemoveWorker(wid string)
 	RegisterObserver(WorkersObserver)
@@ -64,7 +69,7 @@ func newWorkerManager(servingOptions *ServingOptions) WorkerManager {
 }
 
 // UpdateWorker update worker with specific jobs
-func (manager *workerManager) UpdateWorker(w *Worker) {
+func (manager *workerManager) UpdateWorkers(workers []*Worker) {
 }
 
 // GetWorker return specific worker node on etcd path '/headmast/workers/%s`
