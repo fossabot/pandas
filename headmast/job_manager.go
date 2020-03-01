@@ -124,6 +124,15 @@ func (manager *jobManager) AddJob(job *Job) error {
 
 // RemoveJob remove specific job from job manager
 func (manager *jobManager) RemoveJob(jobID string) error {
+	client := manager.newEtcdClient()
+	defer client.Close()
+	ctx, cancel := context.WithTimeout(context.Background(), requestTimeout)
+	_, err := client.Delete(ctx, HEADMAST_JOBS_PATH+"/"+jobID)
+	if err != nil {
+		logrus.WithError(err).Errorf("getting workers from manager failed")
+		return err
+	}
+	cancel()
 	return nil
 }
 

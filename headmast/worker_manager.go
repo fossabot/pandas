@@ -15,7 +15,6 @@ package headmast
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"time"
 
 	"github.com/coreos/etcd/clientv3"
@@ -30,20 +29,6 @@ const (
 	HEADMAST_CHANGES_ADDED   = "added"
 	HEADMAST_CHANGES_DELETED = "deleted"
 )
-
-// Worker represent worker node on which the job is run, worker monitor its
-// working path and recive job that assigned to it. the worker ID is a UUID
-// that created by worker, when worker watch it working path, it will post the
-// worker ID to server.
-type Worker struct {
-	ID          string   `json:"id"`
-	WorkingJobs []string `json:"workingJobs"`
-	KillingJobs []string `json:"killingJobs"`
-}
-
-func (w Worker) WorkingPath() string                             { return fmt.Sprintf("/headmast/workers/%s/jobs", w.ID) }
-func (w Worker) KillerPath() string                              { return fmt.Sprintf("/headmast/workers/%s/killers", w.ID) }
-func (w *Worker) RetrieveJobs(jobCh chan *Job, errCh chan error) {}
 
 type WorkersObserver func(worker *Worker, reason string)
 
@@ -93,12 +78,14 @@ func (manager *workerManager) watchWorkerChanged() {
 	logrus.Println("worker manage connect with etcd '/headdmast/workers' successfully")
 	defer cli.Close()
 
-	for true {
+	for {
 		rch := cli.Watch(context.Background(), HEADMAST_WORKER_PATH)
 		for resp := range rch {
 			for _, ev := range resp.Events {
 				logrus.Printf("%s %q:%q\n", ev.Type, ev.Kv.Key, ev.Kv.Value)
-				worker := Worker{}
+				worker := &Worker{
+					context: WorkerContext{EtcdEndpoints: []string{manager.servingOptions.EtcdEndpoints}},
+				}
 				if err := json.Unmarshal(ev.Kv.Value, &worker); err != nil {
 					logrus.WithError(err)
 					break
@@ -107,27 +94,99 @@ func (manager *workerManager) watchWorkerChanged() {
 				if ev.Type == clientv3.EventTypeDelete {
 					reason = HEADMAST_CHANGES_DELETED
 				}
-				manager.workersObserver(&worker, reason)
+				manager.workersObserver(worker, reason)
 			}
 		}
 	}
 }
 
+// newEtcdClient return client endpoint of etcd
+func (manager *workerManager) newEtcdClient() *clientv3.Client {
+	client, err := clientv3.New(clientv3.Config{
+		Endpoints:   []string{manager.servingOptions.EtcdEndpoints},
+		DialTimeout: dialTimeout,
+	})
+	if err != nil {
+		logrus.Fatalf(err.Error())
+	}
+	return client
+}
+
 // UpdateWorker update worker with specific jobs
 func (manager *workerManager) UpdateWorkers(workers []*Worker) {
+	client := manager.newEtcdClient()
+	defer client.Close()
+	ctx, cancel := context.WithTimeout(context.Background(), requestTimeout)
+	for _, worker := range workers {
+		buf, _ := worker.MarshalBinary()
+		if _, err := client.Put(ctx, HEADMAST_WORKER_PATH+worker.ID, string(buf)); err != nil {
+			logrus.WithError(err)
+		}
+	}
+	cancel()
 }
 
 // GetWorker return specific worker node on etcd path '/headmast/workers/%s`
 func (manager *workerManager) GetWorker(wid string) (*Worker, error) {
-	return nil, nil
+	client := manager.newEtcdClient()
+	defer client.Close()
+	ctx, cancel := context.WithTimeout(context.Background(), requestTimeout)
+	resp, err := client.Get(ctx, HEADMAST_WORKER_PATH+"/"+wid)
+	if err != nil {
+		logrus.WithError(err).Errorf("getting worker from manager failed")
+		return nil, err
+	}
+	defer cancel()
+	worker := NewWorker(
+		WorkerContext{EtcdEndpoints: []string{manager.servingOptions.EtcdEndpoints}})
+	for _, ev := range resp.Kvs {
+		if err := worker.UnmarshalBinary([]byte(ev.Value)); err != nil {
+			logrus.WithError(err).Errorf("can not unmarshal worker object")
+			return nil, err
+		}
+		break
+	}
+
+	return worker, nil
 }
 
 // GetWorker return all availables worker nodes in etcd path
 // '/headmast/workers/`
 func (manager *workerManager) GetWorkers() []*Worker {
-	return nil
+	workers := []*Worker{}
+
+	client := manager.newEtcdClient()
+	defer client.Close()
+	ctx, cancel := context.WithTimeout(context.Background(), requestTimeout)
+	resp, err := client.Get(ctx, HEADMAST_WORKER_PATH+"/")
+	if err != nil {
+		logrus.WithError(err).Errorf("getting workers from manager failed")
+		return workers
+	}
+	defer cancel()
+	for _, ev := range resp.Kvs {
+		worker := NewWorker(
+			WorkerContext{EtcdEndpoints: []string{manager.servingOptions.EtcdEndpoints}})
+		if err := worker.UnmarshalBinary([]byte(ev.Value)); err != nil {
+			logrus.WithError(err).Errorf("can not unmarshal worker object")
+			continue
+		}
+		workers = append(workers, worker)
+	}
+
+	return workers
+
 }
 func (manager *workerManager) RemoveWorker(wid string) {
+	client := manager.newEtcdClient()
+	defer client.Close()
+	ctx, cancel := context.WithTimeout(context.Background(), requestTimeout)
+	_, err := client.Delete(ctx, HEADMAST_WORKER_PATH+"/"+wid)
+	if err != nil {
+		logrus.WithError(err).Errorf("getting workers from manager failed")
+		return
+	}
+	cancel()
 }
 
 func (manager *workerManager) RegisterObserver(observer WorkersObserver) {
