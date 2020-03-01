@@ -1,6 +1,6 @@
 FROM alpine 
 
-LABEL vendor=cloudstone
+LABEL vendor=cloustone
 LABEL product=pandas
 
 ADD certs/* /etc/ssl/pandas

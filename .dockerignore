@@ -1,0 +1,13 @@
+.GOPATH
+.vscode
+dashboard
+docs
+edge
+examples
+pkg
+postman
+scripts
+security
+templates
+tools
+vendor

@@ -14,7 +14,7 @@ package proxy
 import "github.com/cloustone/pandas/pkg/message"
 
 const (
-	AlarmMessageTopic = "iotx-foundry-alarm"
+	AlarmMessageTopic = "pandas-alarm"
 )
 
 type AlarmTopic struct {

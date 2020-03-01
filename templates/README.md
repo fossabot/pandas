@@ -1,0 +1,1 @@
+All kuberntes deploy templates
