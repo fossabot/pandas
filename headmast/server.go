@@ -19,6 +19,7 @@ import (
 	"time"
 
 	"github.com/go-macaron/binding"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 	macaron "gopkg.in/macaron.v1"
 )
@@ -29,14 +30,15 @@ const (
 )
 
 type HeadmastService struct {
-	context       context.Context
-	shutdownFn    context.CancelFunc
-	childRoutines *errgroup.Group
-	macaron       *macaron.Macaron
-	httpsrv       *http.Server
-	jobManager    JobManager
-	workerManager WorkerManager
-	jobScheduler  JobScheduler
+	servingOptions *ServingOptions
+	context        context.Context
+	shutdownFn     context.CancelFunc
+	childRoutines  *errgroup.Group
+	macaron        *macaron.Macaron
+	httpsrv        *http.Server
+	jobManager     JobManager
+	workerManager  WorkerManager
+	jobScheduler   JobScheduler
 }
 
 // NewHeadmastService manage http rest api server to handle client's request
@@ -49,12 +51,13 @@ func NewHeadmastService(servingOptions *ServingOptions) *HeadmastService {
 	rootCtx, shutdownFn := context.WithCancel(context.Background())
 	childRoutines, childCtx := errgroup.WithContext(rootCtx)
 	s := &HeadmastService{
-		context:       childCtx,
-		shutdownFn:    shutdownFn,
-		childRoutines: childRoutines,
-		jobManager:    jobManager,
-		workerManager: workerManager,
-		jobScheduler:  jobScheduler,
+		servingOptions: servingOptions,
+		context:        childCtx,
+		shutdownFn:     shutdownFn,
+		childRoutines:  childRoutines,
+		jobManager:     jobManager,
+		workerManager:  workerManager,
+		jobScheduler:   jobScheduler,
 	}
 
 	r := macaron.New()
@@ -63,8 +66,8 @@ func NewHeadmastService(servingOptions *ServingOptions) *HeadmastService {
 	r.Post("/api/v1/jobs/", binding.Bind(Job{}), s.createJob)
 	r.Delete("/api/v1/jobs/:jobid", s.deleteJob)
 	r.Get("/api/v1/jobs/:jobid", s.getJob)
-	r.Get("/api/v1/jobs?domain=:domain", s.getJobs)
-	r.Get("/api/v1/watch?path=:path", s.watchJobPath)
+	r.Get("/api/v1/jobs", s.getJobs)
+	r.Get("/api/v1/watch/:jobid/", s.watchJobPath)
 	r.Post("/api/v1/jobs/:jobid/:action", s.controlJob)
 
 	addr := fmt.Sprintf(":%s", servingOptions.SecureServing.BindPort)
@@ -87,8 +90,60 @@ func (s *HeadmastService) createJob(ctx *macaron.Context, job Job) {
 	ctx.JSON(200, nil)
 }
 
-func (s *HeadmastService) deleteJob(ctx *macaron.Context)    {}
-func (s *HeadmastService) getJob(ctx *macaron.Context)       {}
-func (s *HeadmastService) getJobs(ctx *macaron.Context)      {}
-func (s *HeadmastService) watchJobPath(ctx *macaron.Context) {}
-func (s *HeadmastService) controlJob(ctx *macaron.Context)   {}
+// deleteJob delete specified job from headmast
+func (s *HeadmastService) deleteJob(ctx *macaron.Context) {
+	s.jobManager.RemoveJob(ctx.Query("jobid"))
+	ctx.JSON(200, nil)
+}
+
+// getJob return specific job detail
+func (s *HeadmastService) getJob(ctx *macaron.Context) {
+	jobID := ctx.Query("jobid")
+	job, err := s.jobManager.GetJob(jobID)
+	if err != nil {
+		logrus.WithError(err)
+		ctx.JSON(500, nil)
+		return
+	}
+	ctx.JSON(200, job)
+}
+
+// getJobs return all jobs in headamast
+func (s *HeadmastService) getJobs(ctx *macaron.Context) {
+	jobs := s.jobManager.GetJobs()
+	ctx.JSON(200, jobs)
+}
+
+// watchJob is used by headmast client to monitor client's job path
+func (s *HeadmastService) watchJobPath(ctx *macaron.Context) {
+	worker, err := s.workerManager.GetWorker(ctx.Query("workerid"))
+	if err != nil {
+		logrus.WithError(err)
+		ctx.JSON(500, err)
+		return
+	}
+	errCh := make(chan error, 1)
+	jobCh := make(chan *Job, 1)
+	defer close(errCh)
+	defer close(jobCh)
+
+	go worker.RetrieveJobs(jobCh, errCh)
+	/*
+		for {
+			switch {
+			case job := <-jobCh:
+				ctx.JSON(200, job)
+			case err := <-errCh:
+				ctx.JSON(504, err)
+				return
+			}
+		}
+	*/
+	ctx.JSON(200, nil)
+}
+
+// controlJob
+func (s *HeadmastService) controlJob(ctx *macaron.Context) {
+	ctx.Query("jobid")
+	ctx.Query("action")
+}

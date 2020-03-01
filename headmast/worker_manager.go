@@ -28,8 +28,9 @@ type Worker struct {
 	KillingJobs []string `json:"killingJobs"`
 }
 
-func (w Worker) WorkingPath() string { return fmt.Sprintf("/headmast/workers/%s", w.ID) }
-func (w Worker) KillerPath() string  { return fmt.Sprintf("/headmast/workers/%s/killers", w.ID) }
+func (w Worker) WorkingPath() string                             { return fmt.Sprintf("/headmast/workers/%s/jobs", w.ID) }
+func (w Worker) KillerPath() string                              { return fmt.Sprintf("/headmast/workers/%s/killers", w.ID) }
+func (w *Worker) RetrieveJobs(jobCh chan *Job, errCh chan error) {}
 
 const (
 	HEADMAST_CHANGES_ADDED   = "added"
@@ -42,7 +43,7 @@ type WorkersObserver func(worker *Worker, reason string)
 // WorkerManager also manager all nodes info, if none node exist, the worker's job
 // will be assign to other works
 type WorkerManager interface {
-	GetWorker(wid string) *Worker
+	GetWorker(wid string) (*Worker, error)
 	UpdateWorkers([]*Worker)
 	GetWorkers() []*Worker
 	RemoveWorker(wid string)
@@ -73,8 +74,8 @@ func (manager *workerManager) UpdateWorkers(workers []*Worker) {
 }
 
 // GetWorker return specific worker node on etcd path '/headmast/workers/%s`
-func (manager *workerManager) GetWorker(wid string) *Worker {
-	return nil
+func (manager *workerManager) GetWorker(wid string) (*Worker, error) {
+	return nil, nil
 }
 
 // GetWorker return all availables worker nodes in etcd path
