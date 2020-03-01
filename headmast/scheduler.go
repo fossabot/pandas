@@ -64,14 +64,14 @@ func (s *jobScheduler) onWorkerChanges(w *Worker, reason string) {
 		// when worker is added, we should reblance all jobs based on all
 		// workers and scheduler policy
 		workers := s.workerManager.GetWorkers()
-		affectedWorkers := s.schedulePolicy.DetermainWithWorkerChanged(s.context, w, workers, true)
+		affectedWorkers := s.schedulePolicy.DeterminWithWorkerChanged(s.context, w, workers, true)
 		s.workerManager.UpdateWorkers(affectedWorkers)
 
 	case HEADMAST_CHANGES_DELETED:
 		// when worker is deleted, get jobs of the deleted workers and reassign
 		// them to other workers
 		workers := s.workerManager.GetWorkers()
-		affectedWorkers := s.schedulePolicy.DetermainWithWorkerChanged(s.context, w, workers, false)
+		affectedWorkers := s.schedulePolicy.DeterminWithWorkerChanged(s.context, w, workers, false)
 		s.workerManager.UpdateWorkers(affectedWorkers)
 	default:
 	}
@@ -85,12 +85,12 @@ func (s *jobScheduler) onJobChanges(job *Job, reason string) {
 		// the scheduler should place the job on specific worker path based on
 		// schedule policy
 		workers := s.workerManager.GetWorkers()
-		affectedWorkers := s.schedulePolicy.DetermainWithJobChanged(s.context, job, workers, true)
+		affectedWorkers := s.schedulePolicy.DeterminWithJobChanged(s.context, job, workers, true)
 		s.workerManager.UpdateWorkers(affectedWorkers)
 
 	case HEADMAST_CHANGES_DELETED:
 		workers := s.workerManager.GetWorkers()
-		affectedWorkers := s.schedulePolicy.DetermainWithJobChanged(s.context, job, workers, false)
+		affectedWorkers := s.schedulePolicy.DeterminWithJobChanged(s.context, job, workers, false)
 		s.workerManager.UpdateWorkers(affectedWorkers)
 	default:
 	}

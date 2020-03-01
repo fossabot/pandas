@@ -14,8 +14,8 @@ package headmast
 import "github.com/sirupsen/logrus"
 
 const (
-	HEADMAST_SCHED_POLICY_ROUNDBIN = "roundbin"
-	HEADMAST_SCHED_POLICY_BLANCE   = "balance"
+	SCHEDULE_POLICY_ROUNDBIN = "roundbin"
+	SCHEDULE_POLICY_BLANCE   = "balance"
 )
 
 // SchedulePolicy determain scheduler policy that affect how the new job and
@@ -23,19 +23,20 @@ const (
 // SchedulePolicy doesn't update etcd directly, it just caculated the result
 type SchedulePolicy interface {
 
-	// DetermainWithJobChange caculate the last result for scheduler when jobs
+	// DeterminWithJobChange caculate the last result for scheduler when jobs
 	// is added or deleted
-	DetermainWithJobChanged(ctx *ScheduleContext, affectedJob *Job, allWorkers []*Worker, added bool) []*Worker
+	DeterminWithJobChanged(ctx *ScheduleContext, affectedJob *Job, allWorkers []*Worker, added bool) []*Worker
 
-	// DetermainWithWorkerChange caculate the last result for scheduler when
+	// DeterminWithWorkerChange caculate the last result for scheduler when
 	// worker is added or deleted
-	DetermainWithWorkerChanged(ctx *ScheduleContext, affectedWorker *Worker, allWorkers []*Worker, added bool) []*Worker
+	DeterminWithWorkerChanged(ctx *ScheduleContext, affectedWorker *Worker, allWorkers []*Worker, added bool) []*Worker
 }
 
 // NewSchedulePolicy return scheduler policy based on serving options's
 // schedule-policy
 func NewSchedulePolicy(servingOptions *ServingOptions) SchedulePolicy {
 	switch servingOptions.SchedulePolicy {
+	case SCHEDULE_POLICY_ROUNDBIN:
 	default:
 		return &roundbinPolicy{}
 	}
@@ -45,7 +46,7 @@ func NewSchedulePolicy(servingOptions *ServingOptions) SchedulePolicy {
 // roundbinPolicy is default scheduler policy
 type roundbinPolicy struct{}
 
-func (r *roundbinPolicy) DetermainWithWorkerChanged(ctx *ScheduleContext, affectedWorker *Worker, allWorkers []*Worker, added bool) []*Worker {
+func (r *roundbinPolicy) DeterminWithWorkerChanged(ctx *ScheduleContext, affectedWorker *Worker, allWorkers []*Worker, added bool) []*Worker {
 	workers := []*Worker{}
 
 	if added {
@@ -91,7 +92,7 @@ func (r *roundbinPolicy) DetermainWithWorkerChanged(ctx *ScheduleContext, affect
 	return workers
 }
 
-func (r *roundbinPolicy) DetermainWithJobChanged(ctx *ScheduleContext, affectedJob *Job, allWorkers []*Worker, added bool) []*Worker {
+func (r *roundbinPolicy) DeterminWithJobChanged(ctx *ScheduleContext, affectedJob *Job, allWorkers []*Worker, added bool) []*Worker {
 	workers := []*Worker{}
 
 	if added {

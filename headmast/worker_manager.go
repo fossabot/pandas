@@ -12,10 +12,23 @@
 
 package headmast
 
-import "fmt"
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"time"
+
+	"github.com/coreos/etcd/clientv3"
+	"github.com/sirupsen/logrus"
+)
 
 const (
-	HEADERMAST_WORKER_PATH = "/headmast/workers"
+	HEADMAST_WORKER_PATH = "/headmast/workers"
+)
+
+const (
+	HEADMAST_CHANGES_ADDED   = "added"
+	HEADMAST_CHANGES_DELETED = "deleted"
 )
 
 // Worker represent worker node on which the job is run, worker monitor its
@@ -31,11 +44,6 @@ type Worker struct {
 func (w Worker) WorkingPath() string                             { return fmt.Sprintf("/headmast/workers/%s/jobs", w.ID) }
 func (w Worker) KillerPath() string                              { return fmt.Sprintf("/headmast/workers/%s/killers", w.ID) }
 func (w *Worker) RetrieveJobs(jobCh chan *Job, errCh chan error) {}
-
-const (
-	HEADMAST_CHANGES_ADDED   = "added"
-	HEADMAST_CHANGES_DELETED = "deleted"
-)
 
 type WorkersObserver func(worker *Worker, reason string)
 
@@ -64,8 +72,44 @@ type workerManager struct {
 
 // newWorkerManager return default worker manager instance
 func newWorkerManager(servingOptions *ServingOptions) WorkerManager {
-	return &workerManager{
+	manager := &workerManager{
 		servingOptions: servingOptions,
+	}
+	go manager.watchWorkerChanged()
+	return manager
+}
+
+// watchWorkerChanged will monitor etcd '/headmast/workers' for worker's change
+func (manager *workerManager) watchWorkerChanged() {
+	cli, err := clientv3.New(clientv3.Config{
+		Endpoints:   []string{manager.servingOptions.EtcdEndpoints},
+		DialTimeout: 2 * time.Second,
+	})
+
+	if err != nil {
+		logrus.Fatalf("connect failed, err:", err)
+		return
+	}
+	logrus.Println("worker manage connect with etcd '/headdmast/workers' successfully")
+	defer cli.Close()
+
+	for true {
+		rch := cli.Watch(context.Background(), HEADMAST_WORKER_PATH)
+		for resp := range rch {
+			for _, ev := range resp.Events {
+				logrus.Printf("%s %q:%q\n", ev.Type, ev.Kv.Key, ev.Kv.Value)
+				worker := Worker{}
+				if err := json.Unmarshal(ev.Kv.Value, &worker); err != nil {
+					logrus.WithError(err)
+					break
+				}
+				reason := HEADMAST_CHANGES_ADDED
+				if ev.Type == clientv3.EventTypeDelete {
+					reason = HEADMAST_CHANGES_DELETED
+				}
+				manager.workersObserver(&worker, reason)
+			}
+		}
 	}
 }
 

@@ -46,15 +46,13 @@ func NewJobManager(servingOptions *ServingOptions) JobManager {
 // jobManager is default manager implementation
 type jobManager struct {
 	servingOptions *ServingOptions
-	observer       JobObserver
+	jobsObserver   JobObserver
 }
 
 func newJobManager(servingOptions *ServingOptions) JobManager {
-	// connection with etcd at first
-	s := &jobManager{servingOptions: servingOptions}
-	client := s.newEtcdClient()
-	defer client.Close()
-	return s
+	manager := &jobManager{servingOptions: servingOptions}
+	go manager.watchJobsChanged()
+	return manager
 }
 
 // newEtcdClient return client endpoint of etcd
@@ -71,7 +69,33 @@ func (manager *jobManager) newEtcdClient() *clientv3.Client {
 
 // RegisterObserver register a observer for jobs changes
 func (manager *jobManager) RegisterObserver(s JobObserver) {
-	manager.observer = s
+	manager.jobsObserver = s
+}
+
+// watchJobsChanged will monitor etcd '/headmast/jobs' for job's change
+func (manager *jobManager) watchJobsChanged() {
+	cli := manager.newEtcdClient()
+	logrus.Println("worker manage connect with etcd '/headdmast/jobs' successfully")
+	defer cli.Close()
+
+	for true {
+		rch := cli.Watch(context.Background(), HEADMAST_JOBS_PATH)
+		for resp := range rch {
+			for _, ev := range resp.Events {
+				logrus.Printf("%s %q:%q\n", ev.Type, ev.Kv.Key, ev.Kv.Value)
+				job := Job{}
+				if err := json.Unmarshal(ev.Kv.Value, &job); err != nil {
+					logrus.WithError(err)
+					break
+				}
+				reason := HEADMAST_CHANGES_ADDED
+				if ev.Type == clientv3.EventTypeDelete {
+					reason = HEADMAST_CHANGES_DELETED
+				}
+				manager.jobsObserver(&job, reason)
+			}
+		}
+	}
 }
 
 // AddJob post a new job on etcd
