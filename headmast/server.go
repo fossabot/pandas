@@ -128,17 +128,15 @@ func (s *HeadmastService) watchJobPath(ctx *macaron.Context) {
 	defer close(jobCh)
 
 	go worker.RetrieveJobs(jobCh, errCh)
-	/*
-		for {
-			switch {
-			case job := <-jobCh:
-				ctx.JSON(200, job)
-			case err := <-errCh:
-				ctx.JSON(504, err)
-				return
-			}
+	for {
+		select {
+		case job := <-jobCh:
+			ctx.JSON(200, job)
+		case err := <-errCh:
+			ctx.JSON(504, err)
+			return
 		}
-	*/
+	}
 	ctx.JSON(200, nil)
 }
 
