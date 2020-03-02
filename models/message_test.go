@@ -11,7 +11,12 @@
 //  under the License.
 package models
 
-import "github.com/sirupsen/logrus"
+import (
+	"encoding/json"
+
+	"github.com/go-openapi/strfmt"
+	"github.com/sirupsen/logrus"
+)
 
 type testingMessage struct {
 	id          string
@@ -40,6 +45,14 @@ func (t *testingMessage) SetType(messageType string)      { t.messageType = mess
 func (t *testingMessage) SetPayload(payload []byte)       { t.payload = payload }
 func (t *testingMessage) SetMetadata(metadata Metadata)   { t.metadata = metadata }
 func (t *testingMessage) SetOriginator(originator string) { t.originator = originator }
+
+func (t *testingMessage) Validate(formats strfmt.Registry) error { return nil }
+func (t *testingMessage) MarshalBinary() ([]byte, error) {
+	return json.Marshal(t)
+}
+func (t *testingMessage) UnmarshalBinary(b []byte) error {
+	return json.Unmarshal(b, t)
+}
 
 type testingMetadata struct {
 	values map[string]interface{}

@@ -25,19 +25,21 @@ func TestInitialize(t *testing.T) {
 	Convey("TestInitialize should return ok", t, func() {
 		servingOptions := modelsoptions.NewServingOptions()
 		factory.Initialize(servingOptions)
-		pm := NewProjectManagementService()
+		pm := NewProjectManagementService(servingOptions)
 		So(pm, ShouldNotBeNil)
 	})
 }
 
 func TestCreateProject(t *testing.T) {
 	Convey("TestCreateProject should return ok when project metainfo is nil", t, func() {
-		pm := NewProjectManagementService()
+		servingOptions := modelsoptions.NewServingOptions()
+		pm := NewProjectManagementService(servingOptions)
 		_, err := pm.CreateProject(context.TODO(), &pb.CreateProjectRequest{})
 		So(err, ShouldNotBeNil)
 	})
 	Convey("TestCreateProject should return ok when project not exist", t, func() {
-		pm := NewProjectManagementService()
+		servingOptions := modelsoptions.NewServingOptions()
+		pm := NewProjectManagementService(servingOptions)
 		id := "12345678"
 		req := pb.CreateProjectRequest{
 			UserID: "hello",
@@ -56,7 +58,8 @@ func TestCreateProject(t *testing.T) {
 	})
 
 	Convey("TestCreateProject should return error if project already exist", t, func() {
-		pm := NewProjectManagementService()
+		servingOptions := modelsoptions.NewServingOptions()
+		pm := NewProjectManagementService(servingOptions)
 		id := "12345678"
 		req := pb.CreateProjectRequest{
 			UserID: "hello",

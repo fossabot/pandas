@@ -72,7 +72,7 @@ func (manager *workerManager) watchWorkerChanged() {
 	})
 
 	if err != nil {
-		logrus.Fatalf("connect failed, err:", err)
+		logrus.WithError(err).Fatal("watch worker changed failed")
 		return
 	}
 	logrus.Println("worker manage connect with etcd '/headdmast/workers' successfully")

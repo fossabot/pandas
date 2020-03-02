@@ -3,6 +3,7 @@ module github.com/cloustone/pandas
 go 1.13
 
 require (
+	bou.ke/monkey v1.0.2
 	github.com/Shopify/sarama v1.24.1
 	github.com/bsm/sarama-cluster v2.1.15+incompatible
 	github.com/carbocation/handlers v0.0.0-20140528190747-c939c6d9ef31 // indirect

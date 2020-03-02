@@ -70,7 +70,7 @@ func NewHeadmastService(servingOptions *ServingOptions) *HeadmastService {
 	r.Get("/api/v1/watch/:jobid/", s.watchJobPath)
 	r.Post("/api/v1/jobs/:jobid/:action", s.controlJob)
 
-	addr := fmt.Sprintf(":%s", servingOptions.SecureServing.BindPort)
+	addr := fmt.Sprintf(":%d", servingOptions.SecureServing.BindPort)
 	s.httpsrv = &http.Server{Addr: addr, Handler: r}
 	s.macaron = r
 	return s

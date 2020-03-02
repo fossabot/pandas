@@ -27,7 +27,7 @@ func TestNodeChains(t *testing.T) {
 		manifest, err := manifest.New([]byte(manifestNormalSample))
 		So(err, ShouldBeNil)
 
-		_, errs := NewWithManifest(manifest)
+		_, errs := newInstanceWithManifest(manifest)
 		So(len(errs), ShouldEqual, 0)
 	})
 }
