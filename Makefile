@@ -13,7 +13,7 @@ DOCKER_NAMESPACE := cloustone
 all: build
 
 .PHONY: build
-build: apimachinery  dmms  pms rulechain lbs headmast 
+build: apimachinery  dmms  pms rulechain lbs headmast docker
 
 .PHONY: apimachinery 
 apimachinery: 
@@ -43,11 +43,17 @@ lbs: cmd/lbs
 .PHONY: headmast 
 headmast: cmd/headmast
 	@echo "building headmast service (headmast)..."
-	$Q CGO_ENABLED=0 go build -o bin/lbs $(IMPORTPATH)/cmd/headmast
+	$Q CGO_ENABLED=0 go build -o bin/headmast $(IMPORTPATH)/cmd/headmast
 
 .PHONY: test
 test: 
 	$Q go test  ./...
+
+.PHONY: docker 
+docker: 
+	@echo "Creating docker image (docker)..."
+	$Q docker build -f docker/Dockerfile -t ${DOCKER_NAMESPACE} .
+	
 
 
 
