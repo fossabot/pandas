@@ -18,32 +18,32 @@ build: apimachinery  dmms  pms rulechain lbs headmast
 .PHONY: apimachinery 
 apimachinery: 
 	@echo "building api server (apimachinery)..."
-	$Q CGO_ENABLED=0 go build -v -o bin/apimachinery $(IMPORTPATH)/cmd/apimachinery
+	$Q CGO_ENABLED=0 go build -v -o bin/pandas-apimachinery $(IMPORTPATH)/cmd/apimachinery
 
 .PHONY: dmms 
 dmms: cmd/dmms 
 	@echo "building device management server (dmms)..."
-	$Q CGO_ENABLED=0 go build -o bin/dmms $(IMPORTPATH)/cmd/dmms
+	$Q CGO_ENABLED=0 go build -o bin/pandas-dmms $(IMPORTPATH)/cmd/dmms
 
 .PHONY: pms 
 pms: cmd/pms 
 	@echo "building project management server (pms)..."
-	$Q CGO_ENABLED=0 go build -o bin/dmms $(IMPORTPATH)/cmd/pms
+	$Q CGO_ENABLED=0 go build -o bin/pandas-pms $(IMPORTPATH)/cmd/pms
 
 .PHONY: rulechain 
 rulechain: cmd/rulechain
 	@echo "building rulechain server (rulechain)..."
-	$Q CGO_ENABLED=0 go build -o bin/rulechain $(IMPORTPATH)/cmd/rulechain
+	$Q CGO_ENABLED=0 go build -o bin/pandas-rulechain $(IMPORTPATH)/cmd/rulechain
 
 .PHONY: lbs 
 lbs: cmd/lbs
 	@echo "building location based service (lbs)..."
-	$Q CGO_ENABLED=0 go build -o bin/lbs $(IMPORTPATH)/cmd/lbs
+	$Q CGO_ENABLED=0 go build -o bin/pandas-lbs $(IMPORTPATH)/cmd/lbs
 
 .PHONY: headmast 
 headmast: cmd/headmast
 	@echo "building headmast service (headmast)..."
-	$Q CGO_ENABLED=0 go build -o bin/lbs $(IMPORTPATH)/cmd/headmast
+	$Q CGO_ENABLED=0 go build -o bin/pandas-headmast $(IMPORTPATH)/cmd/headmast
 
 .PHONY: test
 test: 

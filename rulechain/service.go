@@ -22,7 +22,7 @@ import (
 type RuleChainService struct {
 	standaloneService
 	instanceManager *instanceManager
-	client          *headmast.Client
+	headmastClient  *headmast.Client
 }
 
 // NewRuleChainService return rulechain service object
@@ -36,18 +36,18 @@ func NewRuleChainService(servingOptions *options.ServingOptions) *RuleChainServi
 	if !servingOptions.IsStandalone() {
 		opts := &headmast.ClientOptions{ServerAddr: servingOptions.HeadmastEndpoint}
 		client := headmast.NewClient(opts)
-		err1 := client.WatchJobPath("/headmast/workers/"+servingOptions.ServiceID+"/jobs", s.headmastJobAdded)
-		err2 := client.WatchJobPath("/headmast/workers/"+servingOptions.ServiceID+"/killer", s.headmastJobDeleted)
+		err1 := client.WatchJobPath("/headmast/workers/"+servingOptions.ServiceID+"/jobs", s.onHeadmastJobAdded)
+		err2 := client.WatchJobPath("/headmast/workers/"+servingOptions.ServiceID+"/killer", s.onHeadmastJobDeleted)
 		if err1 != nil || err2 != nil {
 			logrus.Fatalf("watching headmast failed")
 			return nil
 		}
-		s.client = client
+		s.headmastClient = client
 	}
 	return s
 }
 
-func (s *RuleChainService) headmastJobAdded(path string, job *headmast.Job) {
+func (s *RuleChainService) onHeadmastJobAdded(path string, job *headmast.Job) {
 	rulechain := &models.RuleChain{}
 	if err := rulechain.UnmarshalBinary(job.Payload); err != nil {
 		logrus.WithError(err)
@@ -56,7 +56,7 @@ func (s *RuleChainService) headmastJobAdded(path string, job *headmast.Job) {
 	s.instanceManager.startRuleChain(rulechain) // TODO: how to deal with failed job
 }
 
-func (s *RuleChainService) headmastJobDeleted(path string, job *headmast.Job) {
+func (s *RuleChainService) onHeadmastJobDeleted(path string, job *headmast.Job) {
 	rulechain := &models.RuleChain{}
 	if err := rulechain.UnmarshalBinary(job.Payload); err != nil {
 		logrus.WithError(err)
