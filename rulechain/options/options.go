@@ -14,6 +14,7 @@ package options
 import (
 	broadcast_options "github.com/cloustone/pandas/pkg/broadcast"
 	genericoptions "github.com/cloustone/pandas/pkg/server/options"
+	"github.com/rs/xid"
 	"github.com/spf13/pflag"
 )
 
@@ -21,6 +22,7 @@ type ServingOptions struct {
 	SecureServing    *genericoptions.SecureServingOptions
 	BroadcastServing *broadcast_options.ServingOptions
 	HeadmastEndpoint string
+	ServiceID        string
 }
 
 func NewServingOptions() *ServingOptions {
@@ -28,6 +30,7 @@ func NewServingOptions() *ServingOptions {
 		SecureServing:    genericoptions.NewSecureServingOptions("dmms"),
 		BroadcastServing: broadcast_options.NewServingOptions(),
 		HeadmastEndpoint: "",
+		ServiceID:        xid.New().String(),
 	}
 	return &s
 }
@@ -36,6 +39,7 @@ func (s *ServingOptions) AddFlags(fs *pflag.FlagSet) {
 	s.SecureServing.AddFlags(fs)
 	s.BroadcastServing.AddFlags(fs)
 	fs.StringVar(&s.HeadmastEndpoint, "headmast-endpoint", s.HeadmastEndpoint, "headmast server endpoint")
+	fs.StringVar(&s.ServiceID, "service-id", s.ServiceID, "rulechain service ID")
 }
 
 func (s *ServingOptions) IsStandalone() bool {
