@@ -18,12 +18,11 @@ import (
 
 	"github.com/cloustone/pandas/models"
 	"github.com/cloustone/pandas/models/factory"
-	"github.com/cloustone/pandas/pkg/broadcast"
-	broadcast_util "github.com/cloustone/pandas/pkg/broadcast/util"
 	"github.com/cloustone/pandas/rulechain/converter"
 	pb "github.com/cloustone/pandas/rulechain/grpc_rulechain_v1"
 	"github.com/cloustone/pandas/rulechain/nodes"
 	"github.com/cloustone/pandas/rulechain/options"
+	logr "github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -34,22 +33,52 @@ var (
 
 // RuleChainService implement all rulechain interface
 type RuleChainService struct {
-	servingOptions *options.ServingOptions
-	controller     *instanceManager
+	servingOptions    *options.ServingOptions
+	instanceManager   *instanceManager
+	headmastConnector *headmastConnector
 }
 
 // NewRuleChainService return rulechain service object
 func NewRuleChainService(servingOptions *options.ServingOptions) *RuleChainService {
-	return &RuleChainService{
-		servingOptions: servingOptions,
-		controller:     newInstanceManager(),
+	s := &RuleChainService{
+		servingOptions:    servingOptions,
+		headmastConnector: newHeadmastConnector(servingOptions),
+		instanceManager:   newInstanceManager(servingOptions),
 	}
+	s.headmastConnector.registerObserver(s)
+	return s
 }
 
-// notify is internal helper to simplify broadcastization notificaiton
-func notify(path string, action string, param models.Model) {
-	broadcast_util.Notify(path, action, param)
+// onRulechainAdded is called when new rule chain notifications comes
+func (s *RuleChainService) onRulechainAdded(r *models.RuleChain) error {
+	return s.instanceManager.startRuleChain(r)
 }
+
+// onRulechainDeleted is called when existed rule is deleted
+func (s *RuleChainService) onRulechainDeleted(r *models.RuleChain) error {
+	return s.instanceManager.deleteRuleChain(r)
+}
+
+// loadAllRuleChains load runtimes in models and deploy them according to rulechain's status
+func (s *RuleChainService) loadAllRuleChains() error {
+	pf := factory.NewFactory(models.RuleChain{})
+	owner := factory.NewOwner("") // TODO
+	query := models.NewQuery().WithQuery("status", models.RULE_STATUS_STARTED)
+	rulechainModels, err := pf.List(owner, query)
+	if err != nil {
+		logr.WithError(err)
+		return err
+	}
+	for _, rulechainModel := range rulechainModels {
+		rulechain := rulechainModel.(*models.RuleChain)
+		if err := s.instanceManager.startRuleChain(rulechain); err != nil {
+			logr.WithError(err)
+		}
+	}
+	return nil
+}
+
+// The following is standalone service methods
 
 // CheckRuleChain check wether the rule chain is valid
 func (s *RuleChainService) CheckRuleChain(ctx context.Context, in *pb.CheckRuleChainRequest) (*pb.CheckRuleChainResponse, error) {
@@ -64,7 +93,6 @@ func (s *RuleChainService) CheckRuleChain(ctx context.Context, in *pb.CheckRuleC
 		}
 		return &resp, status.Error(codes.InvalidArgument, "")
 	}
-
 	return &resp, nil
 }
 
@@ -108,7 +136,6 @@ func (s *RuleChainService) DeleteRuleChain(ctx context.Context, in *pb.DeleteRul
 	if err := pf.Delete(owner, in.RuleChainID); err != nil {
 		return nil, xerror(err)
 	}
-	notify(broadcast.OBJECT_DELETED, nameOfRuleChain, rulechain)
 	return &pb.DeleteRuleChainResponse{}, nil
 }
 
@@ -130,11 +157,6 @@ func (s *RuleChainService) UpdateRuleChain(ctx context.Context, in *pb.UpdateRul
 	if err := pf.Update(owner, rulechainModel); err != nil {
 		return nil, xerror(err)
 	}
-	notify(broadcast.OBJECT_UPDATED, nameOfRuleChain,
-		&RuleChainNotification{
-			UserID:      in.RuleChain.UserID,
-			RuleChainID: rulechainModel.ID,
-		})
 	return &pb.UpdateRuleChainResponse{}, nil
 }
 
@@ -183,11 +205,6 @@ func (s *RuleChainService) StartRuleChain(ctx context.Context, in *pb.StartRuleC
 		rulechain.Status != models.RULE_STATUS_STOPPED {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
-	notify(broadcast.OBJECT_UPDATED, nameOfRuleChain,
-		&RuleChainNotification{
-			UserID:      in.UserID,
-			RuleChainID: in.RuleChainID,
-		})
 	return &pb.StartRuleChainResponse{}, nil
 }
 
@@ -205,11 +222,6 @@ func (s *RuleChainService) StopRuleChain(ctx context.Context, in *pb.StopRuleCha
 	if rulechain.Status != models.RULE_STATUS_STARTED {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
-	notify(broadcast.OBJECT_UPDATED, nameOfRuleChain,
-		&RuleChainNotification{
-			UserID:      in.UserID,
-			RuleChainID: in.RuleChainID,
-		})
 	return &pb.StopRuleChainResponse{}, nil
 }
 

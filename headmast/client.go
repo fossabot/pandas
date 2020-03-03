@@ -174,7 +174,7 @@ func (c *Client) GetJobs() ([]*Job, error) {
 	return jobs, nil
 }
 
-type WatchPathHandler func(jobPath string, payload []byte)
+type WatchPathHandler func(jobPath string, job *Job)
 
 // WatchJobPath watch a specific job path and call handler when envent occured
 func (c *Client) WatchJobPath(jobPath string, handler WatchPathHandler) error {
@@ -202,7 +202,12 @@ func (c *Client) WatchJobPath(jobPath string, handler WatchPathHandler) error {
 				errCh <- err
 				return
 			}
-			handler(path, buf[:n])
+			job := NewJob()
+			if err := job.UnmarshalBinary(buf[:n]); err != nil {
+				errCh <- err
+				return
+			}
+			handler(path, job)
 		}
 	}(jobPath, handler, resp.Body, errCh)
 	<-errCh

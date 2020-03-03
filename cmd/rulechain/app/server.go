@@ -32,7 +32,9 @@ func NewManagementServer(servingOptions *options.ServingOptions) *ManagementServ
 		RuleChainService: *rulechain.NewRuleChainService(servingOptions),
 	}
 	s.RegisterService = func() {
-		grpc_rulechain_v1.RegisterRuleChainServiceServer(s.Server, s)
+		if servingOptions.IsStandalone() {
+			grpc_rulechain_v1.RegisterRuleChainServiceServer(s.Server, s)
+		}
 	}
 	return s
 }
