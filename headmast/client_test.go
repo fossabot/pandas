@@ -57,3 +57,17 @@ func TestCreateNewJob(t *testing.T) {
 		})
 	})
 }
+func TestDeleteJob(t *testing.T) {
+	Convey("TestDeletsJob", t, func() {
+		Convey("Should be return error when delete error", func() {
+			monkey.Patch(http.NewRequest, func(string, string, io.Reader) (*http.Request, error) {
+				return nil, errors.New("http request faild")
+			})
+			jobID := "1234"
+			defer monkey.UnpatchAll()
+			cli := NewClient(&ClientOptions{ServerAddr: "localhost"})
+			err := cli.DeleteJob(jobID)
+			ShouldNotBeNil(err)
+		})
+	})
+}
