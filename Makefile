@@ -13,7 +13,13 @@ DOCKER_NAMESPACE := cloustone
 all: build
 
 .PHONY: build
-build: apimachinery  dmms  pms rulechain lbs headmast 
+build: docker apimachinery  dmms  pms rulechain lbs headmast 
+
+.PHONY: docker
+docker: 
+    @echo "Creating docker image (docker)..."
+    $Q docker build -f docker/Dockerfile -t ${DOCKER_NAMESPACE} .
+#    docker run -it --name zhmm --rm -P cloustone
 
 .PHONY: apimachinery 
 apimachinery: 
@@ -28,7 +34,7 @@ dmms: cmd/dmms
 .PHONY: pms 
 pms: cmd/pms 
 	@echo "building project management server (pms)..."
-	$Q CGO_ENABLED=0 go build -o bin/dmms $(IMPORTPATH)/cmd/pms
+	$Q CGO_ENABLED=0 go build -o bin/pms $(IMPORTPATH)/cmd/pms
 
 .PHONY: rulechain 
 rulechain: cmd/rulechain
@@ -43,12 +49,11 @@ lbs: cmd/lbs
 .PHONY: headmast 
 headmast: cmd/headmast
 	@echo "building headmast service (headmast)..."
-	$Q CGO_ENABLED=0 go build -o bin/lbs $(IMPORTPATH)/cmd/headmast
+	$Q CGO_ENABLED=0 go build -o bin/headmast $(IMPORTPATH)/cmd/headmast
 
 .PHONY: test
 test: 
 	$Q go test  ./...
-
 
 
 
