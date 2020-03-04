@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# 安装erlangy语言支持
+# Install erlangy language support
 apt-get -y install erlang-nox
 
-# 添加公钥
+# Add public key
 #wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
 
-# 更新软件包
+# Update package
 apt-get -y update
 
-# 安装RabbitMq
+# Install RabbitMq
 apt-get -y install rabbitmq-server
 
-#start
+# start
 service rabbitmq-server start
 

@@ -11,22 +11,22 @@ RUN sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list
 ADD docker/install/postgressql.sh /install/
 RUN chmod 755 install/postgressql.sh
 RUN ./install/postgressql.sh
-ADD conf/postgressqld.conf /etc/
-ADD enterpoint/postgressql.sh /enterpoint/
-RUN chmod 755 /enterpoint/postgressql.sh
+#ADD conf/postgressqld.conf /etc/
+#ADD enterpoint/postgressql.sh /enterpoint/
+#RUN chmod 755 /enterpoint/postgressql.sh
 
 ADD docker/install/rabbitmq.sh /install/
 RUN chmod 755 install/rabbitmq.sh
 RUN ./install/rabbitmq.sh
-ADD conf/rabbitmq.conf /etc/rabbitmq/
-ADD enterpoint/rabbitmq.sh /enterpoint/
-RUN chmod 755 /enterpoint/rabbitmq.sh
+#ADD conf/rabbitmq.conf /etc/rabbitmq/
+#ADD enterpoint/rabbitmq.sh /enterpoint/
+#RUN chmod 755 /enterpoint/rabbitmq.sh
 
 ADD docker/install/etcd.sh /install/
 RUN chmod 755 install/etcd.sh
 RUN ./install/etcd.sh
-ADD enterpoint/etcd.sh /enterpoint/
-RUN chmod 755 /enterpoint/etcd.sh
+#ADD enterpoint/etcd.sh /enterpoint/
+#RUN chmod 755 /enterpoint/etcd.sh
 
 # postgressql volume
 VOLUME /var/lib/postgressqldb

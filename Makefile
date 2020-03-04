@@ -8,6 +8,8 @@ VERSION_FLAGS    := -ldflags='-X "main.Version=$(VERSION)" -X "main.BuildTime=$(
 
 # Space separated patterns of packages to skip in list, test, format.
 DOCKER_NAMESPACE := cloustone
+DOCKERFILE_ADDRESS := docker/Dockerfile
+API_DOCKERFILE_ADDRESS := cmd/apimachinery/Dockerfile
 
 .PHONY: all
 all: build
@@ -17,9 +19,15 @@ build: docker apimachinery  dmms  pms rulechain lbs headmast
 
 .PHONY: docker
 docker: 
-    @echo "Creating docker image (docker)..."
-    $Q docker build -f docker/Dockerfile -t ${DOCKER_NAMESPACE} .
-#    docker run -it --name zhmm --rm -P cloustone
+	@echo "Creating docker image (docker)..."
+	$Q docker build -f ${DOCKERFILE_ADDRESS} -t ${DOCKER_NAMESPACE} .
+	$Q docker build -f cmd/apimachinery/Dockerfile -t api .
+	$Q docker build -f cmd/dmms/Dockerfile -t dmms .
+	$Q docker build -f cmd/headmast/Dockerfile -t headmast .
+	$Q docker build -f cmd/lbs/Dockerfile -t lbs .
+	$Q docker build -f cmd/pms/Dockerfile -t pms .
+	$Q docker build -f cmd/rulechain/Dockerfile -t rulechain .
+#    docker run -it --name zhmm -P cloustone
 
 .PHONY: apimachinery 
 apimachinery: 
