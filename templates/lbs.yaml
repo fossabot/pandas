@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: lbs
+  labels:
+    name: lbs
+spec:
+  replicas: 1
+  selector:
+    name: lbs
+  template:
+    metadata:
+      labels: 
+       name: lbs
+    spec:
+      containers:
+      - name: lbs
+        image: 192.168.1.101:5000/lbs
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          protocol: TCP
