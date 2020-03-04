@@ -192,6 +192,7 @@ func (s *standaloneService) StartRuleChain(ctx context.Context, in *pb.StartRule
 		rulechain.Status != models.RULE_STATUS_STOPPED {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
+	s.instanceManager.startRuleChain(rulechain)
 	return &pb.StartRuleChainResponse{}, nil
 }
 
@@ -209,6 +210,7 @@ func (s *standaloneService) StopRuleChain(ctx context.Context, in *pb.StopRuleCh
 	if rulechain.Status != models.RULE_STATUS_STARTED {
 		return nil, status.Error(codes.FailedPrecondition, "")
 	}
+	s.instanceManager.stopRuleChain(rulechain)
 	return &pb.StopRuleChainResponse{}, nil
 }
 
@@ -234,15 +236,16 @@ func (s *standaloneService) GetNodeConfigs(ctx context.Context, in *pb.GetNodeCo
 
 // xerror return grpc error according to models errors
 func xerror(err error) error {
-	if err == nil {
+	switch {
+	case errors.As(err, nil):
 		return nil
-	} else if errors.Is(err, factory.ErrObjectNotFound) {
+	case errors.As(err, factory.ErrObjectNotFound):
 		return status.Errorf(codes.NotFound, "%w", err)
-	} else if errors.Is(err, factory.ErrObjectAlreadyExist) {
+	case errors.As(err, factory.ErrObjectAlreadyExist):
 		return status.Errorf(codes.AlreadyExists, "%w", err)
-	} else if errors.Is(err, factory.ErrObjectInvalidArg) {
+	case errors.As(err, factory.ErrObjectInvalidArg):
 		return status.Errorf(codes.InvalidArgument, "%w", err)
-	} else {
+	default:
 		return status.Errorf(codes.Internal, "%s", err)
 	}
 }

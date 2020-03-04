@@ -83,13 +83,20 @@ func (r *instanceManager) startRuleChain(rulechainModel *models.RuleChain) error
 	}
 
 	adaptorOptions := buildAdaptorOptions(&rulechainModel.DataSource)
-	r.addInstanceInternal(rulechainModel.ID, rulechain, adaptorOptions.Name)
+	adaptor, err := NewAdaptor(adaptorOptions)
+	if err != nil {
+		logr.WithError(err)
+		return err
+	}
+	adaptor.RegisterObserver(rulechain)
+	r.addInstanceInternal(rulechainModel.ID, rulechain, adaptor)
 	return nil
 }
 
 // addInstanceInternal add a new rulechain instance internally with
 // specified adaptor id
-func (r *instanceManager) addInstanceInternal(rulechainID string, instance *ruleChainInstance, adaptorID string) {
+func (r *instanceManager) addInstanceInternal(rulechainID string, instance *ruleChainInstance, adaptor adaptors.Adaptor) {
+	adaptorID := adaptor.Options().Name
 	if _, found := r.adaptors[adaptorID]; !found {
 		r.adaptors[adaptorID] = []string{}
 	}

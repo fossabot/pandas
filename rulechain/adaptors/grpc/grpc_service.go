@@ -34,11 +34,12 @@ func (r AdaptorFactory) Create(servingOptions *adaptors.AdaptorOptions) (adaptor
 }
 
 type grpcAdaptor struct {
-	context        context.Context
-	shutdownFn     context.CancelFunc
-	childRoutines  *errgroup.Group
-	grpcServer     *grpc.Server
-	servingOptions *adaptors.AdaptorOptions
+	context         context.Context
+	shutdownFn      context.CancelFunc
+	childRoutines   *errgroup.Group
+	grpcServer      *grpc.Server
+	adaptorObserver adaptors.AdaptorObserver
+	servingOptions  *adaptors.AdaptorOptions
 }
 
 func newGrpcAdaptor(servingOptions *adaptors.AdaptorOptions) (adaptors.Adaptor, error) {
@@ -110,4 +111,8 @@ func (r *grpcAdaptor) GracefulShutdown() error {
 func (r *grpcAdaptor) PostMessage(ctx context.Context, in *PostMessageRequest) (*PostMessageResponse, error) {
 	// broadcast message received from endpoint
 	return &PostMessageResponse{}, nil
+}
+
+func (r *grpcAdaptor) RegisterObserver(obs adaptors.AdaptorObserver) {
+	r.adaptorObserver = obs
 }

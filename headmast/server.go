@@ -137,7 +137,6 @@ func (s *HeadmastService) watchJobPath(ctx *macaron.Context) {
 			return
 		}
 	}
-	ctx.JSON(200, nil)
 }
 
 // controlJob
