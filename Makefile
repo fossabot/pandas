@@ -13,7 +13,7 @@ DOCKER_NAMESPACE := cloustone
 all: build
 
 .PHONY: build
-build: apimachinery  dmms  pms rulechain lbs headmast 
+build: apimachinery  dmms  pms rulechain lbs headmast  shiro
 
 .PHONY: apimachinery 
 apimachinery: 
@@ -44,6 +44,12 @@ lbs: cmd/lbs
 headmast: cmd/headmast
 	@echo "building headmast service (headmast)..."
 	$Q CGO_ENABLED=0 go build -o bin/pandas-headmast $(IMPORTPATH)/cmd/headmast
+
+.PHONY: shiro 
+shiro: cmd/shiro
+	@echo "building unified user manager center service (shiro)..."
+	$Q CGO_ENABLED=0 go build -o bin/pandas-shiro $(IMPORTPATH)/cmd/shiro
+
 
 .PHONY: test
 test: 

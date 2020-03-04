@@ -1,0 +1,18 @@
+syntax = "proto3";
+// import "google/protobuf/timestamp.proto";
+
+package grpc.uum.v1;
+
+service UnifiedUserManagement {
+    rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse) {}
+    rpc GetRolePermissions(GetRolePermissionsRequest) returns (GetRolePermissionsResponse) {}
+}
+
+message AuthenticateRequest{
+}
+
+message AuthenticateResponse { }
+
+message GetRolePermissionsRequest {}
+message GetRolePermissionsResponse {}
+
