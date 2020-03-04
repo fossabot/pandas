@@ -13,6 +13,7 @@ package shiro
 
 import (
 	"errors"
+	"sync"
 
 	. "github.com/cloustone/padnas/shiro/realms"
 	"github.com/cloustone/pandas/shiro/adaptors"
@@ -23,6 +24,7 @@ import (
 // SecurityManager is responsible for authenticate and simple authorization
 type SecurityManager interface {
 	UseAdaptor(adaptors.Adaptor)
+	AddDomainRealm(realms.Realm)
 	Authenticate(principal *Principal) error
 	Authorize(principal Principal, subject *Subject, action string) error
 	GetAuthzDefinitions(principal principal) ([]*AuthzDefinition, error)
@@ -38,6 +40,7 @@ func NewSecurityManager(servingOptions *options.ServingOptions) SecurityManager 
 
 // defaultSecuriityManager
 type defaultSecurityManager struct {
+	mutex          sync.RWMutex
 	servingOptions *options.ServingOptions
 	realms         []realms.Realm
 }
@@ -52,6 +55,7 @@ func newDefaultSecurityManager(servingOptions *options.ServingOptions) *defaultS
 		realms = append(realms, NewRealm(option))
 	}
 	return &defaultSecurityManager{
+		mutex:          sync.RWMutex{},
 		servingOptions: servingOptions,
 		realms:         realms,
 	}
@@ -65,4 +69,12 @@ func (s *defaultSecuirytManager) Authenticate(principal *Principal) error {
 		}
 	}
 	return errors.New("no valid realms")
+}
+
+// AddDomainRealm adds domain's specific realm
+func (s *defaultSecurityManager) AddDomainRealm(realm realms.Ream) {
+	// TODO: add realm simply
+	s.mutex.Lock()
+	s.realms = append(s.realms, realm)
+	s.mutex.Unlock()
 }

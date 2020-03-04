@@ -11,5 +11,9 @@
 //  under the License.
 package realms
 
-type Principal struct{}
+type Principal struct {
+	Username string
+	Password string
+	Roles    []string
+}
 type PrincipalDefinition struct{}
