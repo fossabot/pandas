@@ -10,3 +10,18 @@
 //  License for the specific language governing permissions and limitations
 //  under the License.
 package headmast
+
+import (
+	"testing"
+
+	"bou.ke/monkey"
+	. "github.com/smartystreets/goconvey/convey"
+)
+
+func TestRun(t *testing.T) {
+	Convey("TestRun", t, func() {
+		Convey("Should be return error when Run accourd error", func() {
+			monkey.Patch()
+		})
+	})
+}

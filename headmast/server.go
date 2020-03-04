@@ -30,7 +30,7 @@ const (
 )
 
 type HeadmastService struct {
-	servingOptions *ServingOptions
+	servingOptions *ServingOptions //etcdendpoint schedulepolicy
 	context        context.Context
 	shutdownFn     context.CancelFunc
 	childRoutines  *errgroup.Group
@@ -60,14 +60,22 @@ func NewHeadmastService(servingOptions *ServingOptions) *HeadmastService {
 		jobScheduler:   jobScheduler,
 	}
 
+	//new macarin to use middleware
 	r := macaron.New()
+	//be sure to use GET method to add HEAD method automatically
 	r.SetAutoHead(true)
 	r.Use(macaron.Renderer())
+	//Client post 'create a new job' command to server
 	r.Post("/api/v1/jobs/", binding.Bind(Job{}), s.createJob)
+	// Server get a 'delete' command from client by http service
 	r.Delete("/api/v1/jobs/:jobid", s.deleteJob)
+	// Client get the detail	about the current job from server by JobID and htttp service
 	r.Get("/api/v1/jobs/:jobid", s.getJob)
+	// Client get all jobs from server by server address and http service
 	r.Get("/api/v1/jobs", s.getJobs)
+	// Client get the specific path about the current job and call handler when event occured from server by server address and http service
 	r.Get("/api/v1/watch/:jobid/", s.watchJobPath)
+	// Client post 'killed' or 'alived' command to control the job's status on server
 	r.Post("/api/v1/jobs/:jobid/:action", s.controlJob)
 
 	addr := fmt.Sprintf(":%d", servingOptions.SecureServing.BindPort)
@@ -76,6 +84,7 @@ func NewHeadmastService(servingOptions *ServingOptions) *HeadmastService {
 	return s
 }
 
+//Judging the status of server before run server
 func (s *HeadmastService) Run() error {
 	s.childRoutines.Go(func() error {
 		return s.httpsrv.ListenAndServe()
