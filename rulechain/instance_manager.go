@@ -16,84 +16,29 @@ import (
 	"sync"
 
 	"github.com/cloustone/pandas/models"
-	"github.com/cloustone/pandas/models/factory"
-	"github.com/cloustone/pandas/pkg/broadcast"
 	"github.com/cloustone/pandas/rulechain/adaptors"
+	"github.com/cloustone/pandas/rulechain/options"
 
 	logr "github.com/sirupsen/logrus"
 )
 
 // instanceManager manage all rulechain's runtime
 type instanceManager struct {
-	mutex      sync.RWMutex
-	rulechains map[string]*ruleChainInstance
-	adaptors   map[string][]string
+	servingOptions *options.ServingOptions
+	mutex          sync.RWMutex
+	rulechains     map[string]*ruleChainInstance
+	adaptors       map[string][]string
 }
 
 // newInstanceManager create controller instance used in rule chain service
-func newInstanceManager() *instanceManager {
+func newInstanceManager(servingOptions *options.ServingOptions) *instanceManager {
 	controller := &instanceManager{
-		mutex:      sync.RWMutex{},
-		rulechains: make(map[string]*ruleChainInstance),
-		adaptors:   make(map[string][]string),
+		servingOptions: servingOptions,
+		mutex:          sync.RWMutex{},
+		rulechains:     make(map[string]*ruleChainInstance),
+		adaptors:       make(map[string][]string),
 	}
 	return controller
-}
-
-// handleRuleChainNotification hanel rule chain's sychronization
-func (r *instanceManager) handleRuleChainNotification(notify broadcast.Notification) {
-	rulechainNotify := RuleChainNotification{}
-	if err := rulechainNotify.UnmarshalBinary(notify.Param); err != nil {
-		logr.Errorf("unmarshal rulechain notifications '%s' failed", notify.ObjectPath)
-		return
-	}
-	pf := factory.NewFactory(models.RuleChain{})
-	owner := factory.NewOwner(rulechainNotify.UserID)
-
-	rulechainModel, err := pf.Get(owner, rulechainNotify.RuleChainID)
-	if err != nil {
-		logr.WithError(err)
-		return
-	}
-	rulechain := rulechainModel.(*models.RuleChain)
-
-	switch notify.Action {
-	case broadcast.OBJECT_CREATED:
-	case broadcast.OBJECT_UPDATED:
-		switch rulechain.Status {
-		case models.RULE_STATUS_STARTED:
-			err = r.startRuleChain(rulechain)
-		case models.RULE_STATUS_STOPPED:
-			err = r.stopRuleChain(rulechain)
-		default:
-			err = fmt.Errorf("invalid runtime status '%s'", rulechain.Status)
-		}
-
-	case broadcast.OBJECT_DELETED:
-		err = r.deleteRuleChain(rulechain)
-	default:
-		err = fmt.Errorf("invalid model action '%s'", notify.Action)
-	}
-	logr.WithError(err)
-}
-
-// handleMessage handle incoming data received from mixer
-func (r *instanceManager) handleMessages(notify broadcast.Notification) {
-	/*
-		msg := mixer.NewMessage()
-		if err := msg.UnmarshalBinary(notify.Param); err != nil {
-			logr.WithError(err)
-			return
-		}
-		rulechains := r.getAdaptorRuleChains(msg.GetOriginator())
-		if len(rulechains) == 0 {
-			logr.Errorf("no rulechains for adaptor '%s'", msg.GetOriginator())
-			return
-		}
-		for _, rulechain := range rulechains {
-			rulechain.onMessageAvailable(msg)
-		}
-	*/
 }
 
 // getAdaptorRuleChains return all rule chains that handle incomming data from
@@ -106,25 +51,6 @@ func (r *instanceManager) getAdaptorRuleChains(adaptorID string) []*ruleChainIns
 		rulechains = append(rulechains, r.rulechains[rulechainID])
 	}
 	return rulechains
-}
-
-// loadAllRuleChains load runtimes in models and deploy them according to rulechain's status
-func (r *instanceManager) loadAllRuleChains() error {
-	pf := factory.NewFactory(models.RuleChain{})
-	owner := factory.NewOwner("") // TODO
-	query := models.NewQuery().WithQuery("status", models.RULE_STATUS_STARTED)
-	rulechainModels, err := pf.List(owner, query)
-	if err != nil {
-		logr.WithError(err)
-		return err
-	}
-	for _, rulechainModel := range rulechainModels {
-		rulechain := rulechainModel.(*models.RuleChain)
-		if err := r.startRuleChain(rulechain); err != nil {
-			logr.WithError(err)
-		}
-	}
-	return nil
 }
 
 // buildAdaptorOptions
@@ -157,13 +83,20 @@ func (r *instanceManager) startRuleChain(rulechainModel *models.RuleChain) error
 	}
 
 	adaptorOptions := buildAdaptorOptions(&rulechainModel.DataSource)
-	r.addInstanceInternal(rulechainModel.ID, rulechain, adaptorOptions.Name)
+	adaptor, err := NewAdaptor(adaptorOptions)
+	if err != nil {
+		logr.WithError(err)
+		return err
+	}
+	adaptor.RegisterObserver(rulechain)
+	r.addInstanceInternal(rulechainModel.ID, rulechain, adaptor)
 	return nil
 }
 
 // addInstanceInternal add a new rulechain instance internally with
 // specified adaptor id
-func (r *instanceManager) addInstanceInternal(rulechainID string, instance *ruleChainInstance, adaptorID string) {
+func (r *instanceManager) addInstanceInternal(rulechainID string, instance *ruleChainInstance, adaptor adaptors.Adaptor) {
+	adaptorID := adaptor.Options().Name
 	if _, found := r.adaptors[adaptorID]; !found {
 		r.adaptors[adaptorID] = []string{}
 	}

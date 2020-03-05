@@ -31,11 +31,12 @@ func (r AdaptorFactory) Create(servingOptions *adaptors.AdaptorOptions) (adaptor
 }
 
 type mqttAdaptor struct {
-	context        context.Context
-	shutdownFn     context.CancelFunc
-	childRoutines  *errgroup.Group
-	adaptorOptions *adaptors.AdaptorOptions
-	mqttClient     mqtt.Client
+	context         context.Context
+	shutdownFn      context.CancelFunc
+	childRoutines   *errgroup.Group
+	adaptorOptions  *adaptors.AdaptorOptions
+	adaptorObserver adaptors.AdaptorObserver
+	mqttClient      mqtt.Client
 }
 
 func newMqttAdaptor(adaptorOptions *adaptors.AdaptorOptions) (adaptors.Adaptor, error) {
@@ -96,4 +97,8 @@ func (r *mqttAdaptor) GracefulShutdown() error {
 	}
 	r.mqttClient.Disconnect(250)
 	return nil
+}
+
+func (r *mqttAdaptor) RegisterObserver(obs adaptors.AdaptorObserver) {
+	r.adaptorObserver = obs
 }

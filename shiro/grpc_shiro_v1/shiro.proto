@@ -1,0 +1,23 @@
+syntax = "proto3";
+// import "google/protobuf/timestamp.proto";
+
+package grpc.shiro.v1;
+
+service UnifiedUserManagement {
+    // Authenticate authenticate the principal in specific domain realm
+    rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse) {}
+    // AddDomainRealm adds specific realm
+    rpc AddDomainRealm(AddDomainRealmRequest) returns (AddDomainRealmResponse) {}
+    // GetRolePermissions return role's dynamica route path
+    rpc GetRolePermissions(GetRolePermissionsRequest) returns (GetRolePermissionsResponse) {}
+}
+
+message AuthenticateRequest{ }
+message AuthenticateResponse { }
+
+message AddDomainRealmRequest {}
+message AddDomainRealmResponse {}
+
+message GetRolePermissionsRequest {}
+message GetRolePermissionsResponse {}
+

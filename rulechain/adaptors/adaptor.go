@@ -15,10 +15,16 @@ import (
 	"fmt"
 )
 
+type AdaptorObserver interface {
+	OnAdaptorMessageAvailable(Adaptor, []byte)
+	OnAdaptorError(Adaptor)
+}
+
 type Adaptor interface {
 	Options() *AdaptorOptions
 	Start() error
 	GracefulShutdown() error
+	RegisterObserver(AdaptorObserver)
 }
 
 type AdaptorFactory interface {

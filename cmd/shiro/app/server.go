@@ -12,10 +12,10 @@
 package app
 
 import (
+	"github.com/cloustone/pandas/cmd/shiro/app/options"
 	"github.com/cloustone/pandas/pkg/server"
-	"github.com/cloustone/pandas/rulechain"
-	"github.com/cloustone/pandas/rulechain/grpc_rulechain_v1"
-	"github.com/cloustone/pandas/rulechain/options"
+	"github.com/cloustone/pandas/shiro"
+	"github.com/cloustone/pandas/shiro/grpc_shiro_v1"
 	"github.com/gogo/protobuf/version"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -23,28 +23,28 @@ import (
 )
 
 type ManagementServer struct {
-	rulechain.RuleChainService
+	shiro.UnifiedUserManagementService
 	server.GenericGrpcServer
 }
 
-func NewManagementServer(servingOptions *options.ServingOptions) *ManagementServer {
+func NewManagementServer(runOptions *options.ServerRunOptions) *ManagementServer {
 	s := &ManagementServer{
-		RuleChainService: *rulechain.NewRuleChainService(servingOptions),
+		UnifiedUserManagementService: *shiro.NewUnifiedUserManagementService(runOptions.ShiroServingOptions),
 	}
 	s.RegisterService = func() {
-		if servingOptions.IsStandalone() {
-			grpc_rulechain_v1.RegisterRuleChainServiceServer(s.Server, s)
-		}
+		grpc_shiro_v1.RegisterUnifiedUserManagementServer(s.Server, s)
 	}
+
 	return s
+
 }
 
 // NewAPIServerCommand creates a *cobra.Command object with default parameters
 func NewAPIServerCommand() *cobra.Command {
-	s := options.NewServingOptions()
+	s := options.NewServerRunOptions()
 	s.AddFlags(pflag.CommandLine)
 	cmd := &cobra.Command{
-		Use:  "rulechain",
+		Use:  "mixer",
 		Long: ``,
 		Run: func(cmd *cobra.Command, args []string) {
 		},
@@ -53,11 +53,11 @@ func NewAPIServerCommand() *cobra.Command {
 }
 
 // Run runs the specified APIServer.  This should never exit.
-func Run(servingOptions *options.ServingOptions, stopCh <-chan struct{}) error {
+func Run(runOptions *options.ServerRunOptions, stopCh <-chan struct{}) error {
 	// To help debugging, immediately log version
 	logrus.Infof("Version: %+v", version.Get())
 
-	NewManagementServer(servingOptions).Run(servingOptions.SecureServing)
+	NewManagementServer(runOptions).Run(runOptions.SecureServing)
 	<-stopCh
 	return nil
 }

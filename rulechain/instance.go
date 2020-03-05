@@ -16,6 +16,7 @@ import (
 	"strconv"
 
 	"github.com/cloustone/pandas/models"
+	"github.com/cloustone/pandas/rulechain/adaptors"
 	"github.com/cloustone/pandas/rulechain/manifest"
 	"github.com/cloustone/pandas/rulechain/nodes"
 	"github.com/sirupsen/logrus"
@@ -105,12 +106,18 @@ func newInstanceWithManifest(m *manifest.Manifest) (*ruleChainInstance, []error)
 	return r, errs
 }
 
-func (r *ruleChainInstance) Name() string { return r.name }
-
-func (r *ruleChainInstance) onMessageAvailable(msg models.Message) {
+func (r *ruleChainInstance) OnAdaptorMessageAvailable(adaptor adaptors.Adaptor, data []byte) {
+	msg := models.NewMessage()
+	if err := msg.UnmarshalBinary(data); err != nil {
+		logrus.WithError(err).Errorf("rule chain instance receive message from adaptor '%s' failed", adaptor.Options().Name)
+		return
+	}
 	if node, found := r.nodes[r.firstRuleNodeId]; found {
 		go node.Handle(msg)
 		return
 	}
-	logrus.Errorf("node chain '%s' has no valid node", r.Name())
+	logrus.Errorf("node chain '%s' has no valid node", r.name)
+}
+
+func (r *ruleChainInstance) OnAdaptorError(adaptor adaptors.Adaptor) {
 }

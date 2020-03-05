@@ -21,16 +21,17 @@ import (
 type ServingOptions struct {
 	SecureServing    *genericoptions.SecureServingOptions
 	BroadcastServing *broadcast_options.ServingOptions
-	HeadmastEndpoint string
 	ServiceID        string
+	InitFile         string
+	RealmConfigFile  string
 }
 
 func NewServingOptions() *ServingOptions {
 	s := ServingOptions{
 		SecureServing:    genericoptions.NewSecureServingOptions("dmms"),
 		BroadcastServing: broadcast_options.NewServingOptions(),
-		HeadmastEndpoint: "",
 		ServiceID:        xid.New().String(),
+		RealmConfigFile:  "./shiro-realms.json",
 	}
 	return &s
 }
@@ -38,10 +39,7 @@ func NewServingOptions() *ServingOptions {
 func (s *ServingOptions) AddFlags(fs *pflag.FlagSet) {
 	s.SecureServing.AddFlags(fs)
 	s.BroadcastServing.AddFlags(fs)
-	fs.StringVar(&s.HeadmastEndpoint, "headmast-endpoint", s.HeadmastEndpoint, "headmast server endpoint")
-	fs.StringVar(&s.ServiceID, "service-id", s.ServiceID, "rulechain service ID")
-}
-
-func (s *ServingOptions) IsStandalone() bool {
-	return s.HeadmastEndpoint == ""
+	fs.StringVar(&s.ServiceID, "service-id", s.ServiceID, "shiro service ID")
+	fs.StringVar(&s.InitFile, "init-file", s.InitFile, "initial shiro config file")
+	fs.StringVar(&s.RealmConfigFile, "realm-config-file", s.RealmConfigFile, "realm config file")
 }
