@@ -1,23 +1,21 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: pandas-rulechain-service
   labels:
-    run: api
-  name: api-http
+    run: pandas-rulechain  
   namespace: default
   resourceVersion: 
   selfLink: 
   uid: 
 spec:
-  clusterIP: 10.102.214.85
   externalTrafficPolicy: Cluster
   ports:
-  - nodePort: 30721
-    port: 8080
+  - port: 8080
     protocol: TCP
     targetPort: 8080
   selector:
-    run: api
+    app: pandas-rulechain
   sessionAffinity: None
   type: LoadBalancer
 status:
