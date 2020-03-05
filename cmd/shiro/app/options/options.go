@@ -12,21 +12,24 @@
 package options
 
 import (
-	"github.com/cloustone/pandas/headmast"
+	genericoptions "github.com/cloustone/pandas/pkg/server/options"
+	shiro_options "github.com/cloustone/pandas/shiro/options"
 	"github.com/spf13/pflag"
 )
 
 type ServerRunOptions struct {
-	HeadmastServingOptions *headmast.ServingOptions
+	SecureServing       *genericoptions.SecureServingOptions
+	ShiroServingOptions *shiro_options.ServingOptions
 }
 
 func NewServerRunOptions() *ServerRunOptions {
 	s := ServerRunOptions{
-		HeadmastServingOptions: headmast.NewServingOptions(),
+		ShiroServingOptions: shiro_options.NewServingOptions(),
 	}
 	return &s
 }
 
 func (s *ServerRunOptions) AddFlags(fs *pflag.FlagSet) {
-	s.HeadmastServingOptions.AddFlags(fs)
+	s.SecureServing.AddFlags(fs)
+	s.ShiroServingOptions.AddFlags(fs)
 }

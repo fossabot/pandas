@@ -14,6 +14,8 @@ package realms
 import (
 	"encoding/json"
 	"io/ioutil"
+
+	"github.com/sirupsen/logrus"
 )
 
 type Realm interface {
@@ -33,18 +35,19 @@ func NewRealm(realmOptions *RealmOptions) Realm {
 	switch realmOptions.Name {
 	case "l2dap":
 	default:
-		return nil
+		logrus.Fatalf("invalid realm names")
 	}
+	return nil
 }
 
 func NewRealmOptionsWithFile(fullFilePath string) []*RealmOptions {
-	buf, err := ioutil.ReadAll(fullFilePath)
+	buf, err := ioutil.ReadFile(fullFilePath)
 	if err != nil {
 		logrus.WithError(err).Fatalf("open realms config file failed")
 	}
 	realmOptions := []*RealmOptions{}
 	if err := json.Unmarshal(buf, &realmOptions); err != nil {
-		logurs.WithError(err).Fatalf("illegal realm config file")
+		logrus.WithError(err).Fatalf("illegal realm config file")
 	}
 	if len(realmOptions) == 0 {
 		logrus.Fatalf("no realms are specified")

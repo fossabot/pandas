@@ -15,19 +15,18 @@ import (
 	"errors"
 	"sync"
 
-	. "github.com/cloustone/padnas/shiro/realms"
-	"github.com/cloustone/pandas/shiro/adaptors"
 	"github.com/cloustone/pandas/shiro/options"
 	"github.com/cloustone/pandas/shiro/realms"
+	. "github.com/cloustone/pandas/shiro/realms"
 )
 
 // SecurityManager is responsible for authenticate and simple authorization
 type SecurityManager interface {
-	UseAdaptor(adaptors.Adaptor)
+	UseAdaptor(Adaptor)
 	AddDomainRealm(realms.Realm)
 	Authenticate(principal *Principal) error
 	Authorize(principal Principal, subject *Subject, action string) error
-	GetAuthzDefinitions(principal principal) ([]*AuthzDefinition, error)
+	GetAuthzDefinitions(principal Principal) ([]*AuthzDefinition, error)
 	GetPrincipalDefinition(principal Principal) (*PrincipalDefinition, error)
 	GetPrincipalAllowableSubjects(principal Principal) ([]*Subject, error)
 }
@@ -48,11 +47,11 @@ type defaultSecurityManager struct {
 // newDefaultSecurityManager return security manager instance
 // All realms are created here, if failed, shiro must be restarted
 func newDefaultSecurityManager(servingOptions *options.ServingOptions) *defaultSecurityManager {
-	realmOptions := NewRealmOptions(servingOptions.RealmConfigFile)
-	realms := []Ream{}
+	realmOptions := NewRealmOptionsWithFile(servingOptions.RealmConfigFile)
+	realms := []Realm{}
 
 	for _, options := range realmOptions {
-		realms = append(realms, NewRealm(option))
+		realms = append(realms, NewRealm(options))
 	}
 	return &defaultSecurityManager{
 		mutex:          sync.RWMutex{},
@@ -62,7 +61,7 @@ func newDefaultSecurityManager(servingOptions *options.ServingOptions) *defaultS
 }
 
 // Authenticate iterate all realm to authenticate the principal
-func (s *defaultSecuirytManager) Authenticate(principal *Principal) error {
+func (s *defaultSecurityManager) Authenticate(principal *Principal) error {
 	for _, realm := range s.realms {
 		if err := realm.Authenticate(principal); err == nil {
 			return nil
@@ -72,7 +71,7 @@ func (s *defaultSecuirytManager) Authenticate(principal *Principal) error {
 }
 
 // AddDomainRealm adds domain's specific realm
-func (s *defaultSecurityManager) AddDomainRealm(realm realms.Ream) {
+func (s *defaultSecurityManager) AddDomainRealm(realm realms.Realm) {
 	// TODO: add realm simply
 	s.mutex.Lock()
 	s.realms = append(s.realms, realm)

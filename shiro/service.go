@@ -12,18 +12,36 @@
 package shiro
 
 import (
+	"context"
+
+	pb "github.com/cloustone/pandas/shiro/grpc_shiro_v1"
 	"github.com/cloustone/pandas/shiro/options"
 )
 
-// UnifedUserManagementService manage user's authentication and authorization
-type UnifedUserManagementService struct {
+// UnifiedUserManagementService manage user's authentication and authorization
+type UnifiedUserManagementService struct {
 	servingOptions *options.ServingOptions
 }
 
 // UnifiedUserManagementService  return service instance
-func NewUnifiedUserManagementService(servingOptions *options.ServingOptions) *UnifedUserManagementService {
-	s := &standaloneService{
+func NewUnifiedUserManagementService(servingOptions *options.ServingOptions) *UnifiedUserManagementService {
+	s := &UnifiedUserManagementService{
 		servingOptions: servingOptions,
 	}
 	return s
+}
+
+// Authenticate authenticate the principal in specific domain realm
+func (s *UnifiedUserManagementService) Authenticate(ctx context.Context, in *pb.AuthenticateRequest) (*pb.AuthenticateResponse, error) {
+	return nil, nil
+}
+
+// AddDomainRealm adds specific realm
+func (s *UnifiedUserManagementService) AddDomainRealm(ctx context.Context, in *pb.AddDomainRealmRequest) (*pb.AddDomainRealmResponse, error) {
+	return nil, nil
+}
+
+// GetRolePermissions return role's dynamica route path
+func (s *UnifiedUserManagementService) GetRolePermissions(ctx context.Context, in *pb.GetRolePermissionsRequest) (*pb.GetRolePermissionsResponse, error) {
+	return nil, nil
 }

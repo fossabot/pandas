@@ -12,8 +12,10 @@
 package app
 
 import (
-	"github.com/cloustone/pandas/cmd/headmast/app/options"
-	"github.com/cloustone/pandas/headmast"
+	"github.com/cloustone/pandas/cmd/shiro/app/options"
+	"github.com/cloustone/pandas/pkg/server"
+	"github.com/cloustone/pandas/shiro"
+	"github.com/cloustone/pandas/shiro/grpc_shiro_v1"
 	"github.com/gogo/protobuf/version"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -21,13 +23,18 @@ import (
 )
 
 type ManagementServer struct {
-	headmast.HeadmastService
+	shiro.UnifiedUserManagementService
+	server.GenericGrpcServer
 }
 
 func NewManagementServer(runOptions *options.ServerRunOptions) *ManagementServer {
 	s := &ManagementServer{
-		HeadmastService: *headmast.NewHeadmastService(runOptions.HeadmastServingOptions),
+		UnifiedUserManagementService: *shiro.NewUnifiedUserManagementService(runOptions.ShiroServingOptions),
 	}
+	s.RegisterService = func() {
+		grpc_shiro_v1.RegisterUnifiedUserManagementServer(s.Server, s)
+	}
+
 	return s
 
 }
@@ -50,7 +57,7 @@ func Run(runOptions *options.ServerRunOptions, stopCh <-chan struct{}) error {
 	// To help debugging, immediately log version
 	logrus.Infof("Version: %+v", version.Get())
 
-	NewManagementServer(runOptions).Run()
+	NewManagementServer(runOptions).Run(runOptions.SecureServing)
 	<-stopCh
 	return nil
 }

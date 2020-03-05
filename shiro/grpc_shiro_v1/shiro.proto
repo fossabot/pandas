@@ -1,7 +1,7 @@
 syntax = "proto3";
 // import "google/protobuf/timestamp.proto";
 
-package grpc.uum.v1;
+package grpc.shiro.v1;
 
 service UnifiedUserManagement {
     // Authenticate authenticate the principal in specific domain realm
