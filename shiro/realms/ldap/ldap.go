@@ -15,23 +15,21 @@ import (
 	"crypto/tls"
 	"fmt"
 
+	"github.com/cloustone/pandas/shiro/realms"
 	"github.com/go-ldap/ldap"
 )
 
-type Options struct {
-	Addr         string
-	BindUserName string
-	BindPassword string
-	SearchDN     string
-}
+const (
+	AdaptorName = "ldap"
+)
 
 type LdapRealm struct {
-	conn   *ldap.Conn
-	option Options
+	conn         *ldap.Conn
+	realmOptions *realms.RealmOptions
 }
 
-func NewLdapRealm(options Options) (*LDAPService, error) {
-	conn, err := ldap.Dial("tcp", options.Addr)
+func NewLdapRealm(realmOptions *realms.RealmOptions) (*LdapRealm, error) {
+	conn, err := ldap.Dial("tcp", realmOptions.ServiceConnectURL)
 	if err != nil {
 		return nil, err
 	}
@@ -41,24 +39,24 @@ func NewLdapRealm(options Options) (*LDAPService, error) {
 		return nil, err
 	}
 
-	err = conn.Bind(options.BindUserName, options.BindPassword)
+	err = conn.Bind(realmOptions.Username, realmOptions.Password)
 	if err != nil {
 		return nil, err
 	}
 
-	return &LdapRealm{conn: conn, options: options}, nil
+	return &LdapRealm{conn: conn, realmOptions: realmOptions}, nil
 }
 
-func (l *ldap) Authenticate(principal *realm.Principal) error {
+func (l *LdapRealm) Authenticate(principal *realms.Principal) error {
 	searchRequest := ldap.NewSearchRequest(
-		l.SearchDN,
+		l.realmOptions.SearchDN,
 		ldap.ScopeWholeSubtree, ldap.NeverDerefAliases, 0, 0, false,
-		fmt.Sprintf("(&(objectClass=inetOrgPerson)(mail=%s))", principal.UserName),
+		fmt.Sprintf("(&(objectClass=inetOrgPerson)(mail=%s))", principal.Username),
 		[]string{"dn"},
 		nil,
 	)
 
-	sr, err := l.Conn.Search(searchRequest)
+	sr, err := l.conn.Search(searchRequest)
 	if err != nil {
 		return err
 	}
@@ -68,12 +66,12 @@ func (l *ldap) Authenticate(principal *realm.Principal) error {
 	}
 
 	userDN := sr.Entries[0].DN
-	err = l.Conn.Bind(userDN, principal.Password)
+	err = l.conn.Bind(userDN, principal.Password)
 	if err != nil {
 		return err
 	}
 
-	err = l.Conn.Bind(l.Config.BindUserName, l.Config.BindPassword)
+	err = l.conn.Bind(l.realmOptions.Username, l.realmOptions.Password)
 	if err != nil {
 		return err
 	}

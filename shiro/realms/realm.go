@@ -11,13 +11,6 @@
 //  under the License.
 package realms
 
-import (
-	"encoding/json"
-	"io/ioutil"
-
-	"github.com/sirupsen/logrus"
-)
-
 type Realm interface {
 	Authenticate(principal *Principal) error
 }
@@ -29,28 +22,5 @@ type RealmOptions struct {
 	Username          string `json:"username"`
 	Password          string `json:"password"`
 	ServiceConnectURL string `json:"serviceConnectURL"`
-}
-
-func NewRealm(realmOptions *RealmOptions) Realm {
-	switch realmOptions.Name {
-	case "l2dap":
-	default:
-		logrus.Fatalf("invalid realm names")
-	}
-	return nil
-}
-
-func NewRealmOptionsWithFile(fullFilePath string) []*RealmOptions {
-	buf, err := ioutil.ReadFile(fullFilePath)
-	if err != nil {
-		logrus.WithError(err).Fatalf("open realms config file failed")
-	}
-	realmOptions := []*RealmOptions{}
-	if err := json.Unmarshal(buf, &realmOptions); err != nil {
-		logrus.WithError(err).Fatalf("illegal realm config file")
-	}
-	if len(realmOptions) == 0 {
-		logrus.Fatalf("no realms are specified")
-	}
-	return realmOptions
+	SearchDN          string `json:"searchDN"`
 }

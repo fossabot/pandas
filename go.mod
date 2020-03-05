@@ -18,6 +18,7 @@ require (
 	github.com/fatih/color v1.7.0 // indirect
 	github.com/fatih/structs v1.1.0
 	github.com/garyburd/redigo v1.6.0
+	github.com/go-ldap/ldap v3.0.3+incompatible
 	github.com/go-macaron/binding v1.0.1
 	github.com/go-martini/martini v0.0.0-20170121215854-22fa46961aab // indirect
 	github.com/go-openapi/errors v0.19.3
@@ -53,6 +54,7 @@ require (
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect
 	google.golang.org/grpc v1.26.0
+	gopkg.in/asn1-ber.v1 v1.0.0-20181015200546-f715ec2f112d // indirect
 	gopkg.in/macaron.v1 v1.3.4
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 	gopkg.in/yaml.v2 v2.2.4
