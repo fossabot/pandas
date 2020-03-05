@@ -196,19 +196,20 @@ func TestGetJobs(t *testing.T) {
 		})
 	})
 }
-func TestWatchPathHandler(t *testing.T) {
-	Convey("TestWatchPathHandler", t, func() {
-		Convey("Should be return error when watch patch handler", func() {
-			monkey.Patch(http.NewRequest, func(string, string, io.Reader) (*http.Request, error) {
-				return nil, errors.New("http request faild")
-			})
-			l := "liyanpeng"
-			p := []byte(l)
-			job := WatchPathHandler(func(l, p))
-			defer monkey.UnpatchAll()
-			cli := NewClient(&ClientOptions{ServerAddr: "localhost"})
-			err := cli.WatchJobPath(job.jobpath, job)
-			ShouldNotBeNil(err)
-		})
-	})
-}
+
+// func TestWatchPathHandler(t *testing.T) {
+// 	Convey("TestWatchPathHandler", t, func() {
+// 		Convey("Should be return error when watch patch handler", func() {
+// 			monkey.Patch(http.NewRequest, func(string, string, io.Reader) (*http.Request, error) {
+// 				return nil, errors.New("http request faild")
+// 			})
+// 			l := "liyanpeng"
+// 			p := []byte(l)
+// 			job := WatchPathHandler(func(l, p))
+// 			defer monkey.UnpatchAll()
+// 			cli := NewClient(&ClientOptions{ServerAddr: "localhost"})
+// 			err := cli.WatchJobPath(job.jobpath, job)
+// 			ShouldNotBeNil(err)
+// 		})
+// 	})
+// }
