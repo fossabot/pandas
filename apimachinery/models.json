@@ -94,6 +94,52 @@
       },
       "x-go-package": "github.com/cloustone/pandas/models"
     },
+    "DataSource": {
+      "type": "object",
+      "properties": {
+        "certFile": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint8"
+          },
+          "x-go-name": "CertFile"
+        },
+        "connectURL": {
+          "type": "string",
+          "x-go-name": "ConnectURL"
+        },
+        "isProvider": {
+          "type": "boolean",
+          "x-go-name": "IsProvider"
+        },
+        "isTlsEnabled": {
+          "type": "boolean",
+          "x-go-name": "IsTLSEnabled"
+        },
+        "keyFile": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint8"
+          },
+          "x-go-name": "KeyFile"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "protocol": {
+          "type": "string",
+          "x-go-name": "Protocol"
+        },
+        "servicePort": {
+          "type": "string",
+          "x-go-name": "ServicePort"
+        }
+      },
+      "x-go-package": "github.com/cloustone/pandas/models"
+    },
     "Deployment": {
       "description": "Deployment Deployment",
       "type": "object",
@@ -464,28 +510,22 @@
       },
       "x-go-package": "github.com/cloustone/pandas/models"
     },
-    "Model": {
-      "description": "Model base model definition, including fields `ID`, `CreatedAt`, `UpdatedAt`, `DeletedAt`, which could be embedded in your models\ntype User struct {\ngorm.Model\n}",
+    "LoginToken": {
+      "description": "LoginToken login token",
       "type": "object",
       "properties": {
-        "CreatedAt": {
+        "access_token": {
+          "description": "access token",
           "type": "string",
-          "format": "date-time"
+          "x-go-name": "AccessToken"
         },
-        "DeletedAt": {
+        "token_type": {
+          "description": "token type",
           "type": "string",
-          "format": "date-time"
-        },
-        "ID": {
-          "type": "integer",
-          "format": "uint64"
-        },
-        "UpdatedAt": {
-          "type": "string",
-          "format": "date-time"
+          "x-go-name": "TokenType"
         }
       },
-      "x-go-package": "github.com/jinzhu/gorm"
+      "x-go-package": "github.com/cloustone/pandas/models"
     },
     "ModelTypeInfo": {
       "description": "ModelTypeInfo is added to model which should be saved into factory",
@@ -615,6 +655,9 @@
           "format": "date-time",
           "x-go-name": "CreatedAt"
         },
+        "dataSource": {
+          "$ref": "#/definitions/DataSource"
+        },
         "debugMode": {
           "type": "boolean",
           "x-go-name": "DebugMode"
@@ -632,14 +675,6 @@
           "format": "date-time",
           "x-go-name": "LastUpdatedAt"
         },
-        "metadata": {
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "format": "uint8"
-          },
-          "x-go-name": "Metadata"
-        },
         "modelTypeName": {
           "type": "string",
           "x-go-name": "ModelTypeName"
@@ -647,6 +682,14 @@
         "name": {
           "type": "string",
           "x-go-name": "Name"
+        },
+        "payload": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint8"
+          },
+          "x-go-name": "Payload"
         },
         "status": {
           "type": "string",
@@ -692,6 +735,148 @@
     "SearchType": {
       "type": "integer",
       "format": "int64",
+      "x-go-package": "github.com/cloustone/pandas/models"
+    },
+    "Timedef": {
+      "description": "Timedef timedef",
+      "type": "object",
+      "properties": {
+        "created": {
+          "description": "created",
+          "type": "string",
+          "x-go-name": "Created",
+          "readOnly": true
+        },
+        "updated": {
+          "description": "updated",
+          "type": "string",
+          "x-go-name": "Updated",
+          "readOnly": true
+        }
+      },
+      "x-go-package": "github.com/cloustone/pandas/models"
+    },
+    "User": {
+      "description": "User user",
+      "type": "object",
+      "properties": {
+        "balance": {
+          "description": "available balance of user",
+          "type": "string",
+          "x-go-name": "Balance"
+        },
+        "created": {
+          "description": "created",
+          "type": "string",
+          "x-go-name": "Created",
+          "readOnly": true
+        },
+        "email": {
+          "description": "email",
+          "type": "string",
+          "x-go-name": "Email"
+        },
+        "id": {
+          "description": "id",
+          "type": "string",
+          "x-go-name": "ID"
+        },
+        "phone": {
+          "description": "phone",
+          "type": "string",
+          "x-go-name": "Phone"
+        },
+        "roles": {
+          "description": "roles",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "Roles"
+        },
+        "status": {
+          "description": "status",
+          "type": "string",
+          "enum": [
+            "[OFFLINE ONLINE]"
+          ],
+          "x-go-name": "Status"
+        },
+        "totalFund": {
+          "description": "total fund",
+          "type": "string",
+          "x-go-name": "TotalFund"
+        },
+        "updated": {
+          "description": "updated",
+          "type": "string",
+          "x-go-name": "Updated",
+          "readOnly": true
+        },
+        "username": {
+          "description": "username",
+          "type": "string",
+          "x-go-name": "Username"
+        }
+      },
+      "x-go-package": "github.com/cloustone/pandas/models"
+    },
+    "UserLoginRecord": {
+      "description": "UserLoginRecord user login record",
+      "type": "object",
+      "required": [
+        "number"
+      ],
+      "properties": {
+        "date": {
+          "description": "date",
+          "type": "string",
+          "x-go-name": "Date"
+        },
+        "number": {
+          "description": "number",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Number"
+        }
+      },
+      "x-go-package": "github.com/cloustone/pandas/models"
+    },
+    "UserOverview": {
+      "description": "UserOverview user overview",
+      "type": "object",
+      "required": [
+        "dayAveLoginNum",
+        "onlineNum",
+        "todayLoginNum",
+        "totalNum"
+      ],
+      "properties": {
+        "dayAveLoginNum": {
+          "description": "day ave login num",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "DayAveLoginNum"
+        },
+        "onlineNum": {
+          "description": "online num",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "OnlineNum"
+        },
+        "todayLoginNum": {
+          "description": "today login num",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "TodayLoginNum"
+        },
+        "totalNum": {
+          "description": "total num",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "TotalNum"
+        }
+      },
       "x-go-package": "github.com/cloustone/pandas/models"
     },
     "Variable": {

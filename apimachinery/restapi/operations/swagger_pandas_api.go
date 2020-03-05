@@ -26,6 +26,7 @@ import (
 	"github.com/cloustone/pandas/apimachinery/restapi/operations/model"
 	"github.com/cloustone/pandas/apimachinery/restapi/operations/project"
 	"github.com/cloustone/pandas/apimachinery/restapi/operations/rulechain"
+	"github.com/cloustone/pandas/apimachinery/restapi/operations/user"
 	"github.com/cloustone/pandas/models"
 )
 
@@ -46,8 +47,13 @@ func NewSwaggerPandasAPI(spec *loads.Document) *SwaggerPandasAPI {
 		APIKeyAuthenticator: security.APIKeyAuth,
 		BearerAuthenticator: security.BearerAuth,
 		JSONConsumer:        runtime.JSONConsumer(),
+		UrlformConsumer:     runtime.DiscardConsumer,
 		JSONProducer:        runtime.JSONProducer(),
-		ProjectGetProjectsProjectIDHandler: project.GetProjectsProjectIDHandlerFunc(func(params project.GetProjectsProjectIDParams, principal *models.Principal) middleware.Responder {
+		UserChangeCurrentUserPasswordHandler: user.ChangeCurrentUserPasswordHandlerFunc(func(params user.ChangeCurrentUserPasswordParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation UserChangeCurrentUserPassword has not yet been implemented")
+		}), UserChangeUserPasswordHandler: user.ChangeUserPasswordHandlerFunc(func(params user.ChangeUserPasswordParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation UserChangeUserPassword has not yet been implemented")
+		}), ProjectGetProjectsProjectIDHandler: project.GetProjectsProjectIDHandlerFunc(func(params project.GetProjectsProjectIDParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation ProjectGetProjectsProjectID has not yet been implemented")
 		}), ProjectAddProjectDeviceHandler: project.AddProjectDeviceHandlerFunc(func(params project.AddProjectDeviceParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation ProjectAddProjectDevice has not yet been implemented")
@@ -67,6 +73,8 @@ func NewSwaggerPandasAPI(spec *loads.Document) *SwaggerPandasAPI {
 			return middleware.NotImplemented("operation ProjectDeleteProjectDevice has not yet been implemented")
 		}), RulechainDeleteRuleChainHandler: rulechain.DeleteRuleChainHandlerFunc(func(params rulechain.DeleteRuleChainParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation RulechainDeleteRuleChain has not yet been implemented")
+		}), UserDeleteUserHandler: user.DeleteUserHandlerFunc(func(params user.DeleteUserParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation UserDeleteUser has not yet been implemented")
 		}), RulechainDownloadRuleChainHandler: rulechain.DownloadRuleChainHandlerFunc(func(params rulechain.DownloadRuleChainParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation RulechainDownloadRuleChain has not yet been implemented")
 		}), DashboardGetDashboardHandler: dashboard.GetDashboardHandlerFunc(func(params dashboard.GetDashboardParams, principal *models.Principal) middleware.Responder {
@@ -97,6 +105,12 @@ func NewSwaggerPandasAPI(spec *loads.Document) *SwaggerPandasAPI {
 			return middleware.NotImplemented("operation RulechainGetRuleChainMetadata has not yet been implemented")
 		}), RulechainGetRuleChainsHandler: rulechain.GetRuleChainsHandlerFunc(func(params rulechain.GetRuleChainsParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation RulechainGetRuleChains has not yet been implemented")
+		}), UserGetUserHandler: user.GetUserHandlerFunc(func(params user.GetUserParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation UserGetUser has not yet been implemented")
+		}), UserLoginUserHandler: user.LoginUserHandlerFunc(func(params user.LoginUserParams) middleware.Responder {
+			return middleware.NotImplemented("operation UserLoginUser has not yet been implemented")
+		}), UserLogoutUserHandler: user.LogoutUserHandlerFunc(func(params user.LogoutUserParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation UserLogoutUser has not yet been implemented")
 		}), RulechainSaveRuleChainHandler: rulechain.SaveRuleChainHandlerFunc(func(params rulechain.SaveRuleChainParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation RulechainSaveRuleChain has not yet been implemented")
 		}), RulechainSaveRuleChainMetadataHandler: rulechain.SaveRuleChainMetadataHandlerFunc(func(params rulechain.SaveRuleChainMetadataParams, principal *models.Principal) middleware.Responder {
@@ -117,6 +131,8 @@ func NewSwaggerPandasAPI(spec *loads.Document) *SwaggerPandasAPI {
 			return middleware.NotImplemented("operation ProjectUpdateProjectDevice has not yet been implemented")
 		}), ProjectUpdateProjectDeviceStatusHandler: project.UpdateProjectDeviceStatusHandlerFunc(func(params project.UpdateProjectDeviceStatusParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation ProjectUpdateProjectDeviceStatus has not yet been implemented")
+		}), UserUpdateUserHandler: user.UpdateUserHandlerFunc(func(params user.UpdateUserParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation UserUpdateUser has not yet been implemented")
 		}), RulechainUploadRuleChainHandler: rulechain.UploadRuleChainHandlerFunc(func(params rulechain.UploadRuleChainParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation RulechainUploadRuleChain has not yet been implemented")
 		}),
@@ -153,6 +169,9 @@ type SwaggerPandasAPI struct {
 	// JSONConsumer registers a consumer for the following mime types:
 	//   - application/json
 	JSONConsumer runtime.Consumer
+	// UrlformConsumer registers a consumer for the following mime types:
+	//   - application/x-www-form-urlencoded
+	UrlformConsumer runtime.Consumer
 	// JSONProducer registers a producer for the following mime types:
 	//   - application/json
 	JSONProducer runtime.Producer
@@ -164,6 +183,10 @@ type SwaggerPandasAPI struct {
 	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
 	APIAuthorizer runtime.Authorizer
 
+	// UserChangeCurrentUserPasswordHandler sets the operation handler for the change current user password operation
+	UserChangeCurrentUserPasswordHandler user.ChangeCurrentUserPasswordHandler
+	// UserChangeUserPasswordHandler sets the operation handler for the change user password operation
+	UserChangeUserPasswordHandler user.ChangeUserPasswordHandler
 	// ProjectGetProjectsProjectIDHandler sets the operation handler for the get projects project ID operation
 	ProjectGetProjectsProjectIDHandler project.GetProjectsProjectIDHandler
 	// ProjectAddProjectDeviceHandler sets the operation handler for the add project device operation
@@ -184,6 +207,8 @@ type SwaggerPandasAPI struct {
 	ProjectDeleteProjectDeviceHandler project.DeleteProjectDeviceHandler
 	// RulechainDeleteRuleChainHandler sets the operation handler for the delete rule chain operation
 	RulechainDeleteRuleChainHandler rulechain.DeleteRuleChainHandler
+	// UserDeleteUserHandler sets the operation handler for the delete user operation
+	UserDeleteUserHandler user.DeleteUserHandler
 	// RulechainDownloadRuleChainHandler sets the operation handler for the download rule chain operation
 	RulechainDownloadRuleChainHandler rulechain.DownloadRuleChainHandler
 	// DashboardGetDashboardHandler sets the operation handler for the get dashboard operation
@@ -214,6 +239,12 @@ type SwaggerPandasAPI struct {
 	RulechainGetRuleChainMetadataHandler rulechain.GetRuleChainMetadataHandler
 	// RulechainGetRuleChainsHandler sets the operation handler for the get rule chains operation
 	RulechainGetRuleChainsHandler rulechain.GetRuleChainsHandler
+	// UserGetUserHandler sets the operation handler for the get user operation
+	UserGetUserHandler user.GetUserHandler
+	// UserLoginUserHandler sets the operation handler for the login user operation
+	UserLoginUserHandler user.LoginUserHandler
+	// UserLogoutUserHandler sets the operation handler for the logout user operation
+	UserLogoutUserHandler user.LogoutUserHandler
 	// RulechainSaveRuleChainHandler sets the operation handler for the save rule chain operation
 	RulechainSaveRuleChainHandler rulechain.SaveRuleChainHandler
 	// RulechainSaveRuleChainMetadataHandler sets the operation handler for the save rule chain metadata operation
@@ -234,6 +265,8 @@ type SwaggerPandasAPI struct {
 	ProjectUpdateProjectDeviceHandler project.UpdateProjectDeviceHandler
 	// ProjectUpdateProjectDeviceStatusHandler sets the operation handler for the update project device status operation
 	ProjectUpdateProjectDeviceStatusHandler project.UpdateProjectDeviceStatusHandler
+	// UserUpdateUserHandler sets the operation handler for the update user operation
+	UserUpdateUserHandler user.UpdateUserHandler
 	// RulechainUploadRuleChainHandler sets the operation handler for the upload rule chain operation
 	RulechainUploadRuleChainHandler rulechain.UploadRuleChainHandler
 
@@ -299,12 +332,24 @@ func (o *SwaggerPandasAPI) Validate() error {
 		unregistered = append(unregistered, "JSONConsumer")
 	}
 
+	if o.UrlformConsumer == nil {
+		unregistered = append(unregistered, "UrlformConsumer")
+	}
+
 	if o.JSONProducer == nil {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
 	if o.RoleAuthAuth == nil {
 		unregistered = append(unregistered, "RoleAuthAuth")
+	}
+
+	if o.UserChangeCurrentUserPasswordHandler == nil {
+		unregistered = append(unregistered, "user.ChangeCurrentUserPasswordHandler")
+	}
+
+	if o.UserChangeUserPasswordHandler == nil {
+		unregistered = append(unregistered, "user.ChangeUserPasswordHandler")
 	}
 
 	if o.ProjectGetProjectsProjectIDHandler == nil {
@@ -345,6 +390,10 @@ func (o *SwaggerPandasAPI) Validate() error {
 
 	if o.RulechainDeleteRuleChainHandler == nil {
 		unregistered = append(unregistered, "rulechain.DeleteRuleChainHandler")
+	}
+
+	if o.UserDeleteUserHandler == nil {
+		unregistered = append(unregistered, "user.DeleteUserHandler")
 	}
 
 	if o.RulechainDownloadRuleChainHandler == nil {
@@ -407,6 +456,18 @@ func (o *SwaggerPandasAPI) Validate() error {
 		unregistered = append(unregistered, "rulechain.GetRuleChainsHandler")
 	}
 
+	if o.UserGetUserHandler == nil {
+		unregistered = append(unregistered, "user.GetUserHandler")
+	}
+
+	if o.UserLoginUserHandler == nil {
+		unregistered = append(unregistered, "user.LoginUserHandler")
+	}
+
+	if o.UserLogoutUserHandler == nil {
+		unregistered = append(unregistered, "user.LogoutUserHandler")
+	}
+
 	if o.RulechainSaveRuleChainHandler == nil {
 		unregistered = append(unregistered, "rulechain.SaveRuleChainHandler")
 	}
@@ -445,6 +506,10 @@ func (o *SwaggerPandasAPI) Validate() error {
 
 	if o.ProjectUpdateProjectDeviceStatusHandler == nil {
 		unregistered = append(unregistered, "project.UpdateProjectDeviceStatusHandler")
+	}
+
+	if o.UserUpdateUserHandler == nil {
+		unregistered = append(unregistered, "user.UpdateUserHandler")
 	}
 
 	if o.RulechainUploadRuleChainHandler == nil {
@@ -497,6 +562,8 @@ func (o *SwaggerPandasAPI) ConsumersFor(mediaTypes []string) map[string]runtime.
 		switch mt {
 		case "application/json":
 			result["application/json"] = o.JSONConsumer
+		case "application/x-www-form-urlencoded":
+			result["application/x-www-form-urlencoded"] = o.UrlformConsumer
 		}
 
 		if c, ok := o.customConsumers[mt]; ok {
@@ -555,6 +622,16 @@ func (o *SwaggerPandasAPI) initHandlerCache() {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
 
+	if o.handlers["PATCH"] == nil {
+		o.handlers["PATCH"] = make(map[string]http.Handler)
+	}
+	o.handlers["PATCH"]["/users/password"] = user.NewChangeCurrentUserPassword(o.context, o.UserChangeCurrentUserPasswordHandler)
+
+	if o.handlers["PATCH"] == nil {
+		o.handlers["PATCH"] = make(map[string]http.Handler)
+	}
+	o.handlers["PATCH"]["/users/{userId}"] = user.NewChangeUserPassword(o.context, o.UserChangeUserPasswordHandler)
+
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -604,6 +681,11 @@ func (o *SwaggerPandasAPI) initHandlerCache() {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/rulechains/{ruleChainId}"] = rulechain.NewDeleteRuleChain(o.context, o.RulechainDeleteRuleChainHandler)
+
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
+	}
+	o.handlers["DELETE"]["/users/{userId}"] = user.NewDeleteUser(o.context, o.UserDeleteUserHandler)
 
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
@@ -680,6 +762,21 @@ func (o *SwaggerPandasAPI) initHandlerCache() {
 	}
 	o.handlers["GET"]["/rulechains"] = rulechain.NewGetRuleChains(o.context, o.RulechainGetRuleChainsHandler)
 
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/users/{userId}"] = user.NewGetUser(o.context, o.UserGetUserHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/users/login"] = user.NewLoginUser(o.context, o.UserLoginUserHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/users/logout"] = user.NewLogoutUser(o.context, o.UserLogoutUserHandler)
+
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
@@ -729,6 +826,11 @@ func (o *SwaggerPandasAPI) initHandlerCache() {
 		o.handlers["PATCH"] = make(map[string]http.Handler)
 	}
 	o.handlers["PATCH"]["/project/{projectId}/devices/{deviceId}"] = project.NewUpdateProjectDeviceStatus(o.context, o.ProjectUpdateProjectDeviceStatusHandler)
+
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/users/{userId}"] = user.NewUpdateUser(o.context, o.UserUpdateUserHandler)
 
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)

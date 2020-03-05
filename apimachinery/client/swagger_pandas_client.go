@@ -18,6 +18,7 @@ import (
 	"github.com/cloustone/pandas/apimachinery/client/model"
 	"github.com/cloustone/pandas/apimachinery/client/project"
 	"github.com/cloustone/pandas/apimachinery/client/rulechain"
+	"github.com/cloustone/pandas/apimachinery/client/user"
 )
 
 // Default swagger pandas HTTP client.
@@ -77,6 +78,8 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *SwaggerPan
 
 	cli.Rulechain = rulechain.New(transport, formats)
 
+	cli.User = user.New(transport, formats)
+
 	return cli
 }
 
@@ -135,6 +138,8 @@ type SwaggerPandas struct {
 
 	Rulechain *rulechain.Client
 
+	User *user.Client
+
 	Transport runtime.ClientTransport
 }
 
@@ -155,5 +160,7 @@ func (c *SwaggerPandas) SetTransport(transport runtime.ClientTransport) {
 	c.Project.SetTransport(transport)
 
 	c.Rulechain.SetTransport(transport)
+
+	c.User.SetTransport(transport)
 
 }

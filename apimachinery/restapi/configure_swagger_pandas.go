@@ -16,6 +16,7 @@ import (
 	"github.com/cloustone/pandas/apimachinery/restapi/operations/logs"
 	"github.com/cloustone/pandas/apimachinery/restapi/operations/model"
 	"github.com/cloustone/pandas/apimachinery/restapi/operations/project"
+	"github.com/cloustone/pandas/apimachinery/restapi/operations/user"
 	"github.com/cloustone/pandas/apimachinery/server"
 
 	models "github.com/cloustone/pandas/models"
@@ -50,6 +51,9 @@ func configureAPI(api *operations.SwaggerPandasAPI) http.Handler {
 	//
 	// Example:
 	// api.APIAuthorizer = security.Authorized()
+	api.UserLoginUserHandler = user.LoginUserHandlerFunc(func(params user.LoginUserParams) middleware.Responder {
+		return server.LoginUser(params)
+	})
 	api.ProjectGetProjectsProjectIDHandler = project.GetProjectsProjectIDHandlerFunc(func(params project.GetProjectsProjectIDParams, principal *models.Principal) middleware.Responder {
 		return middleware.NotImplemented("operation project.AddProjectDevice has not yet been implemented")
 	})

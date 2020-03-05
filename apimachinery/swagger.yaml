@@ -27,6 +27,8 @@ securityDefinitions:
       admin: scope of registere admin
 
 tags:
+  - name: User
+    description: Operations about user
   - name: Dashboard
     description: operation about dashboard
   - name: Project
@@ -39,13 +41,205 @@ tags:
     description: Operation about log
   - name: Rulechain
     description: operation about rule chain
-  - name: Deployment
-    description: operations about deployments
-
 schemes:
   - http
 
 paths:
+  /users/login:
+    post:
+      tags:
+        - User
+      summary: Logs user into the system
+      description: ''
+      operationId: loginUser
+      security: []
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: grant_type
+          in: formData
+          description: ''
+          required: true
+          type: string
+        - name: username
+          in: formData
+          description: The user name for login
+          required: true
+          type: string
+        - name: password
+          in: formData
+          description: The password for login in clear text
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/LoginToken'
+        '400':
+          description: Invalid username/password supplied
+  /users/logout:
+    get:
+      tags:
+        - User
+      summary: Logs out current logged in user session
+      description: ''
+      operationId: logoutUser
+      security:
+        - roleAuth:
+          - admin
+          - user
+      parameters: []
+      responses:
+        default:
+          description: successful operation
+  /users/password:
+    patch:
+      tags:
+        - User
+      summary: change current user's password
+      description: This can only be done by the logged in user.
+      operationId: ChangeCurrentUserPassword
+      parameters:
+        - in: body
+          name: user
+          description: Updated user password
+          required: true
+          schema:
+            type: object
+            properties:
+              old_password:
+                type: string
+              new_passowrd:
+                type: string
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+  /users/{userId}:
+    get:
+      tags:
+        - User
+      summary: Get user by user id
+      description: This can only be done by the logged in user.
+      operationId: getUser
+      security:
+        - roleAuth:
+            - admin
+            - user
+      parameters:
+        - name: userId
+          in: path
+          description: The name that needs to be fetched.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+    put:
+      tags:
+        - User
+      summary: Updated user by id
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          description: name that need to be updated
+          required: true
+          type: string
+        - in: body
+          name: user
+          description: Updated user object
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              email:
+                type: string
+              phone:
+                type: string
+              roles:
+                type: array
+                items:
+                  type: string
+                  enum:
+                    - admin
+                    - user
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: Invalid user supplied
+        '404':
+          description: User not found
+    patch:
+      tags:
+        - User
+      security:
+        - roleAuth:
+            - admin
+      summary: change user's password
+      description: This can only be done by the logged in user.
+      operationId: ChangeUserPassword
+      parameters:
+        - name: userId
+          in: path
+          description: name that need to be updated
+          required: true
+          type: string
+        - in: body
+          name: user
+          description: Updated user password
+          required: true
+          schema:
+            type: object
+            properties:
+              password:
+                type: string
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+    delete:
+      tags:
+        - User
+      summary: Delete user by id
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          description: The user that needs to be deleted
+          required: true
+          type: string
+      security:
+        - roleAuth:
+            - admin
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+
   /dashboard:
     get:
       tags:
@@ -1112,3 +1306,107 @@ paths:
           description: Deployment not found
         "405":
           description: Deployment exception
+
+definitions:
+  Timedef:
+    type: object
+    properties:
+      created:
+        type: string
+        format: dateTime
+        readOnly: true
+      updated:
+        type: string
+        format: dateTime
+        readOnly: true
+    example:
+      created: '2018-09-20T11:05:54Z'
+      updated: '2018-09-20T11:05:54Z'
+
+  LoginToken:
+    type: object
+    properties:
+      access_token:
+        type: string
+      token_type:
+        type: string
+  SignupUser:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+      email:
+        type: string
+      phone:
+        type: string
+      roles:
+        type: array
+        items:
+          type: string
+          enum:
+            - admin
+            - user
+  User:
+    allOf:
+      - $ref: '#/definitions/Timedef'
+      - properties:
+          id:
+            type: string
+          username:
+            type: string
+          email:
+            type: string
+          phone:
+            type: string
+          status:
+            type: string
+            enum:
+              - OFFLINE
+              - ONLINE
+          roles:
+            type: array
+            items:
+              type: string
+              enum:
+                - admin
+                - user
+        example:
+          id: behnu4h42p0bs8a5qukg
+          username: admin
+          email: admin@cloudstone.com
+          phone: '123456789'
+          status: OFFLINE
+          productNum: '0'
+          totalFund: '0'
+          balance: '0'
+          roles:
+            - admin
+            - user
+  UserOverview:
+    type: object
+    properties:
+      totalNum:
+        type: integer
+      onlineNum:
+        type: integer
+      todayLoginNum:
+        type: integer
+      dayAveLoginNum:
+        type: integer
+    required:
+      - totalNum
+      - onlineNum
+      - todayLoginNum
+      - dayAveLoginNum
+  UserLoginRecord:
+    required:
+      - number
+    type: object
+    properties:
+      date:
+        type: string
+        format: dateTime
+      number:
+        type: integer

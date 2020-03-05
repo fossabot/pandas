@@ -12,8 +12,14 @@ service UnifiedUserManagement {
     rpc GetRolePermissions(GetRolePermissionsRequest) returns (GetRolePermissionsResponse) {}
 }
 
-message AuthenticateRequest{ }
-message AuthenticateResponse { }
+message AuthenticateRequest{ 
+    string Username = 1;
+    string Password = 2;
+}
+message AuthenticateResponse { 
+    string Token = 1;
+    repeated string Roles  = 2;
+}
 
 message AddDomainRealmRequest {}
 message AddDomainRealmResponse {}

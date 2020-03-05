@@ -1557,6 +1557,451 @@ func init() {
           }
         }
       }
+    },
+    "/users/login": {
+      "post": {
+        "security": [],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "Logs user into the system",
+        "operationId": "loginUser",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "grant_type",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "The user name for login",
+            "name": "username",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "The password for login in clear text",
+            "name": "password",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/LoginToken"
+            }
+          },
+          "400": {
+            "description": "Invalid username/password supplied"
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "get": {
+        "security": [
+          {
+            "roleAuth": [
+              "admin",
+              "user"
+            ]
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "Logs out current logged in user session",
+        "operationId": "logoutUser",
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/users/password": {
+      "patch": {
+        "description": "This can only be done by the logged in user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "change current user's password",
+        "operationId": "ChangeCurrentUserPassword",
+        "parameters": [
+          {
+            "description": "Updated user password",
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "new_passowrd": {
+                  "type": "string"
+                },
+                "old_password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "security": [
+          {
+            "roleAuth": [
+              "admin",
+              "user"
+            ]
+          }
+        ],
+        "description": "This can only be done by the logged in user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user by user id",
+        "operationId": "getUser",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The name that needs to be fetched.",
+            "name": "userId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "put": {
+        "description": "This can only be done by the logged in user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Updated user by id",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "name that need to be updated",
+            "name": "userId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Updated user object",
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "admin",
+                      "user"
+                    ]
+                  }
+                },
+                "username": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid user supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "roleAuth": [
+              "admin"
+            ]
+          }
+        ],
+        "description": "This can only be done by the logged in user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Delete user by id",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The user that needs to be deleted",
+            "name": "userId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "patch": {
+        "security": [
+          {
+            "roleAuth": [
+              "admin"
+            ]
+          }
+        ],
+        "description": "This can only be done by the logged in user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "change user's password",
+        "operationId": "ChangeUserPassword",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "name that need to be updated",
+            "name": "userId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Updated user password",
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "LoginToken": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string"
+        },
+        "token_type": {
+          "type": "string"
+        }
+      }
+    },
+    "SignupUser": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "user"
+            ]
+          }
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "Timedef": {
+      "type": "object",
+      "properties": {
+        "created": {
+          "type": "string",
+          "format": "dateTime",
+          "readOnly": true
+        },
+        "updated": {
+          "type": "string",
+          "format": "dateTime",
+          "readOnly": true
+        }
+      },
+      "example": {
+        "created": "2018-09-20T11:05:54Z",
+        "updated": "2018-09-20T11:05:54Z"
+      }
+    },
+    "User": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Timedef"
+        },
+        {
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            },
+            "roles": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "admin",
+                  "user"
+                ]
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "OFFLINE",
+                "ONLINE"
+              ]
+            },
+            "username": {
+              "type": "string"
+            }
+          },
+          "example": {
+            "balance": "0",
+            "email": "admin@cloudstone.com",
+            "id": "behnu4h42p0bs8a5qukg",
+            "phone": "123456789",
+            "productNum": "0",
+            "roles": [
+              "admin",
+              "user"
+            ],
+            "status": "OFFLINE",
+            "totalFund": "0",
+            "username": "admin"
+          }
+        }
+      ]
+    },
+    "UserLoginRecord": {
+      "type": "object",
+      "required": [
+        "number"
+      ],
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "number": {
+          "type": "integer"
+        }
+      }
+    },
+    "UserOverview": {
+      "type": "object",
+      "required": [
+        "totalNum",
+        "onlineNum",
+        "todayLoginNum",
+        "dayAveLoginNum"
+      ],
+      "properties": {
+        "dayAveLoginNum": {
+          "type": "integer"
+        },
+        "onlineNum": {
+          "type": "integer"
+        },
+        "todayLoginNum": {
+          "type": "integer"
+        },
+        "totalNum": {
+          "type": "integer"
+        }
+      }
     }
   },
   "securityDefinitions": {
@@ -1578,6 +2023,10 @@ func init() {
     }
   ],
   "tags": [
+    {
+      "description": "Operations about user",
+      "name": "User"
+    },
     {
       "description": "operation about dashboard",
       "name": "Dashboard"
@@ -1601,10 +2050,6 @@ func init() {
     {
       "description": "operation about rule chain",
       "name": "Rulechain"
-    },
-    {
-      "description": "operations about deployments",
-      "name": "Deployment"
     }
   ]
 }`))
@@ -3148,9 +3593,452 @@ func init() {
           }
         }
       }
+    },
+    "/users/login": {
+      "post": {
+        "security": [],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "Logs user into the system",
+        "operationId": "loginUser",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "grant_type",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "The user name for login",
+            "name": "username",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "The password for login in clear text",
+            "name": "password",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/LoginToken"
+            }
+          },
+          "400": {
+            "description": "Invalid username/password supplied"
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "get": {
+        "security": [
+          {
+            "roleAuth": [
+              "admin",
+              "user"
+            ]
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "Logs out current logged in user session",
+        "operationId": "logoutUser",
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/users/password": {
+      "patch": {
+        "description": "This can only be done by the logged in user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "change current user's password",
+        "operationId": "ChangeCurrentUserPassword",
+        "parameters": [
+          {
+            "description": "Updated user password",
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "new_passowrd": {
+                  "type": "string"
+                },
+                "old_password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "security": [
+          {
+            "roleAuth": [
+              "admin",
+              "user"
+            ]
+          }
+        ],
+        "description": "This can only be done by the logged in user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user by user id",
+        "operationId": "getUser",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The name that needs to be fetched.",
+            "name": "userId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "put": {
+        "description": "This can only be done by the logged in user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Updated user by id",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "name that need to be updated",
+            "name": "userId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Updated user object",
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "admin",
+                      "user"
+                    ]
+                  }
+                },
+                "username": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid user supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "roleAuth": [
+              "admin"
+            ]
+          }
+        ],
+        "description": "This can only be done by the logged in user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "Delete user by id",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The user that needs to be deleted",
+            "name": "userId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "patch": {
+        "security": [
+          {
+            "roleAuth": [
+              "admin"
+            ]
+          }
+        ],
+        "description": "This can only be done by the logged in user.",
+        "tags": [
+          "User"
+        ],
+        "summary": "change user's password",
+        "operationId": "ChangeUserPassword",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "name that need to be updated",
+            "name": "userId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Updated user password",
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "LoginToken": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string"
+        },
+        "token_type": {
+          "type": "string"
+        }
+      }
+    },
+    "SignupUser": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "user"
+            ]
+          }
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "Timedef": {
+      "type": "object",
+      "properties": {
+        "created": {
+          "type": "string",
+          "format": "dateTime",
+          "readOnly": true
+        },
+        "updated": {
+          "type": "string",
+          "format": "dateTime",
+          "readOnly": true
+        }
+      },
+      "example": {
+        "created": "2018-09-20T11:05:54Z",
+        "updated": "2018-09-20T11:05:54Z"
+      }
+    },
+    "User": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Timedef"
+        },
+        {
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            },
+            "roles": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "admin",
+                  "user"
+                ]
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "OFFLINE",
+                "ONLINE"
+              ]
+            },
+            "username": {
+              "type": "string"
+            }
+          },
+          "example": {
+            "balance": "0",
+            "email": "admin@cloudstone.com",
+            "id": "behnu4h42p0bs8a5qukg",
+            "phone": "123456789",
+            "productNum": "0",
+            "roles": [
+              "admin",
+              "user"
+            ],
+            "status": "OFFLINE",
+            "totalFund": "0",
+            "username": "admin"
+          }
+        }
+      ]
+    },
+    "UserLoginRecord": {
+      "type": "object",
+      "required": [
+        "number"
+      ],
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "dateTime"
+        },
+        "number": {
+          "type": "integer"
+        }
+      }
+    },
+    "UserOverview": {
+      "type": "object",
+      "required": [
+        "totalNum",
+        "onlineNum",
+        "todayLoginNum",
+        "dayAveLoginNum"
+      ],
+      "properties": {
+        "dayAveLoginNum": {
+          "type": "integer"
+        },
+        "onlineNum": {
+          "type": "integer"
+        },
+        "todayLoginNum": {
+          "type": "integer"
+        },
+        "totalNum": {
+          "type": "integer"
+        }
+      }
+    },
     "dashboard": {
       "description": "Dashboard Dashboard",
       "type": "object",
@@ -3239,6 +4127,52 @@ func init() {
         "value": {
           "type": "string",
           "x-go-name": "Value"
+        }
+      },
+      "x-go-package": "github.com/cloustone/pandas/models"
+    },
+    "dataSource": {
+      "type": "object",
+      "properties": {
+        "certFile": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint8"
+          },
+          "x-go-name": "CertFile"
+        },
+        "connectURL": {
+          "type": "string",
+          "x-go-name": "ConnectURL"
+        },
+        "isProvider": {
+          "type": "boolean",
+          "x-go-name": "IsProvider"
+        },
+        "isTlsEnabled": {
+          "type": "boolean",
+          "x-go-name": "IsTLSEnabled"
+        },
+        "keyFile": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint8"
+          },
+          "x-go-name": "KeyFile"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "protocol": {
+          "type": "string",
+          "x-go-name": "Protocol"
+        },
+        "servicePort": {
+          "type": "string",
+          "x-go-name": "ServicePort"
         }
       },
       "x-go-package": "github.com/cloustone/pandas/models"
@@ -3626,6 +4560,9 @@ func init() {
           "format": "date-time",
           "x-go-name": "CreatedAt"
         },
+        "dataSource": {
+          "$ref": "#/definitions/dataSource"
+        },
         "debugMode": {
           "type": "boolean",
           "x-go-name": "DebugMode"
@@ -3643,14 +4580,6 @@ func init() {
           "format": "date-time",
           "x-go-name": "LastUpdatedAt"
         },
-        "metadata": {
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "format": "uint8"
-          },
-          "x-go-name": "Metadata"
-        },
         "modelTypeName": {
           "type": "string",
           "x-go-name": "ModelTypeName"
@@ -3658,6 +4587,14 @@ func init() {
         "name": {
           "type": "string",
           "x-go-name": "Name"
+        },
+        "payload": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint8"
+          },
+          "x-go-name": "Payload"
         },
         "status": {
           "type": "string",
@@ -3695,6 +4632,10 @@ func init() {
   ],
   "tags": [
     {
+      "description": "Operations about user",
+      "name": "User"
+    },
+    {
       "description": "operation about dashboard",
       "name": "Dashboard"
     },
@@ -3717,10 +4658,6 @@ func init() {
     {
       "description": "operation about rule chain",
       "name": "Rulechain"
-    },
-    {
-      "description": "operations about deployments",
-      "name": "Deployment"
     }
   ]
 }`))
