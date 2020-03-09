@@ -121,7 +121,7 @@ func TestgetJobs(t *testing.T) {
 func TestwatchJobPath(t *testing.T) {
 	Convey("TestwatchJobPath", t, func() {
 		Convey("Should be return error when mointor client's job path error", func() {
-			monkey.Patch(workerManager.GetWorker, func(string) error {
+			monkey.Patch((*workerManager).GetWorker, func(string) error {
 				return errors.New("mointor path Failed")
 			})
 			defer monkey.UnpatchAll()
@@ -135,7 +135,7 @@ func TestwatchJobPath(t *testing.T) {
 func TestcontrolJob(t *testing.T) {
 	Convey("TestcontrolJob", t, func() {
 		Convey("Should be return error when control job path error", func() {
-			monkey.Patch(workerManager.GetWorker, func(string) error {
+			monkey.Patch((*workerManager).GetWorker, func(string) error {
 				return errors.New("Control job Failed")
 			})
 			defer monkey.UnpatchAll()
