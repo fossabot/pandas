@@ -10,6 +10,7 @@ require (
 	github.com/carbocation/interpose v0.0.0-20161206215253-723534742ba3
 	github.com/casbin/casbin v1.9.1
 	github.com/casbin/casbin/v2 v2.2.1
+	github.com/casbin/gorm-adapter v1.0.0
 	github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 // indirect
 	github.com/coreos/etcd v3.3.10+incompatible
 	github.com/didip/tollbooth v4.0.2+incompatible

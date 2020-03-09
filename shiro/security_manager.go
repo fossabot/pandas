@@ -64,6 +64,15 @@ func newDefaultSecurityManager(servingOptions *options.ServingOptions) *defaultS
 	}
 }
 
+// AddDomainRealm adds domain's specific realm
+//realm is only a kind of interface you can initliaze it with ldaprealm so it will be a ldaprealm
+func (s *defaultSecurityManager) AddDomainRealm(realm realms.Realm) {
+	// TODO: add realm simply
+	s.mutex.Lock()
+	s.realms = append(s.realms, realm)
+	s.mutex.Unlock()
+}
+
 // Authenticate iterate all realm to authenticate the principal
 func (s *defaultSecurityManager) Authenticate(principal *Principal) error {
 	for _, realm := range s.realms {
@@ -72,14 +81,6 @@ func (s *defaultSecurityManager) Authenticate(principal *Principal) error {
 		}
 	}
 	return errors.New("no valid realms")
-}
-
-// AddDomainRealm adds domain's specific realm
-func (s *defaultSecurityManager) AddDomainRealm(realm realms.Realm) {
-	// TODO: add realm simply
-	s.mutex.Lock()
-	s.realms = append(s.realms, realm)
-	s.mutex.Unlock()
 }
 
 func (s *defaultSecurityManager) Authorize(principal Principal, object *Object, action string) error {
