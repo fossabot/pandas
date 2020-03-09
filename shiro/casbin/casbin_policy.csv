@@ -1,0 +1,7 @@
+p, manager, /dataset1/*, GET
+p, manager, /dataset1/resource1, POST
+g, kobe, manager
+p, staff, /dataset2/resource1, *
+p, staff, /dataset2/resource2, GET
+p, staff, /dataset2/folder1/*, POST
+g, mamba, staff

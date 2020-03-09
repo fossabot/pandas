@@ -11,4 +11,6 @@
 //  under the License.
 package shiro
 
-type Subject struct{}
+type Object struct {
+	object string
+}

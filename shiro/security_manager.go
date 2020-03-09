@@ -15,6 +15,7 @@ import (
 	"errors"
 	"sync"
 
+	"github.com/cloustone/pandas/shiro/casbin"
 	"github.com/cloustone/pandas/shiro/options"
 	"github.com/cloustone/pandas/shiro/realms"
 	. "github.com/cloustone/pandas/shiro/realms"
@@ -25,10 +26,10 @@ type SecurityManager interface {
 	UseAdaptor(Adaptor)
 	AddDomainRealm(realms.Realm)
 	Authenticate(principal *Principal) error
-	Authorize(principal Principal, subject *Subject, action string) error
+	Authorize(principal Principal, object *Object, action string) error
 	GetAuthzDefinitions(principal Principal) ([]*AuthzDefinition, error)
 	GetPrincipalDefinition(principal Principal) (*PrincipalDefinition, error)
-	GetPrincipalAllowableSubjects(principal Principal) ([]*Subject, error)
+	GetPrincipalAllowableObjects(principal Principal) ([]*Object, error)
 }
 
 // NewSecurityManager create security manager to hold all realms for
@@ -42,6 +43,7 @@ type defaultSecurityManager struct {
 	mutex          sync.RWMutex
 	servingOptions *options.ServingOptions
 	realms         []realms.Realm
+	casbinInstance *casbin.CasbinInstance
 }
 
 // newDefaultSecurityManager return security manager instance
@@ -49,6 +51,7 @@ type defaultSecurityManager struct {
 func newDefaultSecurityManager(servingOptions *options.ServingOptions) *defaultSecurityManager {
 	realmOptions := NewRealmOptionsWithFile(servingOptions.RealmConfigFile)
 	realms := []Realm{}
+	//casbinInstance := casbin.NewCasbinInstance()
 
 	for _, options := range realmOptions {
 		realms = append(realms, NewRealm(options))
@@ -57,6 +60,7 @@ func newDefaultSecurityManager(servingOptions *options.ServingOptions) *defaultS
 		mutex:          sync.RWMutex{},
 		servingOptions: servingOptions,
 		realms:         realms,
+		casbinInstance: casbin.NewCasbinInstance(),
 	}
 }
 
@@ -76,4 +80,9 @@ func (s *defaultSecurityManager) AddDomainRealm(realm realms.Realm) {
 	s.mutex.Lock()
 	s.realms = append(s.realms, realm)
 	s.mutex.Unlock()
+}
+
+func (s *defaultSecurityManager) Authorize(principal Principal, object *Object, action string) error {
+	s.casbinInstance.Authroize(principal.Username, object.object, action)
+	return nil
 }
