@@ -5,9 +5,9 @@ LABEL product=pandas
 
 ADD certs/* /etc/ssl/pandas
 ADD bin/* /
-RUN chmod 755 pandas-rulechain
+RUN chmod 755 pandas-shiro
 # RUN chmod 755 /dockerize
 
 USER root
 
-CMD ["/pandas-rulechain"]
+CMD ["/pandas-shiro"]

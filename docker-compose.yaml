@@ -1,8 +1,18 @@
 version: "3.7"
 services: 
 
+    docker:
+        container_name: clouston-container
+        tty: true
+        build: 
+            context:  .
+            dockerfile: docker/Dockerfile
+            labels: 
+                - "github.com/cloustone/pandas/docker"
+
     apimachinery:
         container_name: api-container
+        tty: true
         build: 
             context:  .
             dockerfile: cmd/apimachinery/Dockerfile
@@ -11,6 +21,7 @@ services:
     
     dmms:
         container_name: dmms-container
+        tty: true
         build: 
             context:  .
             dockerfile: cmd/dmms/Dockerfile
@@ -19,6 +30,7 @@ services:
 
     headmast:
         container_name: headmast-container
+        tty: true
         build: 
             context:  .
             dockerfile: cmd/headmast/Dockerfile
@@ -27,14 +39,17 @@ services:
 
     lbs:
         container_name: lbs-container
+        tty: true
         build: 
             context:  .
             dockerfile: cmd/lbs/Dockerfile
             labels: 
                 - "github.com/cloustone/pandas/cmd/lbs"
+        #privileged: true
 
     pms:
         container_name: pms-container
+        tty: true
         build: 
             context:  .
             dockerfile: cmd/pms/Dockerfile
@@ -43,8 +58,18 @@ services:
         
     rulechain:
         container_name: rulechain-container
+        tty: true
         build: 
             context:  .
             dockerfile: cmd/rulechain/Dockerfile
             labels: 
                 - "github.com/cloustone/pandas/cmd/rulechain"
+
+    shiro:
+        container_name: shiro-container
+        tty: true
+        build: 
+            context:  .
+            dockerfile: cmd/shiro/Dockerfile
+            labels: 
+                - "github.com/cloustone/pandas/cmd/shiro"
