@@ -1,39 +1,36 @@
-apiVersion: v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pandas-dmms
+  name: {{ .Values.Name}}
   labels:
-    name: pandas-dmms
+    run: {{ .Values.Name}}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicas}}
+  selector:
+      matchLabels:
+        run: {{ .Values.Name}}
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
   template:
     metadata:
-      labels: 
-       app: pandas-dmms
+      labels:
+        run: {{ .Values.Name}}
     spec:
       containers:
-      - name: pandas-dmms
-        image: 192.168.1.101:5000/dmms:latest
+      - name: {{ .Values.Name}}
+        image: {{ .Values.image }}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
           name: httpport
-#        env:
-#          -name: GOROOT
-#          value: /usr/local/go
         livenessProbe:
           initialDelaySeconds: 15
           periodSeconds: 20
-#          httpGet:
-#            path: /
-#            port: 8080
           tcpSocket:
             port: 8080
         readinessProbe:
           initialDelaySeconds: 5
           periodSeconds: 10
-#          httpGet:
-#            path: /
-#            port: 8080
           tcpSocket:
             port: 8080
