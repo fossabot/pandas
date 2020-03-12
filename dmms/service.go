@@ -14,6 +14,7 @@ package dmms
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -42,18 +43,19 @@ type DeviceManagementService struct {
 }
 
 func NewDeviceManagementService() *DeviceManagementService {
-	d := &DeviceManagementService{}
-	factory.RegisterFactory(models.DeviceModel{}, newDeviceModelFactory(&d.servingOptions.ServingOptions))
 	return &DeviceManagementService{}
 }
 
 // Prerun initialize and load builtin devices models
 func (s *DeviceManagementService) Initialize(servingOptions *ServingOptions) {
-	factory.RegisterFactory(models.DeviceModel{}, newDeviceModelFactory(&servingOptions.ServingOptions))
+	fmt.Println("123")
+	factory.RegisterFactory(models.DeviceModel{}, newDeviceModelFactory(servingOptions.ServingOptions))
+	fmt.Println("123")
 	s.servingOptions = servingOptions
 	s.loadPresetDeviceModels(s.servingOptions.DeviceModelPath)
 	broadcast_util.RegisterObserver(s, nameOfDeviceModel)
 	broadcast_util.RegisterObserver(s, nameOfDeviceNotification)
+
 }
 
 // Onbroadcast handle notifications received from other component service

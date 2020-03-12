@@ -20,13 +20,14 @@ import (
 
 // ServingOptions
 type ServingOptions struct {
-	ServingOptions  modeloptions.ServingOptions
+	ServingOptions  *modeloptions.ServingOptions
 	DeviceModelPath string
 }
 
 func NewServingOptions() *ServingOptions {
 	return &ServingOptions{
 		//DeviceModelPath: "./pandas/models",
+		ServingOptions:  modeloptions.NewServingOptions(),
 		DeviceModelPath: "./models",
 	}
 }
