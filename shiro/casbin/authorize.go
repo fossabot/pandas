@@ -13,7 +13,7 @@ type CasbinInstance struct {
 //NewCasbinInstance initialize a casbininstance
 func NewCasbinInstance() *CasbinInstance {
 	//e, err := casbin.NewEnforcerSafe("casbin_model.conf", "casbin_policy.csv")
-	a := gormadapter.NewAdapter("sqllite-3", "casbin_policy.db")
+	a := gormadapter.NewAdapter("sqlite3", "casbin_policy.db")
 	//e := casbin.NewSyncedEnforcer("casbin_model.conf", "casbin_policy.csv")
 	e := casbin.NewSyncedEnforcer("casbin_model.conf", a)
 	//load the policy from db

@@ -33,7 +33,7 @@ type ServingOptions struct {
 
 func NewServingOptions() *ServingOptions {
 	return &ServingOptions{
-		StorePath:         "sqllite-3",
+		StorePath:         "sqlite3",
 		Cache:             KCacheNone,
 		CacheConnectedUrl: "127.0.0.1:6379",
 	}

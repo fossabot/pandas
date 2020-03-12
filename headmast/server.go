@@ -44,6 +44,7 @@ type HeadmastService struct {
 // NewHeadmastService manage http rest api server to handle client's request
 // JobManager and JobScheduler is backend for job's control
 func NewHeadmastService(servingOptions *ServingOptions) *HeadmastService {
+	servingOptions = NewServingOptions()
 	jobManager := NewJobManager(servingOptions)
 	workerManager := NewWorkerManager(servingOptions)
 	jobScheduler := NewJobScheduler(servingOptions, jobManager, workerManager)

@@ -15,6 +15,7 @@ package headmast
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/coreos/etcd/clientv3"
@@ -67,10 +68,11 @@ func newWorkerManager(servingOptions *ServingOptions) WorkerManager {
 // watchWorkerChanged will monitor etcd '/headmast/workers' for worker's change
 func (manager *workerManager) watchWorkerChanged() {
 	cli, err := clientv3.New(clientv3.Config{
-		Endpoints:   []string{manager.servingOptions.EtcdEndpoints},
+		Endpoints: []string{manager.servingOptions.EtcdEndpoints},
+		//Endpoints:   []string{"localhost:2379"},
 		DialTimeout: 2 * time.Second,
 	})
-
+	fmt.Println(manager.servingOptions.EtcdEndpoints)
 	if err != nil {
 		logrus.WithError(err).Fatal("watch worker changed failed")
 		return

@@ -51,6 +51,9 @@ func (s *DeviceManagementService) Initialize(servingOptions *ServingOptions) {
 	s.loadPresetDeviceModels(s.servingOptions.DeviceModelPath)
 	broadcast_util.RegisterObserver(s, nameOfDeviceModel)
 	broadcast_util.RegisterObserver(s, nameOfDeviceNotification)
+	factory.gener
+	factory.RegisterFactory(models.Project{}, newProjectFactory(servingOptions.ServingOptions))
+	factory.RegisterFactory(models.DeviceModel{})
 }
 
 // Onbroadcast handle notifications received from other component service

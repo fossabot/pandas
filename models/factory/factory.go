@@ -13,11 +13,13 @@ package factory
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 
 	"github.com/cloustone/pandas/models"
 	modeloptions "github.com/cloustone/pandas/models/options"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/sirupsen/logrus"
 )
 
@@ -48,7 +50,10 @@ type Factory interface {
 
 // NewFactory create and return model factory
 func NewFactory(obj interface{}) Factory {
-	name := reflect.TypeOf(obj).Name()
+	name := obj.(string)
+	//name := reflect.TypeOf(obj).Name()
+	//fmt.Println(obj)
+	//fmt.Println(reflect.TypeOf(obj))
 	if factory, found := factories[name]; found {
 		return factory
 	}
@@ -65,6 +70,8 @@ func RegisterFactory(model interface{}, f Factory) {
 func Initialize(servingOptions *modeloptions.ServingOptions) {
 	// Open pandas data based
 	db, err := gorm.Open(servingOptions.StorePath, "pandas.db")
+	fmt.Println(servingOptions.StorePath)
+	fmt.Println(err)
 	if err != nil {
 		logrus.Fatalf("factory failed to open database")
 	}
