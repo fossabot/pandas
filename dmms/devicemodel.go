@@ -33,7 +33,7 @@ func newDeviceModelFactory(servingOptions *modelsoptions.ServingOptions) factory
 	if err != nil {
 		logrus.Fatal(err)
 	}
-	modelDB.AutoMigrate(&models.Project{})
+	modelDB.AutoMigrate(&models.DeviceModel{})
 	return &deviceModelFactory{
 		modelDB:        modelDB,
 		cache:          cache.NewCache(servingOptions),

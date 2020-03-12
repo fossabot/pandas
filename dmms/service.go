@@ -14,7 +14,6 @@ package dmms
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -48,9 +47,7 @@ func NewDeviceManagementService() *DeviceManagementService {
 
 // Prerun initialize and load builtin devices models
 func (s *DeviceManagementService) Initialize(servingOptions *ServingOptions) {
-	fmt.Println("123")
 	factory.RegisterFactory(models.DeviceModel{}, newDeviceModelFactory(servingOptions.ServingOptions))
-	fmt.Println("123")
 	s.servingOptions = servingOptions
 	s.loadPresetDeviceModels(s.servingOptions.DeviceModelPath)
 	broadcast_util.RegisterObserver(s, nameOfDeviceModel)
