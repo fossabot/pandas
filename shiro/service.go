@@ -33,6 +33,7 @@ func NewUnifiedUserManagementService(servingOptions *options.ServingOptions) *Un
 
 // Authenticate authenticate the principal in specific domain realm
 func (s *UnifiedUserManagementService) Authenticate(ctx context.Context, in *pb.AuthenticateRequest) (*pb.AuthenticateResponse, error) {
+
 	return nil, nil
 }
 

@@ -25,6 +25,7 @@ type ServingOptions struct {
 func NewServingOptions() *ServingOptions {
 	s := ServingOptions{
 		SecureServing:  genericoptions.NewSecureServingOptions("headmast"),
+		EtcdEndpoints:  "localhost:2379",
 		SchedulePolicy: "roundbin",
 	}
 	return &s
