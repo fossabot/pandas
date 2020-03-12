@@ -64,6 +64,7 @@ func NewFactory(obj interface{}) Factory {
 // RegisterFactory will add model factory. user can also add customized model factory
 func RegisterFactory(model interface{}, f Factory) {
 	factories[reflect.TypeOf(model).Name()] = f
+	fmt.Println(reflect.TypeOf(model).Name())
 }
 
 // Initialize will be called in startup to initialize all internal model factory

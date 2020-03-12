@@ -56,7 +56,6 @@ func Run(runOptions *options.ServerRunOptions, stopCh <-chan struct{}) error {
 
 	// Initialize object factory
 	factory.Initialize(runOptions.ModelServing)
-
 	service := NewDeviceManagementServer(runOptions)
 	service.Initialize(runOptions.DeviceServing)
 	service.Run(runOptions.SecureServing)

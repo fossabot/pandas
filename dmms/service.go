@@ -42,18 +42,18 @@ type DeviceManagementService struct {
 }
 
 func NewDeviceManagementService() *DeviceManagementService {
+	d := &DeviceManagementService{}
+	factory.RegisterFactory(models.DeviceModel{}, newDeviceModelFactory(&d.servingOptions.ServingOptions))
 	return &DeviceManagementService{}
 }
 
 // Prerun initialize and load builtin devices models
 func (s *DeviceManagementService) Initialize(servingOptions *ServingOptions) {
+	factory.RegisterFactory(models.DeviceModel{}, newDeviceModelFactory(&servingOptions.ServingOptions))
 	s.servingOptions = servingOptions
 	s.loadPresetDeviceModels(s.servingOptions.DeviceModelPath)
 	broadcast_util.RegisterObserver(s, nameOfDeviceModel)
 	broadcast_util.RegisterObserver(s, nameOfDeviceNotification)
-	factory.gener
-	factory.RegisterFactory(models.Project{}, newProjectFactory(servingOptions.ServingOptions))
-	factory.RegisterFactory(models.DeviceModel{})
 }
 
 // Onbroadcast handle notifications received from other component service
@@ -87,14 +87,12 @@ func (s *DeviceManagementService) handleDeviceNotifications(n *DeviceNotificatio
 // deinitiontion into manager
 func (s *DeviceManagementService) loadPresetDeviceModels(path string) error {
 	deviceModels := []*models.DeviceModel{}
-
 	handler := func(filename string, fi os.FileInfo, err error) error {
 		if fi.IsDir() {
 			return nil
 		}
 		if sheme := models.BundleSchemeWithNameSuffix(fi.Name()); sheme == models.BundleSchemeJSON {
 			logrus.Debugf("model definition file '%s' found", filename)
-
 			data, err := ioutil.ReadFile(filename)
 			if err != nil {
 				logrus.WithError(err).Errorf("read file '%s' failed", filename)
