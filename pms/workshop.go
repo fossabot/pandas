@@ -33,7 +33,7 @@ func newWorkshopFactory(servingOptions *modelsoptions.ServingOptions) factory.Fa
 	if err != nil {
 		logrus.Fatal(err)
 	}
-	modelDB.AutoMigrate(&models.Project{})
+	modelDB.AutoMigrate(&models.Workshop{})
 	return &workshopFactory{
 		modelDB:        modelDB,
 		cache:          cache.NewCache(servingOptions),

@@ -45,10 +45,10 @@ type GenericGrpcServer struct {
 func (s *GenericGrpcServer) Run(servingOptions *serverOptions.SecureServingOptions) {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", servingOptions.BindPort))
 	if err != nil {
+		fmt.Println(err)
 		log.Fatalf("failed to listening: %v", err)
 	}
 	log.Infof("starting service at %s", lis.Addr())
-
 	var opts []grpc.ServerOption
 	if servingOptions.IsTlsEnabled() {
 		creds, err := credentials.NewServerTLSFromFile(

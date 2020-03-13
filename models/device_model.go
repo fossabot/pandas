@@ -35,7 +35,7 @@ type DeviceModel struct {
 	DataModels    []*DataModel `json:"dataModel"`
 	IsLogical     bool         `json:"isLogical"`
 	IsCompound    bool         `json:"isCompound"`
-	ChildModels   []string     `json:"childModels"`
+	ChildModels   []string     `json:"childModels" gorm:"type:string[]"`
 	IsPreset      bool         `json:"isPreset"`
 	UserID        string       `json:"userId"`
 	CreatedAt     time.Time    `json:"createdAt"`

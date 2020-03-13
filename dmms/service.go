@@ -50,8 +50,11 @@ func (s *DeviceManagementService) Initialize(servingOptions *ServingOptions) {
 	factory.RegisterFactory(models.DeviceModel{}, newDeviceModelFactory(servingOptions.ServingOptions))
 	s.servingOptions = servingOptions
 	s.loadPresetDeviceModels(s.servingOptions.DeviceModelPath)
-	broadcast_util.RegisterObserver(s, nameOfDeviceModel)
-	broadcast_util.RegisterObserver(s, nameOfDeviceNotification)
+	b := broadcast_util.NewBroadcast(broadcast.NewServingOptions())
+	b.RegisterObserver(nameOfDeviceModel, s)
+	b.RegisterObserver(nameOfDeviceNotification, s)
+	//broadcast_util.RegisterObserver(s, nameOfDeviceModel)
+	//broadcast_util.RegisterObserver(s, nameOfDeviceNotification)
 
 }
 
@@ -106,12 +109,10 @@ func (s *DeviceManagementService) loadPresetDeviceModels(path string) error {
 		}
 		return nil
 	}
-
 	if err := filepath.Walk(path, handler); err != nil {
 		logrus.WithError(err).Errorf("failed to load preset device models with path '%s'", path)
 		return err
 	}
-
 	// These models should be upload to backend database after getting models
 	pf := factory.NewFactory(reflect.TypeOf(models.DeviceModel{}).Name())
 	owner := factory.NewOwner("-") // builtin owner

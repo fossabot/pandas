@@ -52,7 +52,7 @@ type GeneratableKeyCert struct {
 func NewSecureServingOptions(name string) *SecureServingOptions {
 	return &SecureServingOptions{
 		BindAddress: net.ParseIP("0.0.0.0"),
-		BindPort:    443,
+		BindPort:    4430,
 		ServerCert: GeneratableKeyCert{
 			PairName:      name,
 			CertDirectory: name + ".local/config/certificates",
