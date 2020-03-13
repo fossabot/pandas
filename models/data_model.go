@@ -33,17 +33,17 @@ func NewDataModelField(key string, tp string, defaultValue string) *DataModelFie
 
 // DataModel ...
 type DataModel struct {
-	Name   string            `json:"name"`
-	ID     string            `json:"id"`
-	Domain string            `json:"domain"`
-	Fields []*DataModelField `json:"fields"`
+	Name        string            `json:"name"`
+	DataModelID string            `json:"datamodelid"`
+	Domain      string            `json:"domain"`
+	Fields      []*DataModelField `json:"fields"`
 }
 
 // NewDataModel ...
 func NewDataModel() *DataModel {
 	return &DataModel{
-		ID:     xid.New().String(),
-		Fields: []*DataModelField{},
+		DataModelID: xid.New().String(),
+		Fields:      []*DataModelField{},
 	}
 }
 
