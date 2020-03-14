@@ -14,7 +14,7 @@ IGNORED_PACKAGES := /vendor/
 
 UNAME = $(shell uname)
 DOCKER_REPO = docker.io
-IMAGES = apimachinery dmms pms rulechain headmast lbs  
+IMAGES = apimachinery dmms pms rulechain headmast lbs shiro
 IMAGE_NAME_PREFIX := pandas-
 IMAGE_DIR := $(IMAGE_NAME)
 ifeq ($(IMAGE_NAME),bridge)
