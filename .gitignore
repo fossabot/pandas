@@ -2,11 +2,13 @@
 bin
 .DS_Store
 *.swp
+*.tmp
 !.gitignore
 *~
 debug
 */bin
 *.o
+*.db
 .vscode/settings.json
 *.tar
 .idea
