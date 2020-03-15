@@ -1,0 +1,108 @@
+{{ if .Values.dmms.deploy }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{.Values.docker.image_prefix}}dmms
+  namespace: {{.Values.namespace.name}}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: {{.Values.docker.image_prefix}}dmms
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: {{.Values.docker.image_prefix}}dmms
+    namespace: {{.Values.namespace.name}}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: pandas-dmms
+  namespace: {{.Values.namespace.name}}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: pandas-dmms
+        version: {{.Values.dmms.version}}
+    spec:
+      serviceAccount: {{.Values.docker.image_prefix}}dmms
+      serviceAccountName: {{.Values.docker.image_prefix}}dmms
+      containers:
+      - name: pandas-dmms
+        image: {{.Values.docker.registry}}/{{.Values.docker.namespace}}/{{.Values.docker.image_prefix}}dmms:{{.Values.dmms.version}}
+{{ if .Values.docker.pullPolicy }}
+        imagePullPolicy: {{.Values.docker.pullPolicy}}
+{{ end }}
+        ports:
+        - containerPort: 8080
+        command: ["/bin/sh", "-c"]
+        args: ["PANDAS_PORT=8080 /main"]
+        env:
+        - name: PANDAS_POD_NAME
+          valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+        - name: PANDAS_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: PANDAS_SERVICE_DISCOVERY_PATH
+          value: /pandas
+        - name: PANDAS_SERVICE_DISCOVERY_TYPE
+          value: zookeeper
+        - name: PANDAS_SERVICE_DISCOVERY_SERVER
+          value: {{ .Values.public.zookeeper.address }}
+        - name: PANDAS_DEPLOY_MODE
+          value: kubernetes
+        - name: PANDAS_PRODUCT_REGISTRY
+          value: {{.Values.docker.registry}}/{{.Values.docker.namespace}}
+        - name: PANDAS_REDIS_ADDRESS
+          value: {{ .Values.public.redis.address }}
+        - name: PANDAS_MESSAGE_BACKEND
+          value: "rabbitmq"
+        - name: PANDAS_MESSAGE_ADDRESS
+          value: {{ .Values.public.rabbitmq.address }}
+        - name: PANDAS_MESSAGE_USERNAME
+          value: {{ .Values.public.rabbitmq.username }}
+        - name: PANDAS_MESSAGE_PASSWORD
+          value: {{ .Values.public.rabbitmq.password }}
+        resources:
+          limits:
+            cpu: {{.Values.dmms.cpus}}
+            memory: {{.Values.dmms.memory}}
+        livenessProbe:
+          exec:
+            command:
+              - /bin/sh
+              - -c
+              - "grpc-health-checker --port 8080 --tls"
+          initialDelaySeconds: 15
+          timeoutSeconds: 2
+            
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: pandas-dmms
+  namespace: {{.Values.namespace.name}}
+  labels:
+    service: pandas-dmms
+spec:
+  ports:
+  - name: pandas-dmms
+    port: 80
+    targetPort: 8080
+  selector:
+    service: pandas-dmms
+{{ end }}

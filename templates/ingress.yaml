@@ -1,0 +1,28 @@
+{{ if .Values.public.ingress.deploy }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: pandas-ingress
+  namespace: {{.Values.namespace.name}}
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-redirect-from: /
+    nginx.ingress.kubernetes.io/proxy-redirect-to: $location_path/
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /pandas
+        backend:
+          serviceName: pandas-webui
+          servicePort: 80
+      - path: /pandas/api
+        backend:
+          serviceName: pandas-apimachinery 
+          servicePort: 80
+{{ end }}

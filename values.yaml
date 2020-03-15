@@ -1,2 +1,83 @@
+namespace: 
+  name: namespace 
+  deploy: false
+env: dev
+services:
+  expose_node_port: true
+docker:
+  registry: 192.168.1.192:5000
+  namespace: cloustone 
+  image_prefix: pandas-
+  pullPolicy: Always
+public:
+  namespace: kube-public
+  ingress:
+    deploy: true
+  prometheus: 
+    address: prometheus.kube-public:9090
+  etcd:
+    address: etcd.kube-public:2379
+    username: test
+    password: test
+    prefix: test
+  redis:
+    address: redis.kube-public:6379
+    port: 6379
+  rabbitmq:
+    address: rabbitmq.kube-public
+    username: pandas 
+    password: pandas 
+    port:
+      epmd: 4369
+      amqp: 5672
+      stats: 15672
+      dist: 25672
 
-
+apimachinery:
+  deploy: true
+  version: latest
+  port: 30001
+  cpus: 100m
+  memory: 256Mi
+dmms:
+  deploy: true
+  version: latest
+  port: 0 
+  cpus: 100m
+  memory: 256Mi
+pms:
+  deploy: true
+  version: latest
+  port: 0 
+  cpus: 100m
+  memory: 256Mi
+headmast:
+  deploy: true
+  version: latest
+  port: 0 
+  cpus: 100m
+  memory: 256Mi
+rulechain:
+  deploy: true
+  version: latest
+  port: 0
+  cpus: 100m
+  memory: 64Mi
+lbs:
+  deploy: true
+  version: latest
+  port: 0
+  cpus: 100m
+  memory: 64Mi
+shiro:
+  deploy: true
+  version: latest
+  port: 0
+  cpus: 100m
+  memory: 256Mi
+dashboard:
+  deploy: true
+  version: latest
+  port: 30880
+  cpus: 100m
+  memory: 64Mi
