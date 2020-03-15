@@ -15,7 +15,6 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/cloustone/pandas/shiro/casbin"
 	"github.com/cloustone/pandas/shiro/options"
 	"github.com/cloustone/pandas/shiro/realms"
 	. "github.com/cloustone/pandas/shiro/realms"
@@ -43,7 +42,6 @@ type defaultSecurityManager struct {
 	mutex          sync.RWMutex
 	servingOptions *options.ServingOptions
 	realms         []realms.Realm
-	casbinInstance *casbin.CasbinInstance
 }
 
 // newDefaultSecurityManager return security manager instance
@@ -51,7 +49,6 @@ type defaultSecurityManager struct {
 func newDefaultSecurityManager(servingOptions *options.ServingOptions) *defaultSecurityManager {
 	realmOptions := NewRealmOptionsWithFile(servingOptions.RealmConfigFile)
 	realms := []Realm{}
-	//casbinInstance := casbin.NewCasbinInstance()
 
 	for _, options := range realmOptions {
 		realms = append(realms, NewRealm(options))
@@ -60,7 +57,6 @@ func newDefaultSecurityManager(servingOptions *options.ServingOptions) *defaultS
 		mutex:          sync.RWMutex{},
 		servingOptions: servingOptions,
 		realms:         realms,
-		casbinInstance: casbin.NewCasbinInstance(),
 	}
 }
 
@@ -84,6 +80,5 @@ func (s *defaultSecurityManager) Authenticate(principal *Principal) error {
 }
 
 func (s *defaultSecurityManager) Authorize(principal Principal, object *Object, action string) error {
-	s.casbinInstance.Authroize(principal.Username, object.object, action)
 	return nil
 }
