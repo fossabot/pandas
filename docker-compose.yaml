@@ -1,2 +1,136 @@
+version: '2'
+services:
+  db:
+    image: postgres:10.10
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: pandas 
+      POSTGRES_USER: pandas 
+      PGDATA: /data/docker/postgres
+    volumes:
+      - /data/docker/postgres:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
 
+  rabbitmq:
+    image: bitnami/rabbitmq
+    ports:
+    - "4369:4369"
+    - "5672:5672"
+    - "15672:15672"
+    - "25672:25672"
+    restart: always
+    environment:
+      RABBITMQ_USERNAME: pandas 
+      RABBITMQ_PASSWORD: pandas 
+
+  etcd:
+    image: quay.io/coreos/etcd
+    ports:
+    - "2379:2379"
+    - "2380:2380"
+    restart: always
+    command: ["/usr/local/bin/etcd", "--name", "etcd", "--initial-advertise-peer-urls", "http://etcd:2380", "--listen-peer-urls", "http://0.0.0.0:2380", "--listen-client-urls", "http://0.0.0.0:2379", "--advertise-client-urls", "http://etcd:2379", "--initial-cluster", "etcd=http://etcd:2380", "--initial-cluster-state", "new"]
+
+  redis:
+    image: redis:alpine
+    ports:
+    - "6379:6379"
+    restart: always
+    
+  apiserver:
+    image: cloustone/pandas-apimachinery
+    ports:
+      - "30001:30001"
+    restart: always
+    depends_on:
+      - etcd 
+    environment:
+      PANDAS_PORT: 30001
+      PANDAS_DNS_SERVER: "docker-compose"
+    command: ["/dockerize", "-wait", "tcp://etcd:2379", "/main"]
+
+  dmms:
+    image: cloustone/pandas-dmms
+    ports:
+      - "30011:30011"
+    restart: always
+    depends_on:
+      - etcd 
+    environment:
+      PANDAS_PORT: 30011
+      PANDAS_DNS_SERVER: "docker-compose"
+    command: ["/dockerize", "-wait", "tcp://etcd:2379", "/main"]
+
+  pms:
+    image: cloustone/pandas-pms
+    ports:
+      - "30012:30012"
+    restart: always
+    depends_on:
+      - etcd 
+    environment:
+      PANDAS_PORT: 30011
+      PANDAS_DNS_SERVER: "docker-compose"
+    command: ["/dockerize", "-wait", "tcp://etcd:2379", "/main"]
+
+  dmms:
+    image: cloustone/pandas-dmms
+    ports:
+      - "30012:30012"
+    restart: always
+    depends_on:
+      - etcd 
+    environment:
+      PANDAS_PORT: 30001
+      PANDAS_DNS_SERVER: "docker-compose"
+    command: ["/dockerize", "-wait", "tcp://etcd:2379", "/main"]
+
+  headmast:
+    image: cloustone/pandas-headmast
+    ports:
+      - "30013:30013"
+    restart: always
+    depends_on:
+      - etcd 
+    environment:
+      PANDAS_PORT: 30013
+      PANDAS_DNS_SERVER: "docker-compose"
+    command: ["/dockerize", "-wait", "tcp://etcd:2379", "/main"]
+
+  rulechain:
+    image: cloustone/pandas-rulechain
+    ports:
+      - "30014:30014"
+    restart: always
+    depends_on:
+      -  headmast 
+    environment:
+      PANDAS_PORT: 30014
+      PANDAS_DNS_SERVER: "docker-compose"
+    command: ["/dockerize", "-wait", "tcp://headmast:30013", "/main"]
+
+  lbs:
+    image: cloustone/pandas-lbs
+    ports:
+      - "30015:30015"
+    restart: always
+    environment:
+      PANDAS_PORT: 30015
+      PANDAS_DNS_SERVER: "docker-compose"
+    command: ["/dockerize", "-wait", "tcp://headmast:30013", "/main"]
+
+  shiro:
+    image: cloustone/pandas-shiro
+    ports:
+      - "30016:30016"
+    restart: always
+    depends_on:
+      -  headmast 
+    environment:
+      PANDAS_PORT: 30016
+      PANDAS_DNS_SERVER: "docker-compose"
+    command: ["/dockerize", "-wait", "tcp://headmast:30013", "/main"]
 

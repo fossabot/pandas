@@ -43,7 +43,7 @@ $(addprefix docker-build-, $(IMAGES)): docker-build-%: %
 .docker-build:
 	@echo building $(IMAGE_NAME_PREFIX)$(IMAGE_NAME) image ...
 	@if [ ! -d "$(IMAGE_DIR)/bin/" ]; then mkdir $(IMAGE_DIR)/bin/ ; fi
-	# @cp scripts/dockerize $(IMAGE_DIR)/bin/
+	@cp scripts/dockerize $(IMAGE_DIR)/bin/
 #	@if [ "$(UNAME)" = "Linux" ]; then cp bin/$(IMAGE_NAME) $(IMAGE_DIR)/bin/main ; fi
 #	@if [ "$(UNAME)" = "Darwin" ]; then cp bin/linux_amd64/$(IMAGE_NAME) $(IMAGE_DIR)/bin/main ; fi
 	cp bin/$(IMAGE_NAME) $(IMAGE_DIR)/bin/main

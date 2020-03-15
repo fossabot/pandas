@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	interpose "github.com/carbocation/interpose/middleware"
+	"github.com/cloustone/pandas/dashboard"
 	"github.com/dre1080/recover"
 	"github.com/elazarl/go-bindata-assetfs"
 	middleware "github.com/go-openapi/runtime/middleware"
@@ -60,10 +61,10 @@ func Cross(h http.Handler) http.Handler {
 func assetFS() *assetfs.AssetFS {
 
 	return &assetfs.AssetFS{
-		//	Asset:     dashboard.Asset,
-		//	AssetDir:  dashboard.AssetDir,
-		//	AssetInfo: dashboard.AssetInfo,
-		Prefix: "dist",
+		Asset:     dashboard.Asset,
+		AssetDir:  dashboard.AssetDir,
+		AssetInfo: dashboard.AssetInfo,
+		Prefix:    "dist",
 	}
 }
 
