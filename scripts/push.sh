@@ -23,10 +23,10 @@ else
     push_image cloustone/pandas-pms
     push_image cloustone/pandas-headmast
     push_image cloustone/pandas-rulechain
-    push_image cloustone/pandas-lbs
     push_image cloustone/pandas-shiro
+    push_image cloustone/pandas-lbs
 fi
-# push_image elasticsearch:alpine
-# push_image quay.io/coreos/etcd
-# push_image bitnami/rabbitmq
-# push_image redis:alpine
+#push_image redis:alpine
+#push_image bitnami/rabbitmq
+#push_image postgres:latest
+#push_image elcolio/etcd
