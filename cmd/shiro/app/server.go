@@ -16,8 +16,6 @@ import (
 	"github.com/cloustone/pandas/pkg/server"
 	"github.com/cloustone/pandas/shiro"
 	"github.com/cloustone/pandas/shiro/grpc_shiro_v1"
-	"github.com/gogo/protobuf/version"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -54,8 +52,6 @@ func NewAPIServerCommand() *cobra.Command {
 
 // Run runs the specified APIServer.  This should never exit.
 func Run(runOptions *options.ServerRunOptions, stopCh <-chan struct{}) error {
-	// To help debugging, immediately log version
-	logrus.Infof("Version: %+v", version.Get())
 
 	NewManagementServer(runOptions).Run(runOptions.SecureServing)
 	<-stopCh
