@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e -o pipefail
 
-: ${WORKDIR:="./dashboard/"}
-: ${NOCOMPRESS:=false}
+: "${WORKDIR:=./dashboard/}"
+: "${NOCOMPRESS:=false}"
 
 YARN_INSTALL="pushd ${WORKDIR} && \
                 yarn && \
@@ -21,5 +21,5 @@ GO_BINDATA="pushd ${WORKDIR} && \
                 popd"
 
 bash -c "${YARN_INSTALL}"
-bash -c "${YARN_BUILD_SIT}"
+bash -c "${YARN_BUILD_PROD}"
 bash -c "${GO_BINDATA}"
