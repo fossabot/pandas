@@ -13,7 +13,7 @@ YARN_BUILD_PROD="pushd ${WORKDIR} && \
                 popd"
 
 YARN_BUILD_SIT="pushd ${WORKDIR} && \
-                yarn build:sit && \
+                yarn build:stage && \
                 popd"
 
 GO_BINDATA="pushd ${WORKDIR} && \

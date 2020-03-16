@@ -70,7 +70,6 @@ func assetFS() *assetfs.AssetFS {
 
 // Dashboard ...
 func Dashboard(handler http.Handler) http.Handler {
-	// return http.FileServer(assetFS())
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/dashboard" || r.URL.Path == "/" {
 			http.Redirect(w, r, "/dashboard/", http.StatusFound)
@@ -91,7 +90,6 @@ func RedocUI(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		opts := middleware.RedocOpts{
 			SpecURL: r.URL.Host + "/dashboard/static/swagger/swagger.yaml",
-			Title:   "User Manager",
 		}
 		middleware.Redoc(opts, handler).ServeHTTP(w, r)
 		return
