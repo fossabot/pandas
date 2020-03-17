@@ -89,7 +89,9 @@ func RedocUI(handler http.Handler) http.Handler {
 	// return http.FileServer(assetFS())
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		opts := middleware.RedocOpts{
-			SpecURL: r.URL.Host + "/dashboard/static/swagger/swagger.yaml",
+			SpecURL:  r.URL.Host + "/dashboard/static/swagger/swagger.yaml",
+			RedocURL: r.URL.Host + "/dashboard/static/js/redoc.standalone.js",
+			Title:    "Pandas API",
 		}
 		middleware.Redoc(opts, handler).ServeHTTP(w, r)
 		return
