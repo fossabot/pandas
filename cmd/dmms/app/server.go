@@ -17,8 +17,6 @@ import (
 	"github.com/cloustone/pandas/dmms/grpc_dmms_v1"
 	"github.com/cloustone/pandas/models/factory"
 	"github.com/cloustone/pandas/pkg/server"
-	"github.com/gogo/protobuf/version"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -51,8 +49,6 @@ func NewAPIServerCommand() *cobra.Command {
 
 // Run runs the specified APIServer.  This should never exit.
 func Run(runOptions *options.ServerRunOptions, stopCh <-chan struct{}) error {
-	// To help debugging, immediately log version
-	logrus.Infof("Version: %+v", version.Get())
 
 	// Initialize object factory
 	factory.Initialize(runOptions.ModelServing)

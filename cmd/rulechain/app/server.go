@@ -16,8 +16,6 @@ import (
 	"github.com/cloustone/pandas/rulechain"
 	"github.com/cloustone/pandas/rulechain/grpc_rulechain_v1"
 	"github.com/cloustone/pandas/rulechain/options"
-	"github.com/gogo/protobuf/version"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -54,8 +52,6 @@ func NewAPIServerCommand() *cobra.Command {
 
 // Run runs the specified APIServer.  This should never exit.
 func Run(servingOptions *options.ServingOptions, stopCh <-chan struct{}) error {
-	// To help debugging, immediately log version
-	logrus.Infof("Version: %+v", version.Get())
 
 	NewManagementServer(servingOptions).Run(servingOptions.SecureServing)
 	<-stopCh

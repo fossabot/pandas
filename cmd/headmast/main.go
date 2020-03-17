@@ -25,6 +25,17 @@ import (
 	"github.com/spf13/pflag"
 )
 
+// inject by go build
+var (
+	Version   = "0.0.0"
+	BuildTime = "2020-01-13-0802 UTC"
+)
+
+func init() {
+	fmt.Println("Version:", Version)
+	fmt.Println("BuildTime:", BuildTime)
+}
+
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 

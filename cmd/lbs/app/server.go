@@ -17,8 +17,6 @@ import (
 	"github.com/cloustone/pandas/lbs/grpc_lbs_v1"
 	lbsproxy "github.com/cloustone/pandas/lbs/proxy"
 	"github.com/cloustone/pandas/pkg/server"
-	"github.com/gogo/protobuf/version"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -55,8 +53,6 @@ func NewAPIServerCommand() *cobra.Command {
 
 // Run runs the specified APIServer.  This should never exit.
 func Run(runOptions *options.ServerRunOptions, stopCh <-chan struct{}) error {
-	// To help debugging, immediately log version
-	logrus.Infof("Version: %+v", version.Get())
 
 	service := NewLocationBasedServer(runOptions)
 	service.Run(runOptions.SecureServing)

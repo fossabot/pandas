@@ -18,7 +18,6 @@ import (
 	"github.com/cloustone/pandas/apimachinery/restapi/operations"
 	"github.com/cloustone/pandas/cmd/apimachinery/app/options"
 	"github.com/go-openapi/loads"
-	"github.com/gogo/protobuf/version"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -40,8 +39,6 @@ func NewAPIServerCommand() *cobra.Command {
 
 // Run runs the specified APIServer.  This should never exit.
 func Run(runOptions *options.ServerRunOptions, stopCh <-chan struct{}) error {
-	// To help debugging, immediately log version
-	logrus.Infof("Version: %+v", version.Get())
 
 	swaggerSpec, err := loads.Embedded(restapi.SwaggerJSON, restapi.FlatSwaggerJSON)
 	if err != nil {
