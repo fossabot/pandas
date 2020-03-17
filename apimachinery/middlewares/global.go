@@ -7,7 +7,7 @@ import (
 	interpose "github.com/carbocation/interpose/middleware"
 	"github.com/cloustone/pandas/dashboard"
 	"github.com/dre1080/recover"
-	"github.com/elazarl/go-bindata-assetfs"
+	assetfs "github.com/elazarl/go-bindata-assetfs"
 	middleware "github.com/go-openapi/runtime/middleware"
 	"github.com/sirupsen/logrus"
 )
@@ -68,7 +68,7 @@ func assetFS() *assetfs.AssetFS {
 	}
 }
 
-// Dashboard ...
+// Dashboard /dashboard to show dashboard
 func Dashboard(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/dashboard" || r.URL.Path == "/" {
@@ -84,7 +84,7 @@ func Dashboard(handler http.Handler) http.Handler {
 	})
 }
 
-// RedocUI ...
+// RedocUI /docs to show redoc ui
 func RedocUI(handler http.Handler) http.Handler {
 	// return http.FileServer(assetFS())
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
