@@ -75,7 +75,5 @@ func Run(runOptions *options.ServerRunOptions, stopCh <-chan struct{}) error {
 	if err := server.Serve(); err != nil {
 		logrus.Fatalln(err)
 	}
-
-	<-stopCh
 	return nil
 }

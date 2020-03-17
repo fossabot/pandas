@@ -91,7 +91,7 @@ func RedocUI(handler http.Handler) http.Handler {
 		opts := middleware.RedocOpts{
 			SpecURL:  r.URL.Host + "/dashboard/static/swagger/swagger.yaml",
 			RedocURL: r.URL.Host + "/dashboard/static/js/redoc.standalone.js",
-			Title:    "Device Manager",
+			Title:    "Pandas API",
 		}
 		middleware.Redoc(opts, handler).ServeHTTP(w, r)
 		return
